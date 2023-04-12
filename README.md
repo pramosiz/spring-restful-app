@@ -1,4 +1,4 @@
-Spring boot application with this tecnologies (at the branch):
+(Develop branch) Spring boot application with this tecnologies:
 
 - PostgreSQL
 - Rest
