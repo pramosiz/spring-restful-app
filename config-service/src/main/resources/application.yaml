@@ -6,9 +6,9 @@ spring:
     config:
       server:
         git:
-          default-label: config-server
+          default-label: config-server      # Branch
           uri: https://github.com/pramosiz/spring-restful-app
-          search-paths: config-data
+          search-paths: config-data         # Folder
           
   application:
     name: config-service
