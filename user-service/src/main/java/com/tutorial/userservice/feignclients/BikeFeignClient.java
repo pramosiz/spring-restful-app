@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.tutorial.userservice.model.Bike;
 
-@FeignClient(name = "bike-service", url = "http://localhost:8003/bike")
+@FeignClient(name = "bike-service")	// Quitamos el url porque ya está registrado en 'eureka'
 public interface BikeFeignClient {
 
 	@PostMapping
 	Bike save(@RequestBody Bike bike);
 	
-	@GetMapping("/byUser/{userId}")
+	@GetMapping("/bike/byUser/{userId}")
 	List<Bike> getBikes(@PathVariable("userId") int userId);
 }
