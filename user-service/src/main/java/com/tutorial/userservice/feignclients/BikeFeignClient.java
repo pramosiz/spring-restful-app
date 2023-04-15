@@ -13,7 +13,7 @@ import com.tutorial.userservice.model.Bike;
 @FeignClient(name = "bike-service")	// Quitamos el url porque ya está registrado en 'eureka'
 public interface BikeFeignClient {
 
-	@PostMapping
+	@PostMapping("/bike")
 	Bike save(@RequestBody Bike bike);
 	
 	@GetMapping("/bike/byUser/{userId}")
