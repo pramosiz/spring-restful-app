@@ -1,5 +1,11 @@
+###################
+# Spring Profile ##
+###################
 server:
    port: ${PORT:${SERVER_PORT:0}} # Busca puertos libres
+###################
+# Eureka Config  ##
+###################
 eureka:
    client:
       fetch-registry: true
