@@ -1,5 +1,11 @@
+###################
+# Spring Profile ##
+###################
 server:
    port: ${PORT:${SERVER_PORT:0}} # Busca puertos libres
+###################
+# Eureka Config  ##
+###################
 eureka:
    client:
       fetch-registry: true
@@ -8,3 +14,36 @@ eureka:
          default-zone: http://localhost:8761/eureka
    instance:
       instance-id: ${spring.application.name}:${spring.application.instance-id:${random.name}}
+###################
+# CircuitBreaker ##
+###################
+resilience4j.circuitbreaker:
+   instances:
+      carCB:      # Car CircuitBreaker
+         registerHealthIndicator: true
+         slidingWindowSize: 10
+         permittedNumberOfCallsInHalfOpenState: 3
+         slidingWindowType: TIME_BASED
+         minimumNumberOfCalls: 4
+         waitDurationInOpenState: 5s
+         failureRateThreshold: 50
+         eventConsumerBufferSize: 10
+      bikeCB:     # Bike CircuitBreaker
+         registerHealthIndicator: true
+         slidingWindowSize: 10
+         permittedNumberOfCallsInHalfOpenState: 3
+         slidingWindowType: TIME_BASED
+         minimumNumberOfCalls: 4
+         waitDurationInOpenState: 5s
+         failureRateThreshold: 50
+         eventConsumerBufferSize: 10
+      allCB:     # All CircuitBreaker
+         registerHealthIndicator: true
+         slidingWindowSize: 10
+         permittedNumberOfCallsInHalfOpenState: 3
+         slidingWindowType: TIME_BASED
+         minimumNumberOfCalls: 4
+         waitDurationInOpenState: 5s
+         failureRateThreshold: 50
+         eventConsumerBufferSize: 10
+            
