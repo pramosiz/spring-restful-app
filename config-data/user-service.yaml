@@ -51,5 +51,6 @@ resilience4j.circuitbreaker:
 ###################
 spring:
    application:
-      zipkin: http://localhost:9411
+      zipkin:
+         baseUrl: http://localhost:9411/
             
