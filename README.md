@@ -7,3 +7,4 @@
 - Eureka
 - Gateway
 - CircuitBreaker
+- Zipkin
