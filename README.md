@@ -6,3 +6,4 @@
 - Config-server
 - Eureka
 - Gateway
+- CircuitBreaker
