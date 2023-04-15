@@ -5,3 +5,4 @@
 - FeignClient
 - Config-server
 - Eureka
+- Gateway
