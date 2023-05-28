@@ -20,6 +20,8 @@ eureka:
 spring:
    cloud:
       gateway:
+         default-filters:
+          - TokenRelay
          discovery:
             locator:
                enabled: true
@@ -28,6 +30,8 @@ spring:
             uri: lb://user-service  # lb = loadbalance
             predicates:
              - Path=/user/**        # ** es para acceder a cualquier ruta inferior
+            filters:
+             - RemoveRequestHeader=Cookie
           - id: car-service
             uri: lb://car-service  
             predicates:
@@ -35,4 +39,5 @@ spring:
           - id: bike-service
             uri: lb://bike-service  
             predicates:
-             - Path=/bike/**        
+             - Path=/bike/**  
+
