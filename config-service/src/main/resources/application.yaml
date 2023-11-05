@@ -3,16 +3,18 @@
 ################
 server:
   port: 8081
+  
 application:
-  version: @project.version@
-  description: Application to define files configuration to Microservices
-  java: @java.version@
-  maven: @maven.version@
-  encoding: @project.build.sourceEncoding@
+  name: '@project.name@'
+  version: '@project.version@'
+  description: '@project.description@'
+  java: '@java.version@'
+  maven: '@maven.version@'
+  encoding: '@project.build.sourceEncoding@'
 
 spring:
   application:
-    name: config-service
+    name: '@project.name@'
    
 ##########
 # Cloud ##
