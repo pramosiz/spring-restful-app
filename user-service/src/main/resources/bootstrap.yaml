@@ -1,18 +1,39 @@
-###################
-# Spring Profile ##
-###################
+################
+# Spring Data ##
+################
+# TODO: Cambiar el contenido por los comentarios, el bootstrap.yaml no lo coge pero en application.yaml sí
+application:
+  name: user-service                                   #  '@project.name@'
+  version: 0.0.1-SNAPSHOT                              #  '@project.version@'
+  description: User data Microservice                  #  '@project.description@'
+  java: 17                                             #  '@java.version@'
+  maven: 3.9.6                                         #  '@maven.version@'
+  encoding: UTF-8                                      #  '@project.build.sourceEncoding@'
+
 spring:
    application:
-      name: user-service
+      name: user-service                               #  '@project.name@'
+
    cloud:
       config:
          enabled: true
          uri: http://localhost:8081
 
 ############################
-# Databse Connection      ##
+# Database Connection     ##
 ############################
    datasource:
-      url: jdbc:postgresql://${PG_DB_URL:localhost}:${PG_DB_PORT:5432}/${PG_DB_NAME:test}
+      url: jdbc:postgresql://${PG_DB_URL:localhost}:${PG_DB_PORT:5432}/${PG_DB_NAME:postgres}
       username: ${PG_DB_USER:postgres}
       password: ${PG_DB_PWD:postgres}
+      
+##########
+# Flyway #
+##########
+   jpa:
+      hibernate:
+         ddl-auto: none
+      database: postgresql
+   flyway:
+      baseline-on-migrate: true
+      enabled: true

@@ -1,9 +1,19 @@
-###################
-# Spring Profile ##
-###################
+################
+# Spring Data ##
+################
+# TODO: Cambiar el contenido por los comentarios, el bootstrap.yaml no lo coge pero en application.yaml sí
+application:
+  name: car-service                                   #  '@project.name@'
+  version: 0.0.1-SNAPSHOT                             #  '@project.version@'
+  description: Car data Microservice                  #  '@project.description@'
+  java: 17                                            #  '@java.version@'
+  maven: 3.9.6                                        #  '@maven.version@'
+  encoding: UTF-8                                     #  '@project.build.sourceEncoding@'
+
 spring:
    application:
-      name: car-service
+      name: car-service                               #  '@project.name@'
+      
    cloud:
       config:
          enabled: true
@@ -13,6 +23,17 @@ spring:
 # Databse Connection      ##
 ############################
    datasource:
-      url: jdbc:postgresql://${PG_DB_URL:localhost}:${PG_DB_PORT:5432}/${PG_DB_NAME:test}
+      url: jdbc:postgresql://${PG_DB_URL:localhost}:${PG_DB_PORT:5432}/${PG_DB_NAME:postgres}
       username: ${PG_DB_USER:postgres}
       password: ${PG_DB_PWD:postgres}
+      
+###########
+# Flyway ##
+###########
+   jpa:
+      hibernate:
+         ddl-auto: none
+      database: postgresql
+   flyway:
+      baseline-on-migrate: true
+      enabled: true
