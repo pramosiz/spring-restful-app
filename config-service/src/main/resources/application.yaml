@@ -1,7 +1,22 @@
+################
+# Spring Data ##
+################
 server:
   port: 8081
+application:
+  version: @project.version@
+  description: Application to define files configuration to Microservices
+  java: @java.version@
+  maven: @maven.version@
+  encoding: @project.build.sourceEncoding@
 
 spring:
+  application:
+    name: config-service
+   
+##########
+# Cloud ##
+########## 
   cloud:
     config:
       server:
@@ -10,5 +25,4 @@ spring:
           uri: https://github.com/pramosiz/spring-restful-app
           search-paths: config-data         # Folder
           
-  application:
-    name: config-service
+  
