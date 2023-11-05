@@ -1,9 +1,22 @@
-###################
-# Spring Profile ##
-###################
+################
+# Spring Data ##
+################
+# TODO: Cambiar el contenido por los comentarios, el bootstrap.yaml no lo coge pero en application.yaml sí
+application:
+  name: gateway-service                        #  '@project.name@'
+  version: 0.0.1-SNAPSHOT                      #  '@project.version@'
+  description: Gateway for Microservices       #  '@project.description@'
+  java: 17                                     #  '@java.version@'
+  maven: 3.9.6                                 #  '@maven.version@'
+  encoding: UTF-8                              #  '@project.build.sourceEncoding@'
+
 spring:
    application:
-      name: gateway-service
+      name: gateway-service                    #  '@project.name@'
+
+##########
+# Cloud ##
+##########
    cloud:
       config:
          enabled: true

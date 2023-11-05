@@ -1,9 +1,21 @@
+################
+# Spring Data ##
+################
+# TODO: Cambiar el contenido por los comentarios, el bootstrap.yaml no lo coge pero en application.yaml sí
+application:
+  name: eureka-service                            #  '@project.name@'
+  version: 0.0.1-SNAPSHOT                        #  '@project.version@'
+  description: Eureka service for Microservice   #  '@project.description@'
+  java: 17                                       # '@java.version@'
+  maven: 3.9.6                                   # '@maven.version@'
+  encoding: UTF-8                                # '@project.build.sourceEncoding@'
+
 ###################
 # Spring Profile ##
 ###################
 spring:
    application:
-      name: eureka-service
+      name: eureka-service                        #  '@project.name@'
    cloud:
       config:
          enabled: true
