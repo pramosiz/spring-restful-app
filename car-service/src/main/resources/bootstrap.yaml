@@ -27,13 +27,3 @@ spring:
       username: ${PG_DB_USER:postgres}
       password: ${PG_DB_PWD:postgres}
       
-###########
-# Flyway ##
-###########
-   jpa:
-      hibernate:
-         ddl-auto: none
-      database: postgresql
-   flyway:
-      baseline-on-migrate: true
-      enabled: true
