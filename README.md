@@ -8,3 +8,4 @@
 - Gateway
 - CircuitBreaker
 - Zipkin
+- Flyway
