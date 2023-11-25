@@ -11,14 +11,14 @@ application:
   encoding: UTF-8                              #  '@project.build.sourceEncoding@'
 
 spring:
-   application:
-      name: gateway-service                    #  '@project.name@'
+  application:
+    name: gateway-service                    #  '@project.name@'
 
 ##########
 # Cloud ##
 ##########
-   cloud:
-      config:
-         enabled: true
-         uri: http://localhost:8081
+  cloud:
+    config:
+      enabled: true
+      uri: http://localhost:8081
 
