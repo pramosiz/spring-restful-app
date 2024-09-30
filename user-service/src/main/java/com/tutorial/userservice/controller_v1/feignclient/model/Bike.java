@@ -1,4 +1,4 @@
-package com.tutorial.userservice.model;
+package com.tutorial.userservice.controller_v1.feignclient.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

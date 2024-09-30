@@ -1,4 +1,4 @@
-package com.tutorial.userservice.feignclients;
+package com.tutorial.userservice.controller_v1.feignclient;
 
 import java.util.List;
 
@@ -8,14 +8,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import com.tutorial.userservice.model.Bike;
+import com.tutorial.userservice.controller_v1.feignclient.model.Car;
 
-@FeignClient(name = "bike-service", url = "http://localhost:8003/bike")
-public interface BikeFeignClient {
+@FeignClient(name = "car-service", url = "http://localhost:8002/car")
+public interface CarFeignClient {
 
 	@PostMapping
-	Bike save(@RequestBody Bike bike);
+	Car save(@RequestBody Car car);
 	
 	@GetMapping("/byUser/{userId}")
-	List<Bike> getBikes(@PathVariable("userId") int userId);
+	List<Car> getCars(@PathVariable("userId") int userId);
 }

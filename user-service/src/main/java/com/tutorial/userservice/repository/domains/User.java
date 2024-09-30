@@ -1,4 +1,4 @@
-package com.tutorial.userservice.entity;
+package com.tutorial.userservice.repository.domains;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -7,25 +7,27 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Data
-@Table(name = "users", schema = "user_service")
+@Table(name = "users", schema = "user-app")
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class User {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
-	private int id;
-	
+	private Long id;
+
 	@Column(name = "name")
 	private String name;
-	
+
 	@Column(name = "email")
 	private String email;
-	
+
 }
