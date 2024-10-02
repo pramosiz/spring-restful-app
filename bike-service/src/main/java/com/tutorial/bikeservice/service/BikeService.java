@@ -1,33 +1,16 @@
 package com.tutorial.bikeservice.service;
 
 import java.util.List;
+import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import com.tutorial.bikeservice.service.dto.BikeDTO;
+import com.tutorial.bikeservice.service.dto.NewBikeDTO;
 
-import com.tutorial.bikeservice.entity.Bike;
-import com.tutorial.bikeservice.repository.BikeRepository;
+public interface BikeService {
 
-@Service
-public class BikeService {
+    List<BikeDTO> getAll();
 
-	@Autowired
-	BikeRepository bikeRepository;
-	
-	public List<Bike> getAll() {
-		return bikeRepository.findAll();
-	}
-	
-	public Bike getUserById(int id) {
-		return bikeRepository.findById(id).orElse(null);
-	}
-	
-	public Bike save (Bike car) {
-		Bike carNew = bikeRepository.save(car);
-		return carNew;
-	}
-	
-	public List<Bike> byUserId(int userId) {
-		return bikeRepository.findByUserId(userId);
-	}
+    Optional<BikeDTO> getById(Long id);
+
+    BikeDTO saveNewBike(NewBikeDTO newBikeDTO);
 }
