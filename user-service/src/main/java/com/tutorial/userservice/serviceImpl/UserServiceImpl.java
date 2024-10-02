@@ -11,8 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.tutorial.userservice.controller_v1.feignclient.BikeFeignClient;
-import com.tutorial.userservice.controller_v1.feignclient.CarFeignClient;
+// import com.tutorial.userservice.controller_v1.feignclient.BikeFeignClient;
+// import com.tutorial.userservice.controller_v1.feignclient.CarFeignClient;
 import com.tutorial.userservice.controller_v1.feignclient.model.Bike;
 import com.tutorial.userservice.controller_v1.feignclient.model.Car;
 import com.tutorial.userservice.controller_v2.dto.UserRestDtoV2;
