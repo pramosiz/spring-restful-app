@@ -1,5 +1,5 @@
 ### (Branch Develop) 
-# Spring boot RESTful App with this tecnologies:
+# Spring boot RESTful App with this technologies:
 
 - Hexagon Architecture / Layered Architecture
 - Maven
