@@ -88,6 +88,7 @@ class BikeControllerV2Test {
         response.andExpect(jsonPath("$[1].user_id").value(userId2));
     }
 
+    @Test
     @SneakyThrows
     void testGetAll_ReturnsEmptyList() {
 

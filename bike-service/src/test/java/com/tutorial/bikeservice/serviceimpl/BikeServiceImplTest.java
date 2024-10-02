@@ -104,7 +104,7 @@ class BikeServiceImplTest {
     }
 
     @Test
-    void testGetById_ReturnExistingUser() {
+    void testGetById_ReturnExistingBike() {
 
         // Given
         Long id = 1L;
@@ -152,7 +152,7 @@ class BikeServiceImplTest {
     }
 
     @Test
-    void testSaveNewUser() {
+    void testSaveNewBike() {
 
         // Given
         Long id = 1L;
