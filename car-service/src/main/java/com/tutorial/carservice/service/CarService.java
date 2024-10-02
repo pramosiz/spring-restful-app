@@ -1,33 +1,16 @@
 package com.tutorial.carservice.service;
 
 import java.util.List;
+import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import com.tutorial.carservice.service.dto.CarDTO;
+import com.tutorial.carservice.service.dto.NewCarDTO;
 
-import com.tutorial.carservice.entity.Car;
-import com.tutorial.carservice.repository.CarRepository;
+public interface CarService {
 
-@Service
-public class CarService {
+    List<CarDTO> getAll();
 
-	@Autowired
-	CarRepository carRepository;
-	
-	public List<Car> getAll() {
-		return carRepository.findAll();
-	}
-	
-	public Car getUserById(int id) {
-		return carRepository.findById(id).orElse(null);
-	}
-	
-	public Car save (Car car) {
-		Car carNew = carRepository.save(car);
-		return carNew;
-	}
-	
-	public List<Car> byUserId(int userId) {
-		return carRepository.findByUserId(userId);
-	}
+    Optional<CarDTO> getById(Long id);
+
+    CarDTO saveNewCar(NewCarDTO newCarDTO);
 }
