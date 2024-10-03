@@ -1,11 +1,9 @@
 package com.tutorial.userservice.controller_v2;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,12 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tutorial.userservice.controller_v1.feignclient.model.Bike;
-import com.tutorial.userservice.controller_v1.feignclient.model.Car;
 import com.tutorial.userservice.controller_v2.dto.NewUserRestDtoV2;
 import com.tutorial.userservice.controller_v2.dto.UserRestDtoV2;
 import com.tutorial.userservice.controller_v2.mapper.UserMapperRestV2;
-import com.tutorial.userservice.repository.domains.User;
 import com.tutorial.userservice.service.UserService;
 import com.tutorial.userservice.service.dto.NewUserDTO;
 import com.tutorial.userservice.service.dto.UserDTO;

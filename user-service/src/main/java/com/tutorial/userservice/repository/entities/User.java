@@ -1,4 +1,4 @@
-package com.tutorial.userservice.repository.domains;
+package com.tutorial.userservice.repository.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

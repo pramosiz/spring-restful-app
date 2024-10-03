@@ -1,4 +1,4 @@
-package com.tutorial.userservice.serviceImpl;
+package com.tutorial.userservice.serviceimpl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -11,21 +11,18 @@ import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import com.tutorial.userservice.repository.domains.User;
+import com.tutorial.userservice.repository.entities.User;
 import com.tutorial.userservice.repository.repositories.UserRepository;
 import com.tutorial.userservice.service.UserService;
 import com.tutorial.userservice.service.dto.NewUserDTO;
 import com.tutorial.userservice.service.dto.UserDTO;
 
-// @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = ApplicationTestServiceImplV2.class)
 class UserServiceImplTest {
 

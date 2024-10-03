@@ -1,4 +1,4 @@
-package com.tutorial.userservice.serviceImpl;
+package com.tutorial.userservice.serviceimpl;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
