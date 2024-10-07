@@ -21,6 +21,7 @@ import com.tutorial.carservice.service.dto.CarDTO;
 import com.tutorial.carservice.service.dto.NewCarDTO;
 
 import lombok.RequiredArgsConstructor;
+import reactor.core.publisher.Mono;
 
 @RestController
 @RequiredArgsConstructor
@@ -48,22 +49,19 @@ public class CarControllerV2 {
 		// @formatter:off
 		return carReturned.map(car -> new ResponseEntity<>(
 						carMapperRestV2.carDTO_2_CarRestDtoV2(car), HttpStatus.OK))
-				.orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+				.orElseGet(() -> ResponseEntity.notFound().build());
 		// @formatter:on
 	}
 
 	@PostMapping()
-	public ResponseEntity<CarRestDtoV2> saveNewBike(@RequestBody NewCarRestDtoV2 newCarRestDtoV2) {
+	public Mono<ResponseEntity<CarRestDtoV2>> saveNewBike(@RequestBody NewCarRestDtoV2 newCarRestDtoV2) {
 		NewCarDTO newCarDTO = carMapperRestV2.newCarRestDtoV2_2_NewCarDTO(newCarRestDtoV2);
-		CarDTO bikeReturned = carService.saveNewCar(newCarDTO);
-		return new ResponseEntity<>(carMapperRestV2.carDTO_2_CarRestDtoV2(bikeReturned), HttpStatus.CREATED);
+		//@formatter:off
+		return carService.saveNewCarWithExternalCheck(newCarDTO)
+				.map(carMapperRestV2::carDTO_2_CarRestDtoV2)
+				.map(carRestDtoV2 -> ResponseEntity.status(HttpStatus.CREATED).body(carRestDtoV2))
+				.defaultIfEmpty(ResponseEntity.badRequest().build());
+		//@formatter:on
 	}
-
-	// @GetMapping("/byUser/{userId}")
-	// public ResponseEntity<List<Car>> getByUserId(@PathVariable("userId") int
-	// userId) {
-	// List<Car> cars = carService.byUserId(userId);
-	// return ResponseEntity.ok(cars);
-	// }
 
 }

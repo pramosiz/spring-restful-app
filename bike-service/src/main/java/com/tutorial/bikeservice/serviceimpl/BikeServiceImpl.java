@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.tutorial.bikeservice.repository.domains.Bike;
+import com.tutorial.bikeservice.repository.entities.Bike;
 import com.tutorial.bikeservice.repository.repositories.BikeRepository;
 import com.tutorial.bikeservice.service.BikeService;
 import com.tutorial.bikeservice.service.dto.BikeDTO;

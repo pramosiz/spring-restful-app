@@ -1,4 +1,4 @@
-package com.tutorial.carservice.repository.domains;
+package com.tutorial.carservice.repository.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

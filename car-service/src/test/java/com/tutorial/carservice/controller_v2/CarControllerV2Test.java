@@ -17,6 +17,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -29,15 +30,19 @@ import com.tutorial.carservice.service.dto.CarDTO;
 import com.tutorial.carservice.service.dto.NewCarDTO;
 
 import lombok.SneakyThrows;
+import reactor.core.publisher.Mono;
 
 @SpringBootTest(classes = ApplicationTestControllerV2.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
-class BikeControllerV2Test {
+class CarControllerV2Test {
 
-    final MockMvc httpClient;
+    final MockMvc httpClient; // MockMvc is for block application
 
-    BikeControllerV2Test(@Autowired MockMvc httpClient) {
+    final WebTestClient webClientTest; // WebTestClient is for reactive application
+
+    CarControllerV2Test(@Autowired MockMvc httpClient, @Autowired WebTestClient webClientTest) {
         this.httpClient = httpClient;
+        this.webClientTest = webClientTest;
     }
 
     @MockBean
@@ -151,7 +156,7 @@ class BikeControllerV2Test {
 
     @Test
     @SneakyThrows
-    void testSaveNewUser_ReturnsCar() {
+    void testSaveNewCar_ReturnsCar() {
 
         // Given
         Long id = 1L;
@@ -160,25 +165,55 @@ class BikeControllerV2Test {
         Long userId = 1L;
         CarDTO carReturned = CarDTO.builder().id(id).brand(brand).model(model).userId(userId).build();
         String contentTest = "{\"brand\":\"Seat\",\"model\":\"Ibiza\",\"user_id\":1}";
-        when(carService.saveNewCar(any(NewCarDTO.class))).thenReturn(carReturned);
+        when(carService.saveNewCarWithExternalCheck(any(NewCarDTO.class))).thenReturn(Mono.just(carReturned));
 
         // When
-        ResultActions response = httpClient.perform(MockMvcRequestBuilders.post("/api/v2/car")
+        //@formatter:off
+        webClientTest.post()
+                .uri("/api/v2/car")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(contentTest));
+                .bodyValue(contentTest)
+                .exchange()
+                // Then
+                .expectStatus().isCreated()
+                .expectBody()
+                .jsonPath("$.id").isEqualTo(id)
+                .jsonPath("$.brand").isEqualTo(brand)
+                .jsonPath("$.model").isEqualTo(model)
+                .jsonPath("$.user_id").isEqualTo(userId);
+        //@formatter:on
 
-        // Then
-        verify(carService).saveNewCar(newCarCaptor.capture());
+        verify(carService).saveNewCarWithExternalCheck(newCarCaptor.capture());
         assertNotNull(newCarCaptor.getValue());
         assertEquals(brand, newCarCaptor.getValue().getBrand());
         assertEquals(model, newCarCaptor.getValue().getModel());
         assertEquals(userId, newCarCaptor.getValue().getUserId());
+    }
 
-        response.andExpect(status().isCreated());
-        response.andExpect(content().contentType(MediaType.APPLICATION_JSON));
-        response.andExpect(jsonPath("$.id").value(id));
-        response.andExpect(jsonPath("$.brand").value(brand));
-        response.andExpect(jsonPath("$.model").value(model));
-        response.andExpect(jsonPath("$.user_id").value(userId));
+    @Test
+    @SneakyThrows
+    void testSaveNewCar_ReturnsBadRequest() {
+
+        // Given
+        String brand = "Seat";
+        String model = "Ibiza";
+        Long userId = 1L;
+        NewCarDTO newCarDTO = NewCarDTO.builder().brand(brand).model(model).userId(userId).build();
+        String contentTest = "{\"brand\":\"Seat\",\"model\":\"Ibiza\",\"user_id\":1}";
+        when(carService.saveNewCarWithExternalCheck(newCarDTO)).thenReturn(Mono.empty());
+
+        // When
+        //@formatter:off
+        webClientTest.post()
+                .uri("/api/v2/car")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(contentTest)
+                .exchange()
+                // Then
+                .expectStatus().isBadRequest();
+        //@formatter:on
+
+        verify(carService).saveNewCarWithExternalCheck(newCarCaptor.capture());
+        assertNotNull(newCarCaptor.getValue());
     }
 }

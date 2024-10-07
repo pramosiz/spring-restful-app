@@ -1,4 +1,4 @@
-package com.tutorial.bikeservice.repository.domains;
+package com.tutorial.bikeservice.repository.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

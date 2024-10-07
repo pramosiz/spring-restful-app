@@ -13,7 +13,7 @@
 	<artifactId>car-service</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<name>car-service</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Reactive Application for Car service</description>
 	<properties>
 		<java.version>17</java.version>
 		<!--spring-cloud.version>2022.0.2</spring-cloud.version-->
@@ -27,15 +27,18 @@
 	</properties>
 
 	<dependencies>
+
+		<!-- Levanta el Tomcat. Libreria para el manejo de las peticiones HTTP -->
+		<!--dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency-->
+		<!--TODO:
+		Añadir servidor Netty-->
 		<!-- Libreria para el uso de JPA -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>
-		<!-- Libreria para el manejo de las peticiones HTTP -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 		<!-- Libreria para pruebas unitarias -->
 		<dependency>
@@ -81,6 +84,11 @@
 			<groupId>org.mapstruct</groupId>
 			<artifactId>mapstruct</artifactId>
 			<version>${mapstruct.version}</version>
+		</dependency>
+		<!-- Libreria para el desarrollo de aplicaciones web reactivas -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webflux</artifactId>
 		</dependency>
 	</dependencies>
 

@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import com.tutorial.bikeservice.repository.domains.Bike;
+import com.tutorial.bikeservice.repository.entities.Bike;
 import com.tutorial.bikeservice.repository.repositories.BikeRepository;
 import com.tutorial.bikeservice.service.BikeService;
 import com.tutorial.bikeservice.service.dto.BikeDTO;

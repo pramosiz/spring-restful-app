@@ -3,7 +3,7 @@ package com.tutorial.carservice.serviceimpl.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-import com.tutorial.carservice.repository.domains.Car;
+import com.tutorial.carservice.repository.entities.Car;
 import com.tutorial.carservice.service.dto.CarDTO;
 import com.tutorial.carservice.service.dto.NewCarDTO;
 

@@ -6,11 +6,13 @@ import java.util.Optional;
 import com.tutorial.carservice.service.dto.CarDTO;
 import com.tutorial.carservice.service.dto.NewCarDTO;
 
+import reactor.core.publisher.Mono;
+
 public interface CarService {
 
     List<CarDTO> getAll();
 
     Optional<CarDTO> getById(Long id);
 
-    CarDTO saveNewCar(NewCarDTO newCarDTO);
+    Mono<CarDTO> saveNewCarWithExternalCheck(NewCarDTO newCarDTO);
 }

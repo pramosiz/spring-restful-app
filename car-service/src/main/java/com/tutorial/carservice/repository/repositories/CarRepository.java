@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.tutorial.carservice.repository.domains.Car;
+import com.tutorial.carservice.repository.entities.Car;
 
 @Repository
 public interface CarRepository extends JpaRepository<Car, Long> {
