@@ -1,7 +1,11 @@
-### (Branch Develop) 
-# Spring boot RESTful App with this technologies:
+<b>Branch:</b> develop-servlet 
+<br/>
+(Switch between branches to watch more technologies)
+<br/><br/>
+# Spring boot RESTful Servlet App with this technologies:
 
 - Hexagon Architecture / Layered Architecture
+- Tomcat
 - Maven
 - Functional programming
 - Spring Data JPA
