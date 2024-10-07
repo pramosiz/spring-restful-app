@@ -7,9 +7,13 @@
 - Hexagon Architecture / Layered Architecture
 - Tomcat
 - Maven
+- Spring Cloud `OpenFeign`
+- Spring Data `JPA`
 - Functional programming
-- Spring Data JPA
 - Unit tests (JUnit 5 & Mockito)
+- H2 database (testing)
+
+- PostgreSQL (PRO) 
 - DTO
 - Repository
 - Mappers

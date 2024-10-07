@@ -21,10 +21,12 @@ import com.tutorial.carservice.service.dto.CarDTO;
 import com.tutorial.carservice.service.dto.NewCarDTO;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v2/car")
+@Slf4j
 public class CarControllerV2 {
 
 	private final CarService carService;
@@ -46,24 +48,21 @@ public class CarControllerV2 {
 	public ResponseEntity<CarRestDtoV2> getById(@PathVariable("id") Long id) {
 		Optional<CarDTO> carReturned = carService.getById(id);
 		// @formatter:off
-		return carReturned.map(car -> new ResponseEntity<>(
-						carMapperRestV2.carDTO_2_CarRestDtoV2(car), HttpStatus.OK))
-				.orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+		return carReturned.map(car -> ResponseEntity.status(HttpStatus.OK)
+				.body(carMapperRestV2.carDTO_2_CarRestDtoV2(car)))
+				.orElseGet(() -> ResponseEntity.notFound().build());
 		// @formatter:on
 	}
 
 	@PostMapping()
 	public ResponseEntity<CarRestDtoV2> saveNewBike(@RequestBody NewCarRestDtoV2 newCarRestDtoV2) {
 		NewCarDTO newCarDTO = carMapperRestV2.newCarRestDtoV2_2_NewCarDTO(newCarRestDtoV2);
-		CarDTO bikeReturned = carService.saveNewCar(newCarDTO);
-		return new ResponseEntity<>(carMapperRestV2.carDTO_2_CarRestDtoV2(bikeReturned), HttpStatus.CREATED);
+		Optional<CarDTO> carReturned = carService.saveNewCarWithExternalCheck(newCarDTO);
+		return carReturned
+				.map(car -> ResponseEntity.status(HttpStatus.CREATED).body(carMapperRestV2.carDTO_2_CarRestDtoV2(car)))
+				.orElseGet(() -> {
+					log.info("User doesn't exist with id: {}", newCarRestDtoV2.getUserId());
+					return ResponseEntity.badRequest().build();
+				});
 	}
-
-	// @GetMapping("/byUser/{userId}")
-	// public ResponseEntity<List<Car>> getByUserId(@PathVariable("userId") int
-	// userId) {
-	// List<Car> cars = carService.byUserId(userId);
-	// return ResponseEntity.ok(cars);
-	// }
-
 }

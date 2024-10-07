@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.tutorial.carservice.feignclient.clients.UserFeignClientV2;
 import com.tutorial.carservice.repository.domains.Car;
 import com.tutorial.carservice.repository.repositories.CarRepository;
 import com.tutorial.carservice.service.CarService;
@@ -23,6 +24,8 @@ public class CarServiceImpl implements CarService {
 
 	private final CarMapper carMapper;
 
+	private final UserFeignClientV2 userFeignClient;
+
 	public List<CarDTO> getAll() {
 		//@formatter:off
 		return carRepository.findAll()
@@ -36,8 +39,12 @@ public class CarServiceImpl implements CarService {
 		return carRepository.findById(id).map(carMapper::car_2_CarDTO);
 	}
 
-	public CarDTO saveNewCar(NewCarDTO newCarDTO) {
-		Car carSaved = carRepository.save(carMapper.newCarDto_2_Car(newCarDTO));
-		return carMapper.car_2_CarDTO(carSaved);
+	public Optional<CarDTO> saveNewCarWithExternalCheck(NewCarDTO newCarDTO) {
+		if (userFeignClient.getById(newCarDTO.getUserId()).isPresent()) {
+			Car carSaved = carRepository.save(carMapper.newCarDto_2_Car(newCarDTO));
+			return Optional.of(carMapper.car_2_CarDTO(carSaved));
+		} else {
+			return Optional.empty();
+		}
 	}
 }

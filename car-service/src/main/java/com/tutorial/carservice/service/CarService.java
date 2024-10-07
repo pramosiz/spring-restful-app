@@ -12,5 +12,5 @@ public interface CarService {
 
     Optional<CarDTO> getById(Long id);
 
-    CarDTO saveNewCar(NewCarDTO newCarDTO);
+    Optional<CarDTO> saveNewCarWithExternalCheck(NewCarDTO newCarDTO);
 }

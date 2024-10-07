@@ -3,6 +3,7 @@ package com.tutorial.carservice.serviceimpl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -17,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import com.tutorial.carservice.feignclient.clients.UserFeignClientV2;
+import com.tutorial.carservice.feignclient.dto.UserRestDtoV2;
 import com.tutorial.carservice.repository.domains.Car;
 import com.tutorial.carservice.repository.repositories.CarRepository;
 import com.tutorial.carservice.service.CarService;
@@ -34,6 +37,9 @@ class CarServiceImplTest {
 
     @MockBean
     CarRepository carRepository;
+
+    @MockBean
+    UserFeignClientV2 userFeignClient;
 
     @Captor
     private ArgumentCaptor<Long> idCaptor;
@@ -152,7 +158,7 @@ class CarServiceImplTest {
     }
 
     @Test
-    void testSaveNewCar() {
+    void testSaveNewCar_ReturnsCar() {
 
         // Given
         Long id = 1L;
@@ -161,13 +167,18 @@ class CarServiceImplTest {
         Long userId = 1L;
         Car carSaved = Car.builder().id(id).brand(brand).model(model).userId(userId).build();
         NewCarDTO newCarDto = NewCarDTO.builder().brand(brand).model(model).userId(userId).build();
-
+        UserRestDtoV2 userDto = UserRestDtoV2.builder().id(userId).build();
+        when(userFeignClient.getById(userId)).thenReturn(Optional.of(userDto));
         when(carRepository.save(any(Car.class))).thenReturn(carSaved);
 
         // When
-        CarDTO response = carService.saveNewCar(newCarDto);
+        Optional<CarDTO> response = carService.saveNewCarWithExternalCheck(newCarDto);
 
         // Then
+        verify(userFeignClient).getById(idCaptor.capture());
+        assertNotNull(idCaptor.getValue());
+        assertEquals(userId, idCaptor.getValue());
+
         verify(carRepository).save(carCaptor.capture());
         assertNotNull(carCaptor.getValue());
         assertEquals(brand, carCaptor.getValue().getBrand());
@@ -175,13 +186,37 @@ class CarServiceImplTest {
         assertEquals(userId, carCaptor.getValue().getUserId());
 
         assertNotNull(response);
-        assertNotNull(response.getId());
-        assertEquals(id, response.getId());
-        assertNotNull(response.getBrand());
-        assertEquals(brand, response.getBrand());
-        assertNotNull(response.getModel());
-        assertEquals(model, response.getModel());
-        assertNotNull(response.getUserId());
-        assertEquals(userId, response.getUserId());
+        assertNotNull(response.get().getId());
+        assertEquals(id, response.get().getId());
+        assertNotNull(response.get().getBrand());
+        assertEquals(brand, response.get().getBrand());
+        assertNotNull(response.get().getModel());
+        assertEquals(model, response.get().getModel());
+        assertNotNull(response.get().getUserId());
+        assertEquals(userId, response.get().getUserId());
+    }
+
+    @Test
+    void testSaveNewCar_ReturnsEmpty() {
+
+        // Given
+        String brand = "Honda";
+        String model = "CBR";
+        Long userId = 1L;
+        NewCarDTO newCarDto = NewCarDTO.builder().brand(brand).model(model).userId(userId).build();
+        when(userFeignClient.getById(userId)).thenReturn(Optional.empty());
+
+        // When
+        Optional<CarDTO> response = carService.saveNewCarWithExternalCheck(newCarDto);
+
+        // Then
+        verify(userFeignClient).getById(idCaptor.capture());
+        assertNotNull(idCaptor.getValue());
+        assertEquals(userId, idCaptor.getValue());
+
+        verify(carRepository, never()).save(carCaptor.capture());
+
+        assertNotNull(response);
+        assertEquals(Optional.empty(), response);
     }
 }

@@ -151,7 +151,7 @@ class BikeControllerV2Test {
 
     @Test
     @SneakyThrows
-    void testSaveNewUser_ReturnsCar() {
+    void testSaveNewCar_ReturnsCar() {
 
         // Given
         Long id = 1L;
@@ -160,7 +160,7 @@ class BikeControllerV2Test {
         Long userId = 1L;
         CarDTO carReturned = CarDTO.builder().id(id).brand(brand).model(model).userId(userId).build();
         String contentTest = "{\"brand\":\"Seat\",\"model\":\"Ibiza\",\"user_id\":1}";
-        when(carService.saveNewCar(any(NewCarDTO.class))).thenReturn(carReturned);
+        when(carService.saveNewCarWithExternalCheck(any(NewCarDTO.class))).thenReturn(Optional.of(carReturned));
 
         // When
         ResultActions response = httpClient.perform(MockMvcRequestBuilders.post("/api/v2/car")
@@ -168,7 +168,7 @@ class BikeControllerV2Test {
                 .content(contentTest));
 
         // Then
-        verify(carService).saveNewCar(newCarCaptor.capture());
+        verify(carService).saveNewCarWithExternalCheck(newCarCaptor.capture());
         assertNotNull(newCarCaptor.getValue());
         assertEquals(brand, newCarCaptor.getValue().getBrand());
         assertEquals(model, newCarCaptor.getValue().getModel());
@@ -180,5 +180,31 @@ class BikeControllerV2Test {
         response.andExpect(jsonPath("$.brand").value(brand));
         response.andExpect(jsonPath("$.model").value(model));
         response.andExpect(jsonPath("$.user_id").value(userId));
+    }
+
+    @Test
+    @SneakyThrows
+    void testSaveNewCar_ReturnsEmpty() {
+
+        // Given
+        String brand = "Seat";
+        String model = "Ibiza";
+        Long userId = 1L;
+        String contentTest = "{\"brand\":\"Seat\",\"model\":\"Ibiza\",\"user_id\":1}";
+        when(carService.saveNewCarWithExternalCheck(any(NewCarDTO.class))).thenReturn(Optional.empty());
+
+        // When
+        ResultActions response = httpClient.perform(MockMvcRequestBuilders.post("/api/v2/car")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(contentTest));
+
+        // Then
+        verify(carService).saveNewCarWithExternalCheck(newCarCaptor.capture());
+        assertNotNull(newCarCaptor.getValue());
+        assertEquals(brand, newCarCaptor.getValue().getBrand());
+        assertEquals(model, newCarCaptor.getValue().getModel());
+        assertEquals(userId, newCarCaptor.getValue().getUserId());
+
+        response.andExpect(status().isBadRequest());
     }
 }

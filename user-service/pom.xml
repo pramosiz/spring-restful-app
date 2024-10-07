@@ -27,12 +27,7 @@
 	</properties>
 
 	<dependencies>
-		<!-- Libreria para el uso de JPA -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>
-		<!-- Libreria para el manejo de las peticiones HTTP -->
+		<!-- Levanta servidor Tomcat. Libreria para el manejo de las peticiones HTTP -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -42,6 +37,11 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<!-- Libreria para el uso de JPA -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 		<!-- Libreria para pruebas en BBDD embebida -->
 		<dependency>
