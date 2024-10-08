@@ -21,10 +21,12 @@ import com.tutorial.bikeservice.service.dto.BikeDTO;
 import com.tutorial.bikeservice.service.dto.NewBikeDTO;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v2/bike")
+@Slf4j
 public class BikeControllerV2 {
 
 	private final BikeService bikeService;
@@ -46,24 +48,22 @@ public class BikeControllerV2 {
 	public ResponseEntity<BikeRestDtoV2> getById(@PathVariable("id") Long id) {
 		Optional<BikeDTO> bikeReturned = bikeService.getById(id);
 		// @formatter:off
-		return bikeReturned.map(bike -> new ResponseEntity<>(
-						bikeMapperRestV2.bikeDTO_2_BikeRestDtoV2(bike), HttpStatus.OK))
-				.orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+		return bikeReturned.map(bike -> ResponseEntity.status(HttpStatus.OK)
+				.body(bikeMapperRestV2.bikeDTO_2_BikeRestDtoV2(bike)))
+				.orElseGet(() -> ResponseEntity.notFound().build());
 		// @formatter:on
 	}
 
 	@PostMapping()
 	public ResponseEntity<BikeRestDtoV2> saveNewBike(@RequestBody NewBikeRestDtoV2 newBikeRestDtoV2) {
 		NewBikeDTO newBikeDTO = bikeMapperRestV2.newBikeRestDtoV2_2_NewBikeDTO(newBikeRestDtoV2);
-		BikeDTO bikeReturned = bikeService.saveNewBike(newBikeDTO);
-		return new ResponseEntity<>(bikeMapperRestV2.bikeDTO_2_BikeRestDtoV2(bikeReturned), HttpStatus.CREATED);
+		Optional<BikeDTO> bikeReturned = bikeService.saveNewBikeWithExternalCheck(newBikeDTO);
+		return bikeReturned
+				.map(bike -> ResponseEntity.status(HttpStatus.CREATED)
+						.body(bikeMapperRestV2.bikeDTO_2_BikeRestDtoV2(bike)))
+				.orElseGet(() -> {
+					log.info("User doesn't exist with id: {}", newBikeRestDtoV2.getUserId());
+					return ResponseEntity.badRequest().build();
+				});
 	}
-
-	// @GetMapping("/byUser/{userId}")
-	// public ResponseEntity<List<Bike>> getByUserId(@PathVariable("userId") int
-	// userId) {
-	// List<Bike> bikes = bikeService.byUserId(userId);
-	// return ResponseEntity.ok(bikes);
-	// }
-
 }

@@ -3,6 +3,7 @@ package com.tutorial.bikeservice.serviceimpl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -17,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import com.tutorial.bikeservice.feignclient.clients.UserFeignClientV2;
+import com.tutorial.bikeservice.feignclient.dto.UserRestDtoV2;
 import com.tutorial.bikeservice.repository.domains.Bike;
 import com.tutorial.bikeservice.repository.repositories.BikeRepository;
 import com.tutorial.bikeservice.service.BikeService;
@@ -34,6 +37,9 @@ class BikeServiceImplTest {
 
     @MockBean
     BikeRepository bikeRepository;
+
+    @MockBean
+    UserFeignClientV2 userFeignClient;
 
     @Captor
     private ArgumentCaptor<Long> idCaptor;
@@ -152,7 +158,7 @@ class BikeServiceImplTest {
     }
 
     @Test
-    void testSaveNewBike() {
+    void testSaveNewBike_ReturnsBike() {
 
         // Given
         Long id = 1L;
@@ -161,13 +167,19 @@ class BikeServiceImplTest {
         Long userId = 1L;
         Bike bikeSaved = Bike.builder().id(id).brand(brand).model(model).userId(userId).build();
         NewBikeDTO newBikeDto = NewBikeDTO.builder().brand(brand).model(model).userId(userId).build();
+        UserRestDtoV2 userDto = UserRestDtoV2.builder().id(userId).build();
 
+        when(userFeignClient.getById(userId)).thenReturn(Optional.of(userDto));
         when(bikeRepository.save(any(Bike.class))).thenReturn(bikeSaved);
 
         // When
-        BikeDTO response = bikeService.saveNewBike(newBikeDto);
+        Optional<BikeDTO> response = bikeService.saveNewBikeWithExternalCheck(newBikeDto);
 
         // Then
+        verify(userFeignClient).getById(idCaptor.capture());
+        assertNotNull(idCaptor.getValue());
+        assertEquals(userId, idCaptor.getValue());
+
         verify(bikeRepository).save(bikeCaptor.capture());
         assertNotNull(bikeCaptor.getValue());
         assertEquals(brand, bikeCaptor.getValue().getBrand());
@@ -175,13 +187,36 @@ class BikeServiceImplTest {
         assertEquals(userId, bikeCaptor.getValue().getUserId());
 
         assertNotNull(response);
-        assertNotNull(response.getId());
-        assertEquals(id, response.getId());
-        assertNotNull(response.getBrand());
-        assertEquals(brand, response.getBrand());
-        assertNotNull(response.getModel());
-        assertEquals(model, response.getModel());
-        assertNotNull(response.getUserId());
-        assertEquals(userId, response.getUserId());
+        assertNotNull(response.get().getId());
+        assertEquals(id, response.get().getId());
+        assertNotNull(response.get().getBrand());
+        assertEquals(brand, response.get().getBrand());
+        assertNotNull(response.get().getModel());
+        assertEquals(model, response.get().getModel());
+        assertNotNull(response.get().getUserId());
+        assertEquals(userId, response.get().getUserId());
+    }
+
+    @Test
+    void testSaveNewBike_ReturnsEmpty() {
+
+        // Given
+        String brand = "Honda";
+        String model = "CBR";
+        Long userId = 1L;
+        NewBikeDTO newBikeDto = NewBikeDTO.builder().brand(brand).model(model).userId(userId).build();
+        when(userFeignClient.getById(userId)).thenReturn(Optional.empty());
+
+        // When
+        Optional<BikeDTO> response = bikeService.saveNewBikeWithExternalCheck(newBikeDto);
+
+        // Then
+        verify(userFeignClient).getById(idCaptor.capture());
+        assertNotNull(idCaptor.getValue());
+        assertEquals(userId, idCaptor.getValue());
+
+        verify(bikeRepository, never()).save(bikeCaptor.capture());
+        assertNotNull(response);
+        assertEquals(Optional.empty(), response);
     }
 }

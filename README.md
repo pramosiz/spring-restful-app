@@ -4,7 +4,7 @@
 <br/><br/>
 # Spring boot RESTful Servlet App with this technologies:
 
-- Hexagon Architecture / Layered Architecture
+- Layered Architecture
 - Tomcat
 - Maven
 - Spring Cloud `OpenFeign`

@@ -152,7 +152,7 @@ class BikeControllerV2Test {
 
     @Test
     @SneakyThrows
-    void testSaveNewUser_ReturnsBike() {
+    void testSaveNewBike_ReturnsBike() {
 
         // Given
         Long id = 1L;
@@ -160,7 +160,7 @@ class BikeControllerV2Test {
         String model = "CBR";
         Long userId = 1L;
         BikeDTO bikeReturned = BikeDTO.builder().id(id).brand(brand).model(model).userId(userId).build();
-        when(bikeService.saveNewBike(any(NewBikeDTO.class))).thenReturn(bikeReturned);
+        when(bikeService.saveNewBikeWithExternalCheck(any(NewBikeDTO.class))).thenReturn(Optional.of(bikeReturned));
 
         // When
         ResultActions response = httpClient.perform(MockMvcRequestBuilders.post("/api/v2/bike")
@@ -168,7 +168,7 @@ class BikeControllerV2Test {
                 .content("{\"brand\":\"Honda\",\"model\":\"CBR\",\"user_id\":1}"));
 
         // Then
-        verify(bikeService).saveNewBike(newBikeCaptor.capture());
+        verify(bikeService).saveNewBikeWithExternalCheck(newBikeCaptor.capture());
         assertNotNull(newBikeCaptor.getValue());
         assertEquals(brand, newBikeCaptor.getValue().getBrand());
         assertEquals(model, newBikeCaptor.getValue().getModel());
@@ -180,5 +180,30 @@ class BikeControllerV2Test {
         response.andExpect(jsonPath("$.brand").value(brand));
         response.andExpect(jsonPath("$.model").value(model));
         response.andExpect(jsonPath("$.user_id").value(userId));
+    }
+
+    @Test
+    @SneakyThrows
+    void testSaveNewBike_ReturnsEmpty() {
+
+        // Given
+        String brand = "Honda";
+        String model = "CBR";
+        Long userId = 1L;
+        when(bikeService.saveNewBikeWithExternalCheck(any(NewBikeDTO.class))).thenReturn(Optional.empty());
+
+        // When
+        ResultActions response = httpClient.perform(MockMvcRequestBuilders.post("/api/v2/bike")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"brand\":\"Honda\",\"model\":\"CBR\",\"user_id\":1}"));
+
+        // Then
+        verify(bikeService).saveNewBikeWithExternalCheck(newBikeCaptor.capture());
+        assertNotNull(newBikeCaptor.getValue());
+        assertEquals(brand, newBikeCaptor.getValue().getBrand());
+        assertEquals(model, newBikeCaptor.getValue().getModel());
+        assertEquals(userId, newBikeCaptor.getValue().getUserId());
+
+        response.andExpect(status().isBadRequest());
     }
 }

@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.tutorial.bikeservice.feignclient.clients.UserFeignClientV2;
 import com.tutorial.bikeservice.repository.domains.Bike;
 import com.tutorial.bikeservice.repository.repositories.BikeRepository;
 import com.tutorial.bikeservice.service.BikeService;
@@ -23,6 +24,8 @@ public class BikeServiceImpl implements BikeService {
 
 	private final BikeMapper bikeMapper;
 
+	private final UserFeignClientV2 userFeignClient;
+
 	public List<BikeDTO> getAll() {
 		//@formatter:off
 		return bikeRepository.findAll()
@@ -36,9 +39,13 @@ public class BikeServiceImpl implements BikeService {
 		return bikeRepository.findById(id).map(bikeMapper::bike_2_BikeDTO);
 	}
 
-	public BikeDTO saveNewBike(NewBikeDTO newBikeDTO) {
-		Bike bikeSaved = bikeRepository.save(bikeMapper.newBikeDto_2_Bike(newBikeDTO));
-		return bikeMapper.bike_2_BikeDTO(bikeSaved);
+	public Optional<BikeDTO> saveNewBikeWithExternalCheck(NewBikeDTO newBikeDTO) {
+		if (userFeignClient.getById(newBikeDTO.getUserId()).isPresent()) {
+			Bike bikeSaved = bikeRepository.save(bikeMapper.newBikeDto_2_Bike(newBikeDTO));
+			return Optional.of(bikeMapper.bike_2_BikeDTO(bikeSaved));
+		} else {
+			return Optional.empty();
+		}
 	}
 
 }

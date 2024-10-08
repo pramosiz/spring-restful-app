@@ -13,10 +13,9 @@
 	<artifactId>bike-service</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<name>bike-service</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Servlet RESTful App for Spring Boot</description>
 	<properties>
 		<java.version>17</java.version>
-		<!--spring-cloud.version>2022.0.2</spring-cloud.version-->
 		<postgresql.version>42.7.3</postgresql.version>
 		<h2.version>2.2.224</h2.version>
 		<mapstruct.version>1.6.2</mapstruct.version>
@@ -24,15 +23,11 @@
 		<maven.compiler.plugin>3.8.1</maven.compiler.plugin>
 		<maven.surefire.version>3.5.0</maven.surefire.version>
 		<lombok.version>1.18.34</lombok.version>
+		<openfeign.version>4.1.3</openfeign.version>
 	</properties>
 
 	<dependencies>
-		<!-- Libreria para el uso de JPA -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>
-		<!-- Libreria para el manejo de las peticiones HTTP -->
+		<!-- Levanta servidor Tomcat. Libreria para el manejo de las peticiones HTTP -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -42,6 +37,11 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<!-- Libreria para el uso de JPA -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 		<!-- Libreria para pruebas en BBDD embebida -->
 		<dependency>
@@ -81,6 +81,12 @@
 			<groupId>org.mapstruct</groupId>
 			<artifactId>mapstruct</artifactId>
 			<version>${mapstruct.version}</version>
+		</dependency>
+		<!-- Libreria para el uso de OpenFeign (peticiones REST) -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-openfeign</artifactId>
+			<version>${openfeign.version}</version>
 		</dependency>
 	</dependencies>
 
