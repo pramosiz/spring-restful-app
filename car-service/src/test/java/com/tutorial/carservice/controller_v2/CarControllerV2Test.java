@@ -207,4 +207,65 @@ class BikeControllerV2Test {
 
         response.andExpect(status().isBadRequest());
     }
+
+    @Test
+    @SneakyThrows
+    void testGetByUserId_ReturnsListOfCars() {
+
+        // Given
+        List<CarDTO> expectedResponse = new ArrayList<>();
+        Long id1 = 1L;
+        String brand1 = "Seat";
+        String model1 = "Ibiza";
+        Long userId = 1L;
+        expectedResponse.add(CarDTO.builder().id(id1).brand(brand1).model(model1).userId(userId).build());
+
+        Long id2 = 2L;
+        String brand2 = "Hyundai";
+        String model2 = "i30";
+        Long userId2 = userId;
+        expectedResponse.add(CarDTO.builder().id(id2).brand(brand2).model(model2).userId(userId2).build());
+
+        when(carService.getByUserId(userId)).thenReturn(expectedResponse);
+
+        // When
+        ResultActions response = httpClient.perform(MockMvcRequestBuilders.get("/api/v2/car/byUser/" + userId));
+
+        // Then
+        verify(carService).getByUserId(idCaptor.capture());
+        assertNotNull(idCaptor.getValue());
+        assertEquals(userId, idCaptor.getValue());
+
+        response.andExpect(status().isOk());
+        response.andExpect(content().contentType(MediaType.APPLICATION_JSON));
+        assertNotNull(response.andReturn().getResponse().getContentAsString());
+        response.andExpect(jsonPath("$[0].id").value(id1));
+        response.andExpect(jsonPath("$[0].brand").value(brand1));
+        response.andExpect(jsonPath("$[0].model").value(model1));
+        response.andExpect(jsonPath("$[0].user_id").value(userId));
+        response.andExpect(jsonPath("$[1].id").value(id2));
+        response.andExpect(jsonPath("$[1].brand").value(brand2));
+        response.andExpect(jsonPath("$[1].model").value(model2));
+        response.andExpect(jsonPath("$[1].user_id").value(userId2));
+    }
+
+    @Test
+    @SneakyThrows
+    void testGetByUserId_ReturnsEmptyList() {
+
+        // Given
+        Long userId = 1L;
+        List<CarDTO> expectedResponse = new ArrayList<>();
+        when(carService.getByUserId(userId)).thenReturn(expectedResponse);
+
+        // When
+        ResultActions response = httpClient.perform(MockMvcRequestBuilders.get("/api/v2/car/byUser/" + userId));
+
+        // Then
+        verify(carService).getByUserId(idCaptor.capture());
+        assertNotNull(idCaptor.getValue());
+        assertEquals(userId, idCaptor.getValue());
+
+        response.andExpect(status().isNotFound());
+    }
 }

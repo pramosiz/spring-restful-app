@@ -13,8 +13,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.tutorial.userservice.controller_v2.dto.BikeRestDtoV2;
+import com.tutorial.userservice.controller_v2.dto.CarRestDtoV2;
 import com.tutorial.userservice.controller_v2.dto.NewUserRestDtoV2;
 import com.tutorial.userservice.controller_v2.dto.UserRestDtoV2;
+import com.tutorial.userservice.controller_v2.mapper.BikeMapperRestV2;
+import com.tutorial.userservice.controller_v2.mapper.CarMapperRestV2;
 import com.tutorial.userservice.controller_v2.mapper.UserMapperRestV2;
 import com.tutorial.userservice.service.UserService;
 import com.tutorial.userservice.service.dto.NewUserDTO;
@@ -31,6 +35,10 @@ public class UserControllerV2 {
 
 	final UserMapperRestV2 userMapperRestV2;
 
+	final CarMapperRestV2 carMapperRestV2;
+
+	final BikeMapperRestV2 bikeMapperRestV2;
+
 	@GetMapping
 	public ResponseEntity<List<UserRestDtoV2>> getAll() {
 		//@formatter:off
@@ -46,9 +54,8 @@ public class UserControllerV2 {
 	public ResponseEntity<UserRestDtoV2> getById(@PathVariable("id") Long id) {
 		Optional<UserDTO> userReturned = userService.getById(id);
 		return userReturned
-				.map(user -> new ResponseEntity<>(userMapperRestV2.userDto_2_UserRestDtoV2(user),
-						HttpStatus.OK))
-				.orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+				.map(user -> ResponseEntity.ok(userMapperRestV2.userDto_2_UserRestDtoV2(user)))
+				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
 	@PostMapping()
@@ -56,54 +63,39 @@ public class UserControllerV2 {
 		try {
 			NewUserDTO newUserDTO = userMapperRestV2.newUserRestDtoV2_2_NewUserDto(user);
 			UserDTO userReturned = userService.saveNewUser(newUserDTO);
-			return new ResponseEntity<>(userMapperRestV2.userDto_2_UserRestDtoV2(userReturned), HttpStatus.CREATED);
+			return ResponseEntity.status(HttpStatus.CREATED)
+					.body(userMapperRestV2.userDto_2_UserRestDtoV2(userReturned));
 
 		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			return ResponseEntity.badRequest().build();
 		}
 	}
 
-	// @GetMapping("/cars/{userId}")
-	// public ResponseEntity<List<Car>> getCars(@PathVariable("userId") int userId)
-	// {
-	// User user = userServiceImpl.getUserById(userId);
-	// if (user == null) {
-	// return ResponseEntity.notFound().build();
-	// }
-	// List<Car> cars = userServiceImpl.getCars(userId);
-	// return ResponseEntity.ok(cars);
-	// }
+	@GetMapping("/{userId}/cars")
+	public ResponseEntity<List<CarRestDtoV2>> getCars(@PathVariable("userId") int userId) {
+		//@formatter:off
+		List<CarRestDtoV2> carsReturned = userService.getCarsByUserId((long) userId)
+				.stream()
+				.map(carMapperRestV2::carDTO_2_CarRestDtoV2)
+				.collect(Collectors.toList());
 
-	// @GetMapping("/bikes/{userId}")
-	// public ResponseEntity<List<Bike>> getBikes(@PathVariable("userId") int
-	// userId) {
-	// User user = userServiceImpl.getUserById(userId);
-	// if (user == null) {
-	// return ResponseEntity.notFound().build();
-	// }
-	// List<Bike> bikes = userServiceImpl.getBikes(userId);
-	// return ResponseEntity.ok(bikes);
-	// }
+		return carsReturned.isEmpty() ? ResponseEntity.notFound().build()
+				: ResponseEntity.ok(carsReturned);
+		//@formatter:on
+	}
 
-	// @PostMapping("/saveCar/{userId}")
-	// public ResponseEntity<Car> saveCar(@PathVariable("userId") int userId,
-	// @RequestBody Car car) {
-	// if (userServiceImpl.getUserById(userId) == null) {
-	// return ResponseEntity.notFound().build();
-	// }
-	// Car carNew = userServiceImpl.saveCar(userId, car);
-	// return ResponseEntity.ok(carNew);
-	// }
+	@GetMapping("/{userId}/bikes")
+	public ResponseEntity<List<BikeRestDtoV2>> getBikes(@PathVariable("userId") int userId) {
+		//@formatter:off
+		List<BikeRestDtoV2> bikesReturned = userService.getBikesByUserId((long) userId)
+				.stream()
+				.map(bikeMapperRestV2::bikeDTO_2_BikeRestDtoV2)
+				.collect(Collectors.toList());
 
-	// @PostMapping("/saveBike/{userId}")
-	// public ResponseEntity<Bike> saveBike(@PathVariable("userId") int userId,
-	// @RequestBody Bike bike) {
-	// if (userServiceImpl.getUserById(userId) == null) {
-	// return ResponseEntity.notFound().build();
-	// }
-	// Bike bikeNew = userServiceImpl.saveBike(userId, bike);
-	// return ResponseEntity.ok(bikeNew);
-	// }
+		return bikesReturned.isEmpty() ? ResponseEntity.notFound().build()
+				: ResponseEntity.ok(bikesReturned);
+		//@formatter:on
+	}
 
 	// @GetMapping("/getAll/{userId}")
 	// public ResponseEntity<Map<String, Object>>

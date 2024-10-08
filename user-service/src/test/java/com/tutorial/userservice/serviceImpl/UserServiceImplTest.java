@@ -17,9 +17,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import com.tutorial.userservice.feignclient.clients.BikeFeignClientV2;
+import com.tutorial.userservice.feignclient.clients.CarFeignClientV2;
+import com.tutorial.userservice.feignclient.dto.BikeFeignRestDtoV2;
+import com.tutorial.userservice.feignclient.dto.CarFeignRestDtoV2;
 import com.tutorial.userservice.repository.entities.User;
 import com.tutorial.userservice.repository.repositories.UserRepository;
 import com.tutorial.userservice.service.UserService;
+import com.tutorial.userservice.service.dto.BikeDTO;
+import com.tutorial.userservice.service.dto.CarDTO;
 import com.tutorial.userservice.service.dto.NewUserDTO;
 import com.tutorial.userservice.service.dto.UserDTO;
 
@@ -34,6 +40,12 @@ class UserServiceImplTest {
 
     @MockBean
     UserRepository userRepository;
+
+    @MockBean
+    CarFeignClientV2 carFeignClientV2;
+
+    @MockBean
+    BikeFeignClientV2 bikeFeignClientV2;
 
     @Captor
     private ArgumentCaptor<User> userCaptor;
@@ -169,4 +181,143 @@ class UserServiceImplTest {
         assertNotNull(response.getEmail());
         assertEquals(email, response.getEmail());
     }
+
+    @Test
+    void testGetCarsByUserId_ReturnsListOfCars() {
+
+        // Given
+        List<CarFeignRestDtoV2> cars = new ArrayList<>();
+        Long id1 = 1L;
+        String brand1 = "Toyota";
+        String model1 = "Corolla";
+        Long userId = 1L;
+        cars.add(CarFeignRestDtoV2.builder().id(id1).brand(brand1).model(model1).userId(userId).build());
+
+        Long id2 = 2L;
+        String brand2 = "Ford";
+        String model2 = "Focus";
+        Long userId2 = userId;
+        cars.add(CarFeignRestDtoV2.builder().id(id2).brand(brand2).model(model2).userId(userId2).build());
+
+        when(carFeignClientV2.getCarsByUserId(userId)).thenReturn(cars);
+
+        // When
+        List<CarDTO> response = userService.getCarsByUserId(userId);
+
+        // Then
+        verify(carFeignClientV2).getCarsByUserId(idCaptor.capture());
+        assertNotNull(idCaptor.getValue());
+        assertEquals(userId, idCaptor.getValue());
+
+        assertNotNull(response);
+        assertNotNull(response.get(0));
+        assertNotNull(response.get(0).getId());
+        assertEquals(id1, response.get(0).getId());
+        assertNotNull(response.get(0).getBrand());
+        assertEquals(brand1, response.get(0).getBrand());
+        assertNotNull(response.get(0).getModel());
+        assertEquals(model1, response.get(0).getModel());
+        assertNotNull(response.get(0).getUserId());
+        assertEquals(userId, response.get(0).getUserId());
+
+        assertNotNull(response.get(1));
+        assertNotNull(response.get(1).getId());
+        assertEquals(id2, response.get(1).getId());
+        assertNotNull(response.get(1).getBrand());
+        assertEquals(brand2, response.get(1).getBrand());
+        assertNotNull(response.get(1).getModel());
+        assertEquals(model2, response.get(1).getModel());
+        assertNotNull(response.get(1).getUserId());
+        assertEquals(userId2, response.get(1).getUserId());
+    }
+
+    @Test
+    void testGetCarsByUserId_ReturnsEmptyList() {
+
+        // Given
+        List<CarFeignRestDtoV2> cars = new ArrayList<>();
+        Long userId = 1L;
+        when(carFeignClientV2.getCarsByUserId(userId)).thenReturn(cars);
+
+        // When
+        List<CarDTO> response = userService.getCarsByUserId(userId);
+
+        // Then
+        verify(carFeignClientV2).getCarsByUserId(idCaptor.capture());
+        assertNotNull(idCaptor.getValue());
+        assertEquals(userId, idCaptor.getValue());
+
+        assertNotNull(response);
+        assertEquals(0, response.size());
+    }
+
+    @Test
+    void testGetBikesByUserId_ReturnsListOfBikes() {
+
+        // Given
+        List<BikeFeignRestDtoV2> bikes = new ArrayList<>();
+        Long id1 = 1L;
+        String brand1 = "Honda";
+        String model1 = "CBR";
+        Long userId = 1L;
+        bikes.add(BikeFeignRestDtoV2.builder().id(id1).brand(brand1).model(model1).userId(userId).build());
+
+        Long id2 = 2L;
+        String brand2 = "Yamaha";
+        String model2 = "R1";
+        Long userId2 = userId;
+        bikes.add(BikeFeignRestDtoV2.builder().id(id2).brand(brand2).model(model2).userId(userId2).build());
+
+        when(bikeFeignClientV2.getBikesByUserId(userId)).thenReturn(bikes);
+
+        // When
+        List<BikeDTO> response = userService.getBikesByUserId(userId);
+
+        // Then
+        verify(bikeFeignClientV2).getBikesByUserId(idCaptor.capture());
+        assertNotNull(idCaptor.getValue());
+        assertEquals(userId, idCaptor.getValue());
+
+        assertNotNull(response);
+        assertNotNull(response.get(0));
+        assertNotNull(response.get(0).getId());
+        assertEquals(id1, response.get(0).getId());
+        assertNotNull(response.get(0).getBrand());
+        assertEquals(brand1, response.get(0).getBrand());
+        assertNotNull(response.get(0).getModel());
+        assertEquals(model1, response.get(0).getModel());
+        assertNotNull(response.get(0).getUserId());
+        assertEquals(userId, response.get(0).getUserId());
+
+        assertNotNull(response.get(1));
+        assertNotNull(response.get(1).getId());
+        assertEquals(id2, response.get(1).getId());
+        assertNotNull(response.get(1).getBrand());
+        assertEquals(brand2, response.get(1).getBrand());
+        assertNotNull(response.get(1).getModel());
+        assertEquals(model2, response.get(1).getModel());
+        assertNotNull(response.get(1).getUserId());
+        assertEquals(userId2, response.get(1).getUserId());
+    }
+
+    @Test
+    void testGetBikesByUserId_ReturnsEmptyList() {
+
+        // Given
+        List<BikeFeignRestDtoV2> bikes = new ArrayList<>();
+        Long userId = 1L;
+        when(bikeFeignClientV2.getBikesByUserId(userId)).thenReturn(bikes);
+
+        // When
+        List<BikeDTO> response = userService.getBikesByUserId(userId);
+
+        // Then
+        verify(bikeFeignClientV2).getBikesByUserId(idCaptor.capture());
+        assertNotNull(idCaptor.getValue());
+        assertEquals(userId, idCaptor.getValue());
+
+        assertNotNull(response);
+        assertEquals(0, response.size());
+    }
+
 }

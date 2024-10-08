@@ -48,8 +48,7 @@ public class BikeControllerV2 {
 	public ResponseEntity<BikeRestDtoV2> getById(@PathVariable("id") Long id) {
 		Optional<BikeDTO> bikeReturned = bikeService.getById(id);
 		// @formatter:off
-		return bikeReturned.map(bike -> ResponseEntity.status(HttpStatus.OK)
-				.body(bikeMapperRestV2.bikeDTO_2_BikeRestDtoV2(bike)))
+		return bikeReturned.map(bike -> ResponseEntity.ok(bikeMapperRestV2.bikeDTO_2_BikeRestDtoV2(bike)))
 				.orElseGet(() -> ResponseEntity.notFound().build());
 		// @formatter:on
 	}
@@ -65,5 +64,15 @@ public class BikeControllerV2 {
 					log.info("User doesn't exist with id: {}", newBikeRestDtoV2.getUserId());
 					return ResponseEntity.badRequest().build();
 				});
+	}
+
+	@GetMapping("/byUser/{userId}")
+	public ResponseEntity<List<BikeRestDtoV2>> getByUserId(@PathVariable("userId") Long userId) {
+
+		List<BikeRestDtoV2> bikesReturned = bikeService.getByUserId(userId).stream()
+				.map(bikeMapperRestV2::bikeDTO_2_BikeRestDtoV2)
+				.collect(Collectors.toList());
+		return bikesReturned.isEmpty() ? ResponseEntity.notFound().build()
+				: ResponseEntity.ok(bikesReturned);
 	}
 }

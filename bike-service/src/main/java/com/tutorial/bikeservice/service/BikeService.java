@@ -12,5 +12,7 @@ public interface BikeService {
 
     Optional<BikeDTO> getById(Long id);
 
+    List<BikeDTO> getByUserId(Long id);
+
     Optional<BikeDTO> saveNewBikeWithExternalCheck(NewBikeDTO newBikeDTO);
 }

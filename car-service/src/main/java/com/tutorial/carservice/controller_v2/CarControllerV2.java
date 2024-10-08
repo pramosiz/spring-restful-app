@@ -47,11 +47,8 @@ public class CarControllerV2 {
 	@GetMapping("/{id}")
 	public ResponseEntity<CarRestDtoV2> getById(@PathVariable("id") Long id) {
 		Optional<CarDTO> carReturned = carService.getById(id);
-		// @formatter:off
-		return carReturned.map(car -> ResponseEntity.status(HttpStatus.OK)
-				.body(carMapperRestV2.carDTO_2_CarRestDtoV2(car)))
+		return carReturned.map(car -> ResponseEntity.ok(carMapperRestV2.carDTO_2_CarRestDtoV2(car)))
 				.orElseGet(() -> ResponseEntity.notFound().build());
-		// @formatter:on
 	}
 
 	@PostMapping()
@@ -64,5 +61,15 @@ public class CarControllerV2 {
 					log.info("User doesn't exist with id: {}", newCarRestDtoV2.getUserId());
 					return ResponseEntity.badRequest().build();
 				});
+	}
+
+	@GetMapping("/byUser/{userId}")
+	public ResponseEntity<List<CarRestDtoV2>> getByUserId(@PathVariable("userId") Long userId) {
+
+		List<CarRestDtoV2> carsReturned = carService.getByUserId(userId).stream()
+				.map(carMapperRestV2::carDTO_2_CarRestDtoV2)
+				.collect(Collectors.toList());
+		return carsReturned.isEmpty() ? ResponseEntity.notFound().build()
+				: ResponseEntity.ok(carsReturned);
 	}
 }

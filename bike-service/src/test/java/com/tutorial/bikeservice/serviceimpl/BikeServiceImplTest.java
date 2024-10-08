@@ -219,4 +219,73 @@ class BikeServiceImplTest {
         assertNotNull(response);
         assertEquals(Optional.empty(), response);
     }
+
+    @Test
+    void testGetByUserId_ReturnsListOfBikes() {
+
+        // Given
+        List<Bike> expectedResponse = new ArrayList<>();
+        Long id1 = 1L;
+        String brand1 = "Honda";
+        String model1 = "CBR";
+        Long userId = 1L;
+        expectedResponse.add(Bike.builder().id(id1).brand(brand1).model(model1).userId(userId).build());
+
+        Long id2 = 2L;
+        String brand2 = "Yamaha";
+        String model2 = "R1";
+        Long userId2 = userId;
+        expectedResponse.add(Bike.builder().id(id2).brand(brand2).model(model2).userId(userId2).build());
+
+        when(bikeRepository.findByUserId(userId)).thenReturn(expectedResponse);
+
+        // When
+        List<BikeDTO> response = bikeService.getByUserId(userId);
+
+        // Then
+        verify(bikeRepository).findByUserId(idCaptor.capture());
+        assertNotNull(idCaptor.getValue());
+        assertEquals(userId, idCaptor.getValue());
+
+        assertNotNull(response);
+        assertNotNull(response.get(0));
+        assertNotNull(response.get(0).getId());
+        assertEquals(id1, response.get(0).getId());
+        assertNotNull(response.get(0).getBrand());
+        assertEquals(brand1, response.get(0).getBrand());
+        assertNotNull(response.get(0).getModel());
+        assertEquals(model1, response.get(0).getModel());
+        assertNotNull(response.get(0).getUserId());
+        assertEquals(userId, response.get(0).getUserId());
+
+        assertNotNull(response.get(1));
+        assertNotNull(response.get(1).getId());
+        assertEquals(id2, response.get(1).getId());
+        assertNotNull(response.get(1).getBrand());
+        assertEquals(brand2, response.get(1).getBrand());
+        assertNotNull(response.get(1).getModel());
+        assertEquals(model2, response.get(1).getModel());
+        assertNotNull(response.get(1).getUserId());
+        assertEquals(userId2, response.get(1).getUserId());
+    }
+
+    @Test
+    void testGetByUserId_ReturnsEmptyList() {
+
+        // Given
+        Long userId = 1L;
+        List<Bike> bikes = new ArrayList<>();
+        when(bikeRepository.findByUserId(userId)).thenReturn(bikes);
+
+        // When
+        List<BikeDTO> response = bikeService.getByUserId(userId);
+
+        // Then
+        verify(bikeRepository).findByUserId(idCaptor.capture());
+        assertNotNull(idCaptor.getValue());
+        assertEquals(userId, idCaptor.getValue());
+
+        assertNotNull(response);
+        assertEquals(0, response.size());
+    }
 }

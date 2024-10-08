@@ -27,12 +27,10 @@ public class CarServiceImpl implements CarService {
 	private final UserFeignClientV2 userFeignClient;
 
 	public List<CarDTO> getAll() {
-		//@formatter:off
 		return carRepository.findAll()
-					.stream()
-					.map(carMapper::car_2_CarDTO)
-					.collect(Collectors.toList());
-		//@formatter:on
+				.stream()
+				.map(carMapper::car_2_CarDTO)
+				.collect(Collectors.toList());
 	}
 
 	public Optional<CarDTO> getById(Long id) {
@@ -46,5 +44,13 @@ public class CarServiceImpl implements CarService {
 		} else {
 			return Optional.empty();
 		}
+	}
+
+	@Override
+	public List<CarDTO> getByUserId(Long id) {
+		return carRepository.findByUserId(id)
+				.stream()
+				.map(carMapper::car_2_CarDTO)
+				.collect(Collectors.toList());
 	}
 }

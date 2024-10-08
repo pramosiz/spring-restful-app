@@ -59,8 +59,8 @@ class CarServiceImplTest {
         expectedResponse.add(Car.builder().id(id1).brand(brand1).model(model1).userId(userId).build());
 
         Long id2 = 2L;
-        String brand2 = "Yamaha";
-        String model2 = "R1";
+        String brand2 = "Tesla";
+        String model2 = "S";
         Long userId2 = 2L;
         expectedResponse.add(Car.builder().id(id2).brand(brand2).model(model2).userId(userId2).build());
 
@@ -162,8 +162,8 @@ class CarServiceImplTest {
 
         // Given
         Long id = 1L;
-        String brand = "Honda";
-        String model = "CBR";
+        String brand = "Tesla";
+        String model = "S";
         Long userId = 1L;
         Car carSaved = Car.builder().id(id).brand(brand).model(model).userId(userId).build();
         NewCarDTO newCarDto = NewCarDTO.builder().brand(brand).model(model).userId(userId).build();
@@ -200,8 +200,8 @@ class CarServiceImplTest {
     void testSaveNewCar_ReturnsEmpty() {
 
         // Given
-        String brand = "Honda";
-        String model = "CBR";
+        String brand = "Tesla";
+        String model = "S";
         Long userId = 1L;
         NewCarDTO newCarDto = NewCarDTO.builder().brand(brand).model(model).userId(userId).build();
         when(userFeignClient.getById(userId)).thenReturn(Optional.empty());
@@ -218,5 +218,74 @@ class CarServiceImplTest {
 
         assertNotNull(response);
         assertEquals(Optional.empty(), response);
+    }
+
+    @Test
+    void testGetByUserId_ReturnsListOfCars() {
+
+        // Given
+        List<Car> expectedResponse = new ArrayList<>();
+        Long id1 = 1L;
+        String brand1 = "Seat";
+        String model1 = "Ibiza";
+        Long userId = 1L;
+        expectedResponse.add(Car.builder().id(id1).brand(brand1).model(model1).userId(userId).build());
+
+        Long id2 = 2L;
+        String brand2 = "Tesla";
+        String model2 = "S";
+        Long userId2 = userId;
+        expectedResponse.add(Car.builder().id(id2).brand(brand2).model(model2).userId(userId2).build());
+
+        when(carRepository.findByUserId(userId)).thenReturn(expectedResponse);
+
+        // When
+        List<CarDTO> response = carService.getByUserId(userId);
+
+        // Then
+        verify(carRepository).findByUserId(idCaptor.capture());
+        assertNotNull(idCaptor.getValue());
+        assertEquals(userId, idCaptor.getValue());
+
+        assertNotNull(response);
+        assertNotNull(response.get(0));
+        assertNotNull(response.get(0).getId());
+        assertEquals(id1, response.get(0).getId());
+        assertNotNull(response.get(0).getBrand());
+        assertEquals(brand1, response.get(0).getBrand());
+        assertNotNull(response.get(0).getModel());
+        assertEquals(model1, response.get(0).getModel());
+        assertNotNull(response.get(0).getUserId());
+        assertEquals(userId, response.get(0).getUserId());
+
+        assertNotNull(response.get(1));
+        assertNotNull(response.get(1).getId());
+        assertEquals(id2, response.get(1).getId());
+        assertNotNull(response.get(1).getBrand());
+        assertEquals(brand2, response.get(1).getBrand());
+        assertNotNull(response.get(1).getModel());
+        assertEquals(model2, response.get(1).getModel());
+        assertNotNull(response.get(1).getUserId());
+        assertEquals(userId2, response.get(1).getUserId());
+    }
+
+    @Test
+    void testGetByUserId_ReturnsEmptyList() {
+
+        // Given
+        Long userId = 1L;
+        List<Car> cars = new ArrayList<>();
+        when(carRepository.findByUserId(userId)).thenReturn(cars);
+
+        // When
+        List<CarDTO> response = carService.getByUserId(userId);
+
+        // Then
+        verify(carRepository).findByUserId(idCaptor.capture());
+        assertNotNull(idCaptor.getValue());
+        assertEquals(userId, idCaptor.getValue());
+
+        assertNotNull(response);
+        assertEquals(0, response.size());
     }
 }

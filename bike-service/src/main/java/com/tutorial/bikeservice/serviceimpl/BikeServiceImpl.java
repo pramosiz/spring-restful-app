@@ -48,4 +48,11 @@ public class BikeServiceImpl implements BikeService {
 		}
 	}
 
+	@Override
+	public List<BikeDTO> getByUserId(Long id) {
+		return bikeRepository.findByUserId(id)
+				.stream()
+				.map(bikeMapper::bike_2_BikeDTO)
+				.collect(Collectors.toList());
+	}
 }
