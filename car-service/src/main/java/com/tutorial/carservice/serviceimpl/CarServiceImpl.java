@@ -46,11 +46,14 @@ public class CarServiceImpl implements CarService {
 		}
 	}
 
-	@Override
 	public List<CarDTO> getByUserId(Long id) {
 		return carRepository.findByUserId(id)
 				.stream()
 				.map(carMapper::car_2_CarDTO)
 				.collect(Collectors.toList());
+	}
+
+	public void deleteById(Long id) {
+		carRepository.deleteById(id);
 	}
 }

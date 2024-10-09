@@ -19,4 +19,6 @@ public interface UserService {
     List<CarDTO> getCarsByUserId(Long userId);
 
     List<BikeDTO> getBikesByUserId(Long userId);
+
+    void deleteById(Long id);
 }

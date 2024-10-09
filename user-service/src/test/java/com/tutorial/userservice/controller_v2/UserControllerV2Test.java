@@ -297,4 +297,21 @@ class UserControllerV2Test {
         assertEquals(userId, idCaptor.getValue());
         response.andExpect(status().isNotFound());
     }
+
+    @Test
+    @SneakyThrows
+    void testDeleteById() {
+
+        // Given
+        Long id = 1L;
+
+        // When
+        ResultActions response = httpClient.perform(MockMvcRequestBuilders.delete("/api/v2/user/" + id));
+
+        // Then
+        verify(userService).deleteById(idCaptor.capture());
+        assertNotNull(idCaptor.getValue());
+        assertEquals(id, idCaptor.getValue());
+        response.andExpect(status().isNoContent());
+    }
 }

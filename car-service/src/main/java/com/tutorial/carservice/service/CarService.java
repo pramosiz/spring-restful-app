@@ -15,4 +15,6 @@ public interface CarService {
     List<CarDTO> getByUserId(Long id);
 
     Optional<CarDTO> saveNewCarWithExternalCheck(NewCarDTO newCarDTO);
+
+    void deleteById(Long id);
 }

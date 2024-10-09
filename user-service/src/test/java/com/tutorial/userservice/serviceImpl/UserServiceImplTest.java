@@ -3,6 +3,9 @@ package com.tutorial.userservice.serviceimpl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -13,6 +16,8 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.springframework.amqp.core.FanoutExchange;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -47,10 +52,18 @@ class UserServiceImplTest {
     @MockBean
     BikeFeignClientV2 bikeFeignClientV2;
 
+    @MockBean
+    RabbitTemplate rabbitTemplate;
+
+    @MockBean
+    FanoutExchange notifyDeleteInfoFanout;
+
     @Captor
     private ArgumentCaptor<User> userCaptor;
     @Captor
     private ArgumentCaptor<Long> idCaptor;
+    @Captor
+    private ArgumentCaptor<String> fanoutCaptor;
 
     @Test
     void testGetAll_ReturnsListOfUsers() {
@@ -320,4 +333,27 @@ class UserServiceImplTest {
         assertEquals(0, response.size());
     }
 
+    @Test
+    void testDeleteById() {
+
+        // Given
+        Long id = 1L;
+        String fanoutName = "NOTIFY_DELETE_INFO";
+        when(notifyDeleteInfoFanout.getName()).thenReturn(fanoutName);
+        doNothing().when(rabbitTemplate).convertAndSend(anyString(), anyString(), anyLong());
+
+        // When
+        userService.deleteById(id);
+
+        // Then
+        verify(userRepository).deleteById(idCaptor.capture());
+        assertNotNull(idCaptor.getValue());
+        assertEquals(id, idCaptor.getValue());
+
+        verify(rabbitTemplate).convertAndSend(fanoutCaptor.capture(), anyString(), idCaptor.capture());
+        assertNotNull(fanoutCaptor.getValue());
+        assertEquals(fanoutName, fanoutCaptor.getValue());
+        assertNotNull(idCaptor.getValue());
+        assertEquals(id, idCaptor.getValue());
+    }
 }

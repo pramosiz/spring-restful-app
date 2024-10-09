@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,6 +52,12 @@ public class BikeControllerV2 {
 		return bikeReturned.map(bike -> ResponseEntity.ok(bikeMapperRestV2.bikeDTO_2_BikeRestDtoV2(bike)))
 				.orElseGet(() -> ResponseEntity.notFound().build());
 		// @formatter:on
+	}
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Void> deleteById(@PathVariable("id") Long id) {
+		bikeService.deleteById(id);
+		return ResponseEntity.noContent().build();
 	}
 
 	@PostMapping()

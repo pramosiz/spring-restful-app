@@ -3,6 +3,7 @@ package com.tutorial.carservice.serviceimpl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -287,5 +288,21 @@ class CarServiceImplTest {
 
         assertNotNull(response);
         assertEquals(0, response.size());
+    }
+
+    @Test
+    void testDeleteById() {
+
+        // Given
+        Long id = 1L;
+        doNothing().when(carRepository).deleteById(id);
+
+        // When
+        carRepository.deleteById(id);
+
+        // Then
+        verify(carRepository).deleteById(idCaptor.capture());
+        assertNotNull(idCaptor.getValue());
+        assertEquals(id, idCaptor.getValue());
     }
 }

@@ -9,6 +9,7 @@
 - Maven
 - Spring Cloud `OpenFeign`
 - Spring Data `JPA`
+- Asynchronous messaging `RabbitMQ`
 - Functional programming
 - Unit tests (JUnit 5 & Mockito)
 - H2 database (testing)

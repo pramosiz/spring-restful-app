@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.amqp.core.FanoutExchange;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
 import com.tutorial.userservice.feignclient.clients.BikeFeignClientV2;
@@ -37,6 +39,10 @@ public class UserServiceImpl implements UserService {
 
 	final BikeMapper bikeMapper;
 
+	final RabbitTemplate rabbitTemplate;
+
+	final FanoutExchange notifyDeleteInfoFanout;
+
 	public List<UserDTO> getAll() {
 		//@formatter:off
 		return userRepository.findAll()
@@ -59,7 +65,6 @@ public class UserServiceImpl implements UserService {
 		return userMapper.user_2_UserDto(userSaved);
 	}
 
-	@Override
 	public List<CarDTO> getCarsByUserId(Long userId) {
 		return carFeignClientV2.getCarsByUserId(userId)
 				.stream()
@@ -67,11 +72,15 @@ public class UserServiceImpl implements UserService {
 				.collect(Collectors.toList());
 	}
 
-	@Override
 	public List<BikeDTO> getBikesByUserId(Long userId) {
 		return bikeFeignClientV2.getBikesByUserId(userId)
 				.stream()
 				.map(bikeMapper::bikeFeignRestDtoV2_2_BikeDTO)
 				.collect(Collectors.toList());
+	}
+
+	public void deleteById(Long id) {
+		userRepository.deleteById(id);
+		rabbitTemplate.convertAndSend(notifyDeleteInfoFanout.getName(), "", id);
 	}
 }

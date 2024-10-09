@@ -3,6 +3,7 @@ package com.tutorial.bikeservice.controller_v2;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -266,5 +267,24 @@ class BikeControllerV2Test {
         assertEquals(userId, idCaptor.getValue());
 
         response.andExpect(status().isNotFound());
+    }
+
+    @Test
+    @SneakyThrows
+    void testDeleteById() {
+
+        // Given
+        Long id = 1L;
+        doNothing().when(bikeService).deleteById(id);
+
+        // When
+        ResultActions response = httpClient.perform(MockMvcRequestBuilders.delete("/api/v2/bike/" + id));
+
+        // Then
+        verify(bikeService).deleteById(idCaptor.capture());
+        assertNotNull(idCaptor.getValue());
+        assertEquals(id, idCaptor.getValue());
+
+        response.andExpect(status().isNoContent());
     }
 }
