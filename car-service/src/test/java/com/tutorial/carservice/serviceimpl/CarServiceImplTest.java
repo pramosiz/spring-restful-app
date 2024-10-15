@@ -305,4 +305,20 @@ class CarServiceImplTest {
         assertNotNull(idCaptor.getValue());
         assertEquals(id, idCaptor.getValue());
     }
+
+    @Test
+    void testDeleteByUserId() {
+
+        // Given
+        Long userId = 1L;
+        doNothing().when(carRepository).deleteByUserId(userId);
+
+        // When
+        carRepository.deleteByUserId(userId);
+
+        // Then
+        verify(carRepository).deleteByUserId(idCaptor.capture());
+        assertNotNull(idCaptor.getValue());
+        assertEquals(userId, idCaptor.getValue());
+    }
 }

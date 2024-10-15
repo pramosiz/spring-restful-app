@@ -11,4 +11,6 @@ import com.tutorial.carservice.repository.domains.Car;
 public interface CarRepository extends JpaRepository<Car, Long> {
 
 	List<Car> findByUserId(Long userId);
+
+	void deleteByUserId(Long userId);
 }
