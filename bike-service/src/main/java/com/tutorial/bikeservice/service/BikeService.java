@@ -17,4 +17,6 @@ public interface BikeService {
     Optional<BikeDTO> saveNewBikeWithExternalCheck(NewBikeDTO newBikeDTO);
 
     void deleteById(Long id);
+
+    void deleteByUserId(Long id);
 }

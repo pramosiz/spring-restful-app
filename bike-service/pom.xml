@@ -24,6 +24,8 @@
 		<maven.surefire.version>3.5.0</maven.surefire.version>
 		<lombok.version>1.18.34</lombok.version>
 		<openfeign.version>4.1.3</openfeign.version>
+		<amqp.version>3.3.4</amqp.version>
+		<rabbit.test.version>3.1.7</rabbit.test.version>
 	</properties>
 
 	<dependencies>
@@ -87,6 +89,19 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-openfeign</artifactId>
 			<version>${openfeign.version}</version>
+		</dependency>
+		<!-- Libreria para el uso de RabbitMQ -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-amqp</artifactId>
+			<version>${amqp.version}</version>
+		</dependency>
+		<!-- Libreria para pruebas de RabbitMQ -->
+		<dependency>
+			<groupId>org.springframework.amqp</groupId>
+			<artifactId>spring-rabbit-test</artifactId>
+			<version>${rabbit.test.version}</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 

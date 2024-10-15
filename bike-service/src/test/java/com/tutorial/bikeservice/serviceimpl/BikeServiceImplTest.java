@@ -305,4 +305,20 @@ class BikeServiceImplTest {
         assertNotNull(idCaptor.getValue());
         assertEquals(id, idCaptor.getValue());
     }
+
+    @Test
+    void testDeleteByUserId() {
+
+        // Given
+        Long userId = 1L;
+        doNothing().when(bikeRepository).deleteByUserId(userId);
+
+        // When
+        bikeService.deleteByUserId(userId);
+
+        // Then
+        verify(bikeRepository).deleteByUserId(idCaptor.capture());
+        assertNotNull(idCaptor.getValue());
+        assertEquals(userId, idCaptor.getValue());
+    }
 }

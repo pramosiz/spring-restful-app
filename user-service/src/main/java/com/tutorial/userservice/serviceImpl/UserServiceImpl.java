@@ -8,6 +8,8 @@ import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tutorial.userservice.amqp.dto.NotificationDTO;
 import com.tutorial.userservice.feignclient.clients.BikeFeignClientV2;
 import com.tutorial.userservice.feignclient.clients.CarFeignClientV2;
 import com.tutorial.userservice.repository.entities.User;
@@ -22,8 +24,10 @@ import com.tutorial.userservice.serviceimpl.mapper.CarMapper;
 import com.tutorial.userservice.serviceimpl.mapper.UserMapper;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
@@ -80,7 +84,12 @@ public class UserServiceImpl implements UserService {
 	}
 
 	public void deleteById(Long id) {
-		userRepository.deleteById(id);
-		rabbitTemplate.convertAndSend(notifyDeleteInfoFanout.getName(), "", id);
+		try {
+			String message = new ObjectMapper().writeValueAsString(new NotificationDTO(id));
+			userRepository.deleteById(id);
+			rabbitTemplate.convertAndSend(notifyDeleteInfoFanout.getName(), "", message);
+		} catch (Exception e) {
+			log.error("Failed to delete user with id: {}", id, e);
+		}
 	}
 }

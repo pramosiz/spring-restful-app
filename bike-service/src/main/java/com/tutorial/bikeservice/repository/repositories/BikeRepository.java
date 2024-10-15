@@ -11,4 +11,6 @@ import com.tutorial.bikeservice.repository.domains.Bike;
 public interface BikeRepository extends JpaRepository<Bike, Long> {
 
 	List<Bike> findByUserId(Long userId);
+
+	void deleteByUserId(Long userId);
 }

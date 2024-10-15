@@ -1,4 +1,4 @@
-package com.tutorial.carservice.listener_v2;
+package com.tutorial.bikeservice.listener_v2;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -16,7 +16,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tutorial.carservice.service.CarService;
+import com.tutorial.bikeservice.service.BikeService;
 
 @SpringBootTest(classes = ApplicationTestListenerV2.class)
 @Import(BeansConfigurationTest.class)
@@ -29,7 +29,7 @@ public class NotifyDeleteListenerTest {
     private final ObjectMapper objectMapper;
 
     @MockBean
-    private CarService carService;
+    private BikeService bikeService;
 
     @Captor
     private ArgumentCaptor<Long> userIdCaptor;
@@ -38,7 +38,7 @@ public class NotifyDeleteListenerTest {
 
     @BeforeEach
     public void setUp() {
-        notifyDeleteListener = new NotifyDeleteListener(carService, objectMapper);
+        notifyDeleteListener = new NotifyDeleteListener(bikeService, objectMapper);
     }
 
     @AfterEach
@@ -51,11 +51,11 @@ public class NotifyDeleteListenerTest {
         // Given
         Long userId = 10L;
         String message = "{\"user_id\":" + userId + "}";
-        doNothing().when(carService).deleteByUserId(userId);
+        doNothing().when(bikeService).deleteByUserId(userId);
         // When
         notifyDeleteListener.handleMessage(message);
         // Then
-        verify(carService).deleteByUserId(userIdCaptor.capture());
+        verify(bikeService).deleteByUserId(userIdCaptor.capture());
         assertNotNull(userIdCaptor.getValue());
         assertEquals(userId, userIdCaptor.getValue());
     }

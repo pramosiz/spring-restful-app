@@ -3,7 +3,6 @@ package com.tutorial.userservice.serviceimpl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
@@ -22,6 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tutorial.userservice.amqp.dto.NotificationDTO;
 import com.tutorial.userservice.feignclient.clients.BikeFeignClientV2;
 import com.tutorial.userservice.feignclient.clients.CarFeignClientV2;
 import com.tutorial.userservice.feignclient.dto.BikeFeignRestDtoV2;
@@ -33,6 +34,8 @@ import com.tutorial.userservice.service.dto.BikeDTO;
 import com.tutorial.userservice.service.dto.CarDTO;
 import com.tutorial.userservice.service.dto.NewUserDTO;
 import com.tutorial.userservice.service.dto.UserDTO;
+
+import lombok.SneakyThrows;
 
 @SpringBootTest(classes = ApplicationTestServiceImplV2.class)
 class UserServiceImplTest {
@@ -64,6 +67,8 @@ class UserServiceImplTest {
     private ArgumentCaptor<Long> idCaptor;
     @Captor
     private ArgumentCaptor<String> fanoutCaptor;
+    @Captor
+    private ArgumentCaptor<String> bodyCaptor;
 
     @Test
     void testGetAll_ReturnsListOfUsers() {
@@ -334,13 +339,14 @@ class UserServiceImplTest {
     }
 
     @Test
+    @SneakyThrows
     void testDeleteById() {
 
         // Given
         Long id = 1L;
         String fanoutName = "NOTIFY_DELETE_INFO";
         when(notifyDeleteInfoFanout.getName()).thenReturn(fanoutName);
-        doNothing().when(rabbitTemplate).convertAndSend(anyString(), anyString(), anyLong());
+        doNothing().when(rabbitTemplate).convertAndSend(anyString(), anyString(), anyString());
 
         // When
         userService.deleteById(id);
@@ -350,10 +356,12 @@ class UserServiceImplTest {
         assertNotNull(idCaptor.getValue());
         assertEquals(id, idCaptor.getValue());
 
-        verify(rabbitTemplate).convertAndSend(fanoutCaptor.capture(), anyString(), idCaptor.capture());
+        verify(rabbitTemplate).convertAndSend(fanoutCaptor.capture(), anyString(), bodyCaptor.capture());
         assertNotNull(fanoutCaptor.getValue());
         assertEquals(fanoutName, fanoutCaptor.getValue());
-        assertNotNull(idCaptor.getValue());
-        assertEquals(id, idCaptor.getValue());
+        NotificationDTO notificationCaptor = new ObjectMapper().readValue(bodyCaptor.getValue(), NotificationDTO.class);
+        assertNotNull(notificationCaptor);
+        assertNotNull(notificationCaptor.getUserId());
+        assertEquals(id, notificationCaptor.getUserId());
     }
 }
