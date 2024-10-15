@@ -19,7 +19,6 @@ public class NotifyDeleteListener {
     private final ObjectMapper objectMapper;
 
     @RabbitListener(id = "handle_message", queues = "#{carSuscriberQueue.name}")
-    // @RabbitListener(id = "handle_message", queues = "test")
     public void handleMessage(String notificationMessage) {
         try {
             NotificationDTO notificationDTO = objectMapper.readValue(notificationMessage,
