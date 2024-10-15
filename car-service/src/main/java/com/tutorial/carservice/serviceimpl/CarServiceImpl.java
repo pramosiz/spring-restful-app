@@ -56,4 +56,8 @@ public class CarServiceImpl implements CarService {
 	public void deleteById(Long id) {
 		carRepository.deleteById(id);
 	}
+
+	public void deleteByUserId(Long id) {
+		carRepository.deleteByUserId(id);
+	}
 }
