@@ -2,6 +2,7 @@ package com.tutorial.userservice.serviceimpl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
@@ -10,6 +11,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -363,5 +365,317 @@ class UserServiceImplTest {
         assertNotNull(notificationCaptor);
         assertNotNull(notificationCaptor.getUserId());
         assertEquals(id, notificationCaptor.getUserId());
+    }
+
+    @Test
+    void testGetUserAndVehicles_FoundUserCarsAndBikes() {
+
+        // Given
+        String userKey = "user";
+        String carsKey = "cars";
+        String bikesKey = "bikes";
+
+        // User
+        Long userId = 1L;
+        String name = "John";
+        String email = "john@gmail.com";
+        User user = User.builder().id(userId).name(name).email(email).build();
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+
+        // Cars
+        List<CarFeignRestDtoV2> cars = new ArrayList<>();
+        Long carId1 = 1L;
+        String carBrand1 = "Toyota";
+        String carModel1 = "Corolla";
+        Long carUserId1 = userId;
+        cars.add(CarFeignRestDtoV2.builder().id(carId1).brand(carBrand1).model(carModel1).userId(carUserId1).build());
+
+        Long carId2 = 2L;
+        String carBrand2 = "Ford";
+        String carModel2 = "Focus";
+        Long carUserId2 = userId;
+        cars.add(CarFeignRestDtoV2.builder().id(carId2).brand(carBrand2).model(carModel2).userId(carUserId2).build());
+
+        when(carFeignClientV2.getCarsByUserId(userId)).thenReturn(cars);
+
+        // Bikes
+        List<BikeFeignRestDtoV2> bikes = new ArrayList<>();
+        Long bikeId1 = 1L;
+        String bikeBrand1 = "Honda";
+        String bikeModel1 = "CBR";
+        Long bikeUserId1 = userId;
+        bikes.add(BikeFeignRestDtoV2.builder().id(bikeId1).brand(bikeBrand1).model(bikeModel1).userId(bikeUserId1)
+                .build());
+
+        when(bikeFeignClientV2.getBikesByUserId(userId)).thenReturn(bikes);
+
+        // When
+        Map<String, Object> response = userService.getUserAndVehicles(userId);
+
+        // Then
+        verify(userRepository).findById(idCaptor.capture());
+        assertNotNull(idCaptor.getValue());
+        assertEquals(userId, idCaptor.getValue());
+
+        verify(carFeignClientV2).getCarsByUserId(idCaptor.capture());
+        assertNotNull(idCaptor.getValue());
+        assertEquals(userId, idCaptor.getValue());
+
+        verify(bikeFeignClientV2).getBikesByUserId(idCaptor.capture());
+        assertNotNull(idCaptor.getValue());
+        assertEquals(userId, idCaptor.getValue());
+
+        assertThat(response).containsKey(userKey);
+        assertThat(response.get(userKey)).isNotNull();
+        assertThat(response.get(userKey)).isInstanceOf(UserDTO.class);
+        assertThat(response.get(userKey)).extracting("id").isEqualTo(userId);
+        assertThat(response.get(userKey)).extracting("name").isEqualTo(name);
+        assertThat(response.get(userKey)).extracting("email").isEqualTo(email);
+
+        assertThat(response).containsKey(carsKey);
+        assertThat(response.get(carsKey)).isNotNull();
+        assertThat(response.get(carsKey)).isInstanceOf(List.class);
+        assertThat(((List<?>) response.get(carsKey)).size()).isEqualTo(2);
+        assertThat(((List<?>) response.get(carsKey)).get(0)).isInstanceOf(CarDTO.class);
+        assertThat(((List<?>) response.get(carsKey)).get(0)).extracting("id").isEqualTo(carId1);
+        assertThat(((List<?>) response.get(carsKey)).get(0)).extracting("brand").isEqualTo(carBrand1);
+        assertThat(((List<?>) response.get(carsKey)).get(0)).extracting("model").isEqualTo(carModel1);
+        assertThat(((List<?>) response.get(carsKey)).get(0)).extracting("userId").isEqualTo(carUserId1);
+        assertThat(((List<?>) response.get(carsKey)).get(1)).extracting("id").isEqualTo(carId2);
+        assertThat(((List<?>) response.get(carsKey)).get(1)).extracting("brand").isEqualTo(carBrand2);
+        assertThat(((List<?>) response.get(carsKey)).get(1)).extracting("model").isEqualTo(carModel2);
+        assertThat(((List<?>) response.get(carsKey)).get(1)).extracting("userId").isEqualTo(carUserId2);
+
+        assertThat(response).containsKey(bikesKey);
+        assertThat(response.get(bikesKey)).isNotNull();
+        assertThat(response.get(bikesKey)).isInstanceOf(List.class);
+        assertThat(((List<?>) response.get(bikesKey)).size()).isEqualTo(1);
+        assertThat(((List<?>) response.get(bikesKey)).get(0)).isInstanceOf(BikeDTO.class);
+        assertThat(((List<?>) response.get(bikesKey)).get(0)).extracting("id").isEqualTo(bikeId1);
+        assertThat(((List<?>) response.get(bikesKey)).get(0)).extracting("brand").isEqualTo(bikeBrand1);
+        assertThat(((List<?>) response.get(bikesKey)).get(0)).extracting("model").isEqualTo(bikeModel1);
+        assertThat(((List<?>) response.get(bikesKey)).get(0)).extracting("userId").isEqualTo(bikeUserId1);
+    }
+
+    @Test
+    void testGetUserAndVehicles_FoundUserNoCarsAndBikes() {
+
+        // Given
+        String userKey = "user";
+        String carsKey = "cars";
+        String bikesKey = "bikes";
+
+        // User
+        Long userId = 1L;
+        String name = "John";
+        String email = "john@gmail.com";
+        User user = User.builder().id(userId).name(name).email(email).build();
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+
+        // Cars
+        List<CarFeignRestDtoV2> cars = new ArrayList<>();
+        when(carFeignClientV2.getCarsByUserId(userId)).thenReturn(cars);
+
+        // Bikes
+        List<BikeFeignRestDtoV2> bikes = new ArrayList<>();
+        Long bikeId1 = 1L;
+        String bikeBrand1 = "Honda";
+        String bikeModel1 = "CBR";
+        Long bikeUserId1 = userId;
+        bikes.add(BikeFeignRestDtoV2.builder().id(bikeId1).brand(bikeBrand1).model(bikeModel1).userId(bikeUserId1)
+                .build());
+
+        when(bikeFeignClientV2.getBikesByUserId(userId)).thenReturn(bikes);
+
+        // When
+        Map<String, Object> response = userService.getUserAndVehicles(userId);
+
+        // Then
+        verify(userRepository).findById(idCaptor.capture());
+        assertNotNull(idCaptor.getValue());
+        assertEquals(userId, idCaptor.getValue());
+
+        verify(carFeignClientV2).getCarsByUserId(idCaptor.capture());
+        assertNotNull(idCaptor.getValue());
+        assertEquals(userId, idCaptor.getValue());
+
+        verify(bikeFeignClientV2).getBikesByUserId(idCaptor.capture());
+        assertNotNull(idCaptor.getValue());
+        assertEquals(userId, idCaptor.getValue());
+
+        assertThat(response).containsKey(userKey);
+        assertThat(response.get(userKey)).isNotNull();
+        assertThat(response.get(userKey)).isInstanceOf(UserDTO.class);
+        assertThat(response.get(userKey)).extracting("id").isEqualTo(userId);
+        assertThat(response.get(userKey)).extracting("name").isEqualTo(name);
+        assertThat(response.get(userKey)).extracting("email").isEqualTo(email);
+
+        assertThat(response).containsKey(carsKey);
+        assertThat(response.get(carsKey)).isNotNull();
+        assertThat(response.get(carsKey)).isInstanceOf(List.class);
+        assertThat(((List<?>) response.get(carsKey)).size()).isEqualTo(0);
+
+        assertThat(response).containsKey(bikesKey);
+        assertThat(response.get(bikesKey)).isNotNull();
+        assertThat(response.get(bikesKey)).isInstanceOf(List.class);
+        assertThat(((List<?>) response.get(bikesKey)).size()).isEqualTo(1);
+        assertThat(((List<?>) response.get(bikesKey)).get(0)).isInstanceOf(BikeDTO.class);
+        assertThat(((List<?>) response.get(bikesKey)).get(0)).extracting("id").isEqualTo(bikeId1);
+        assertThat(((List<?>) response.get(bikesKey)).get(0)).extracting("brand").isEqualTo(bikeBrand1);
+        assertThat(((List<?>) response.get(bikesKey)).get(0)).extracting("model").isEqualTo(bikeModel1);
+        assertThat(((List<?>) response.get(bikesKey)).get(0)).extracting("userId").isEqualTo(bikeUserId1);
+    }
+
+    @Test
+    void testGetUserAndVehicles_FoundUserCarsAndNoBikes() {
+
+        // Given
+        String userKey = "user";
+        String carsKey = "cars";
+        String bikesKey = "bikes";
+
+        // User
+        Long userId = 1L;
+        String name = "John";
+        String email = "john@gmail.com";
+        User user = User.builder().id(userId).name(name).email(email).build();
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+
+        // Cars
+        List<CarFeignRestDtoV2> cars = new ArrayList<>();
+        Long carId1 = 1L;
+        String carBrand1 = "Toyota";
+        String carModel1 = "Corolla";
+        Long carUserId1 = userId;
+        cars.add(CarFeignRestDtoV2.builder().id(carId1).brand(carBrand1).model(carModel1).userId(carUserId1).build());
+
+        Long carId2 = 2L;
+        String carBrand2 = "Ford";
+        String carModel2 = "Focus";
+        Long carUserId2 = userId;
+        cars.add(CarFeignRestDtoV2.builder().id(carId2).brand(carBrand2).model(carModel2).userId(carUserId2).build());
+
+        when(carFeignClientV2.getCarsByUserId(userId)).thenReturn(cars);
+
+        // Bikes
+        List<BikeFeignRestDtoV2> bikes = new ArrayList<>();
+        when(bikeFeignClientV2.getBikesByUserId(userId)).thenReturn(bikes);
+
+        // When
+        Map<String, Object> response = userService.getUserAndVehicles(userId);
+
+        // Then
+        verify(userRepository).findById(idCaptor.capture());
+        assertNotNull(idCaptor.getValue());
+        assertEquals(userId, idCaptor.getValue());
+
+        verify(carFeignClientV2).getCarsByUserId(idCaptor.capture());
+        assertNotNull(idCaptor.getValue());
+        assertEquals(userId, idCaptor.getValue());
+
+        verify(bikeFeignClientV2).getBikesByUserId(idCaptor.capture());
+        assertNotNull(idCaptor.getValue());
+        assertEquals(userId, idCaptor.getValue());
+
+        assertThat(response).containsKey(userKey);
+        assertThat(response.get(userKey)).isNotNull();
+        assertThat(response.get(userKey)).isInstanceOf(UserDTO.class);
+        assertThat(response.get(userKey)).extracting("id").isEqualTo(userId);
+        assertThat(response.get(userKey)).extracting("name").isEqualTo(name);
+        assertThat(response.get(userKey)).extracting("email").isEqualTo(email);
+
+        assertThat(response).containsKey(carsKey);
+        assertThat(response.get(carsKey)).isNotNull();
+        assertThat(response.get(carsKey)).isInstanceOf(List.class);
+        assertThat(((List<?>) response.get(carsKey)).size()).isEqualTo(2);
+        assertThat(((List<?>) response.get(carsKey)).get(0)).isInstanceOf(CarDTO.class);
+        assertThat(((List<?>) response.get(carsKey)).get(0)).extracting("id").isEqualTo(carId1);
+        assertThat(((List<?>) response.get(carsKey)).get(0)).extracting("brand").isEqualTo(carBrand1);
+        assertThat(((List<?>) response.get(carsKey)).get(0)).extracting("model").isEqualTo(carModel1);
+        assertThat(((List<?>) response.get(carsKey)).get(0)).extracting("userId").isEqualTo(carUserId1);
+        assertThat(((List<?>) response.get(carsKey)).get(1)).extracting("id").isEqualTo(carId2);
+        assertThat(((List<?>) response.get(carsKey)).get(1)).extracting("brand").isEqualTo(carBrand2);
+        assertThat(((List<?>) response.get(carsKey)).get(1)).extracting("model").isEqualTo(carModel2);
+        assertThat(((List<?>) response.get(carsKey)).get(1)).extracting("userId").isEqualTo(carUserId2);
+
+        assertThat(response).containsKey(bikesKey);
+        assertThat(response.get(bikesKey)).isNotNull();
+        assertThat(response.get(bikesKey)).isInstanceOf(List.class);
+        assertThat(((List<?>) response.get(bikesKey)).size()).isEqualTo(0);
+    }
+
+    @Test
+    void testGetUserAndVehicles_FoundUserNoCarsAndNoBikes() {
+
+        // Given
+        String userKey = "user";
+        String carsKey = "cars";
+        String bikesKey = "bikes";
+
+        // User
+        Long userId = 1L;
+        String name = "John";
+        String email = "john@gmail.com";
+        User user = User.builder().id(userId).name(name).email(email).build();
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+
+        // Cars
+        List<CarFeignRestDtoV2> cars = new ArrayList<>();
+        when(carFeignClientV2.getCarsByUserId(userId)).thenReturn(cars);
+
+        // Bikes
+        List<BikeFeignRestDtoV2> bikes = new ArrayList<>();
+        when(bikeFeignClientV2.getBikesByUserId(userId)).thenReturn(bikes);
+
+        // When
+        Map<String, Object> response = userService.getUserAndVehicles(userId);
+
+        // Then
+        verify(userRepository).findById(idCaptor.capture());
+        assertNotNull(idCaptor.getValue());
+        assertEquals(userId, idCaptor.getValue());
+
+        verify(carFeignClientV2).getCarsByUserId(idCaptor.capture());
+        assertNotNull(idCaptor.getValue());
+        assertEquals(userId, idCaptor.getValue());
+
+        verify(bikeFeignClientV2).getBikesByUserId(idCaptor.capture());
+        assertNotNull(idCaptor.getValue());
+        assertEquals(userId, idCaptor.getValue());
+
+        assertThat(response).containsKey(userKey);
+        assertThat(response.get(userKey)).isNotNull();
+        assertThat(response.get(userKey)).isInstanceOf(UserDTO.class);
+        assertThat(response.get(userKey)).extracting("id").isEqualTo(userId);
+        assertThat(response.get(userKey)).extracting("name").isEqualTo(name);
+        assertThat(response.get(userKey)).extracting("email").isEqualTo(email);
+
+        assertThat(response).containsKey(carsKey);
+        assertThat(response.get(carsKey)).isNotNull();
+        assertThat(response.get(carsKey)).isInstanceOf(List.class);
+        assertThat(((List<?>) response.get(carsKey)).size()).isEqualTo(0);
+
+        assertThat(response).containsKey(bikesKey);
+        assertThat(response.get(bikesKey)).isNotNull();
+        assertThat(response.get(bikesKey)).isInstanceOf(List.class);
+        assertThat(((List<?>) response.get(bikesKey)).size()).isEqualTo(0);
+    }
+
+    @Test
+    void testGetUserAndVehicles_UserNotFound() {
+
+        // Given
+        Long userId = 1L;
+        when(userRepository.findById(userId)).thenReturn(Optional.empty());
+
+        // When
+        try {
+            userService.getUserAndVehicles(userId);
+        } catch (Exception e) {
+            // Then
+            verify(userRepository).findById(idCaptor.capture());
+            assertNotNull(idCaptor.getValue());
+            assertEquals(userId, idCaptor.getValue());
+        }
     }
 }

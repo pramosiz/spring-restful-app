@@ -1,6 +1,7 @@
 package com.tutorial.userservice.controller_v2;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.ArrayList;
 
@@ -313,5 +314,42 @@ class UserControllerV2Test {
         assertNotNull(idCaptor.getValue());
         assertEquals(id, idCaptor.getValue());
         response.andExpect(status().isNoContent());
+    }
+
+    @Test
+    @SneakyThrows
+    void testGetAllVehicles_NoError() {
+        // Given
+        Map<String, Object> expectedResponse = Map.of("user", "test");
+        Long id = 1L;
+        when(userService.getUserAndVehicles(id)).thenReturn(expectedResponse);
+
+        // When
+        ResultActions response = httpClient.perform(MockMvcRequestBuilders.get("/api/v2/user/getAll/" + id));
+
+        // Then
+        verify(userService).getUserAndVehicles(idCaptor.capture());
+        assertNotNull(idCaptor.getValue());
+        assertEquals(id, idCaptor.getValue());
+        response.andExpect(status().isOk());
+        response.andExpect(content().contentType(MediaType.APPLICATION_JSON));
+        assertNotNull(response.andReturn().getResponse().getContentAsString());
+    }
+
+    @Test
+    @SneakyThrows
+    void testGetAllVehicles_Error() {
+        // Given
+        Long id = 1L;
+        when(userService.getUserAndVehicles(id)).thenThrow(new RuntimeException("User not found"));
+
+        // When
+        ResultActions response = httpClient.perform(MockMvcRequestBuilders.get("/api/v2/user/getAll/" + id));
+
+        // Then
+        verify(userService).getUserAndVehicles(idCaptor.capture());
+        assertNotNull(idCaptor.getValue());
+        assertEquals(id, idCaptor.getValue());
+        response.andExpect(status().isNotFound());
     }
 }

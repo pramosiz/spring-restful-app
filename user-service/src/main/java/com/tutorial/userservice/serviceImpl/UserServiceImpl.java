@@ -1,6 +1,7 @@
 package com.tutorial.userservice.serviceimpl;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -22,6 +23,7 @@ import com.tutorial.userservice.service.dto.UserDTO;
 import com.tutorial.userservice.serviceimpl.mapper.BikeMapper;
 import com.tutorial.userservice.serviceimpl.mapper.CarMapper;
 import com.tutorial.userservice.serviceimpl.mapper.UserMapper;
+import com.tutorial.userservice.serviceimpl.utlis.FeignUtils;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -91,5 +93,25 @@ public class UserServiceImpl implements UserService {
 		} catch (Exception e) {
 			log.error("Failed to delete user with id: {}", id, e);
 		}
+	}
+
+	public Map<String, Object> getUserAndVehicles(Long userId) {
+
+		User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+		List<CarDTO> cars = FeignUtils.safeFeignCall(() -> carFeignClientV2.getCarsByUserId(userId)
+				.stream()
+				.map(carMapper::carFeignRestDtoV2_2_CarDTO)
+				.collect(Collectors.toList()));
+		List<BikeDTO> bikes = FeignUtils.safeFeignCall(() -> bikeFeignClientV2.getBikesByUserId(userId)
+				.stream()
+				.map(bikeMapper::bikeFeignRestDtoV2_2_BikeDTO)
+				.collect(Collectors.toList()));
+		//@formatter:off
+		return Map.of(
+			"user", userMapper.user_2_UserDto(user), 
+			"cars", cars, 
+			"bikes", bikes
+		);
+		//@formatter:on
 	}
 }

@@ -1,6 +1,7 @@
 package com.tutorial.userservice.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import com.tutorial.userservice.service.dto.BikeDTO;
@@ -21,4 +22,6 @@ public interface UserService {
     List<BikeDTO> getBikesByUserId(Long userId);
 
     void deleteById(Long id);
+
+    Map<String, Object> getUserAndVehicles(Long userId);
 }

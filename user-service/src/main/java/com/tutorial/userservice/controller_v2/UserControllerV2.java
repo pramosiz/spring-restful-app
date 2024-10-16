@@ -1,6 +1,7 @@
 package com.tutorial.userservice.controller_v2;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -104,11 +105,12 @@ public class UserControllerV2 {
 		//@formatter:on
 	}
 
-	// @GetMapping("/getAll/{userId}")
-	// public ResponseEntity<Map<String, Object>>
-	// getAllVehicles(@PathVariable("userId") int userId) {
-	// Map<String, Object> result = userServiceImpl.getUserAndVehicles(userId);
-	// return ResponseEntity.ok(result);
-	// }
-
+	@GetMapping("/getAll/{userId}")
+	public ResponseEntity<Map<String, Object>> getAllVehicles(@PathVariable("userId") Long userId) {
+		try {
+			return ResponseEntity.ok(userService.getUserAndVehicles(userId));
+		} catch (RuntimeException e) {
+			return ResponseEntity.notFound().build();
+		}
+	}
 }
