@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-// @ConfigurationProperties -> TODO: Estudiar esto
 public class NotifyDeleteFanout {
 
     private static final String NOTIFY_DELETE_INFO_EXCHANGE = "NOTIFY_DELETE_INFO";
