@@ -1,0 +1,83 @@
+version: '3'
+services:
+  rabbitmq:
+    image: rabbitmq_user:v1
+    ports:
+      - 15672:15672
+      - 5672:5672
+  
+  postgres:
+    image: postgres:14.13 
+    container_name: postgres
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: test
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - /Users/pabloramosizquierdo/Desktop/Pablo/Dockers/PostgreSQL/data:/var/lib/postgresql/data
+
+  user-service:
+    image: user-service:1.0.0
+    ports:
+      - 8001:8001
+    depends_on:
+      - rabbitmq
+      - postgres
+    environment:
+      PG_DB_URL: postgres
+      PG_DB_PORT: 5432
+      PG_DB_NAME: test
+      PG_DB_USER: postgres
+      PG_DB_PWD: postgres
+      PG_DB_SCHEMA: user-app
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: test
+      RABBITMQ_PWD: test
+      RABBITMQ_VHOST: test
+      CAR_SERVICE_URL: car-service
+      CAR_SERVICE_PORT: 8002
+      BIKE_SERVICE_URL: bike-service
+      BIKE_SERVICE_PORT: 8003
+  
+  car-service:
+    image: car-service:1.0.0
+    ports:
+      - 8002:8002
+    depends_on:
+      - rabbitmq
+      - postgres
+    environment:
+      PG_DB_URL: postgres
+      PG_DB_PORT: 5432
+      PG_DB_NAME: test
+      PG_DB_USER: postgres
+      PG_DB_PWD: postgres
+      PG_DB_SCHEMA: user-app
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: test
+      RABBITMQ_PWD: test
+      RABBITMQ_VHOST: test
+  
+  bike-service:
+    image: bike-service:1.0.0
+    ports:
+      - 8003:8003
+    depends_on:
+      - rabbitmq
+      - postgres
+    environment:
+      PG_DB_URL: postgres
+      PG_DB_PORT: 5432
+      PG_DB_NAME: test
+      PG_DB_USER: postgres
+      PG_DB_PWD: postgres
+      PG_DB_SCHEMA: user-app
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: test
+      RABBITMQ_PWD: test
+      RABBITMQ_VHOST: test
