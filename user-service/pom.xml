@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.3.4</version>
+		<version>3.3.5</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.tutorial</groupId>
@@ -104,10 +104,21 @@
 			<version>${rabbit.test.version}</version>
 			<scope>test</scope>
 		</dependency>
+		<!--No
+		es necesario, ya que se incluye en spring-boot-starter-->
+		<!--dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-logging</artifactId>
+		</dependency-->
 	</dependencies>
 
 	<build>
 		<plugins>
+			<!-- plugin necesario para que Docker pueda construir la imagen -->
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>

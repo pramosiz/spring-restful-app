@@ -4,39 +4,28 @@
     <include resource="org/springframework/boot/logging/logback/base.xml" />
 
     <!-- Parámetros propios -->
-    <property name="HOME_LOGS" value="/logs" />
+    <property
+        name="HOME_LOGS" value="/logs" />
     <property name="APP_NAME" value="user-service" />
 
     <!-- Parámetros de configuración de los logs de fichero -->
     <property
         name="FILE_LOG_PATTERN"
         value="%d{yyyy-MM-dd HH:mm:ss.SSS} | [${LOG_LEVEL_PATTERN:-%5p}] | %-40.40logger{39} : %msg%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}" />
-    <property name="FILE_LOG_THRESHOLD" value="INFO" />
+    <property
+        name="FILE_LOG_THRESHOLD" value="INFO" />
 
-    <property name="LOG_FILE" value="${HOME_LOGS}/${APP_NAME}.log" />
-    <property name="LOGBACK_ROLLINGPOLICY_FILE_NAME_PATTERN"
-        value="${HOME_LOGS}/${APP_NAME}.%d{yyyy-MM-dd}.%i.log" />
-    <property name="LOGBACK_ROLLINGPOLICY_MAX_FILE_SIZE" value="10MB" />
-    <property name="LOGBACK_ROLLINGPOLICY_TOTAL_SIZE_CAP" value="100MB" />
-    <property name="LOGBACK_ROLLINGPOLICY_MAX_HISTORY" value="7" />
-
-    <!-- File appender for logging to a file -->
-    <appender
-        name="FILE_TEST" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <!-- Filename -->
-        <file>${HOME_LOG}/${LOG_NAME}.log</file>
-        <!-- Politica de logs -->
-        <rollingPolicy class="ch.qos.logback.core.rolling.SizeRollingPolicy">
-            <!--fileNamePattern>${HOME_LOG}/${LOG_NAME}.%d{yyyy-MM-dd}.%i.log</fileNamePattern-->
-            <!-- each archived file, size max 50MB -->
-            <maxFileSize>50MB</maxFileSize>
-            <!-- 7 days to keep -->
-            <!--maxHistory>7</maxHistory-->
-        </rollingPolicy>
-        <encoder>
-            <pattern>%date{"yyyy-MM-dd'T'HH:mm:ss,SSSXXX", UTC} [%p] [%c{1.}] [%t] %m%n</pattern>
-        </encoder>
-    </appender>
+    <property name="LOG_FILE"
+        value="${HOME_LOGS}/${APP_NAME}/${APP_NAME}.log" />
+    <property
+        name="LOGBACK_ROLLINGPOLICY_FILE_NAME_PATTERN"
+        value="${HOME_LOGS}/${APP_NAME}/${APP_NAME}.%d{yyyy-MM-dd}.%i.log" />
+    <property
+        name="LOGBACK_ROLLINGPOLICY_MAX_FILE_SIZE" value="10MB" />
+    <property
+        name="LOGBACK_ROLLINGPOLICY_TOTAL_SIZE_CAP" value="100MB" />
+    <property
+        name="LOGBACK_ROLLINGPOLICY_MAX_HISTORY" value="7" />
 
     <springProfile>
         <!-- Root logger configuration -->
@@ -48,7 +37,7 @@
 
     <!-- Todas las trazas de nivel INFO y superior se vuelcan al fichero y a la consola -->
     <!-- Además todas las trazas de la clase "com.tutorial" donde el nivel sea WARN o superior -->
-    <springProfile name="pro">
+    <!-- <springProfile name="pro">
         <root level="INFO">
             <appender-ref ref="FILE-ROLLING" />
         </root>
@@ -56,5 +45,5 @@
             <appender-ref ref="CONSOLE" />
             <appender-ref ref="FILE-ROLLING" />
         </logger>
-    </springProfile>
+    </springProfile> -->
 </configuration>

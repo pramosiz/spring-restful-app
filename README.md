@@ -5,6 +5,7 @@
 # Spring boot RESTful Servlet App with this technologies:
 
 - Layered Architecture
+- `Docker`: Docker Network, Docker Compose 
 - Tomcat
 - Maven
 - Spring Cloud `OpenFeign`
@@ -15,7 +16,9 @@
 - H2 database (testing)
 
 - PostgreSQL (PRO) 
+- Sistema de Logging: Logback
 - DTO
 - Repository
 - Mappers
 - Lombok
+

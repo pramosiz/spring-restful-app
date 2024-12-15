@@ -1,5 +1,6 @@
 ###user-service###
 /target/
+/.idea/
 .classpath
 .factorypath
 .project
