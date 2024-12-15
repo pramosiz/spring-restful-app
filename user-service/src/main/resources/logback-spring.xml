@@ -11,7 +11,8 @@
     <!-- Parámetros de configuración de los logs de fichero -->
     <property
         name="FILE_LOG_PATTERN"
-        value="%d{yyyy-MM-dd HH:mm:ss.SSS} | [${LOG_LEVEL_PATTERN:-%5p}] | %-40.40logger{39} : %msg%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}" />
+        value="%d{yyyy-MM-dd HH:mm:ss.SSS} | [${LOG_LEVEL_PATTERN:-%5p}] | %-40.40logger{39} :
+    %msg%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}" />
     <property
         name="FILE_LOG_THRESHOLD" value="INFO" />
 

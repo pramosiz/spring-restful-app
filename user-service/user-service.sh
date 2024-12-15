@@ -4,7 +4,7 @@
 docker network create restful-app || true
 
 # Run the Docker container for user-service
-docker run -d --name user_service \
+docker run -d \
   --network restful-app \
   -p 8001:8001 \
   -e PG_DB_URL=postgres \
@@ -18,4 +18,8 @@ docker run -d --name user_service \
   -e RABBITMQ_USER=test \
   -e RABBITMQ_PWD=test \
   -e RABBITMQ_VHOST=test \
-  --name user-service-container user-service:1.0.0
+  -e CAR_SERVICE_URL=car-service \
+  -e CAR_SERVICE_PORT=8002 \
+  -e BIKE_SERVICE_URL=bike-service \
+  -e BIKE_SERVICE_PORT=8003 \
+  --name user-service user-service:1.0.0

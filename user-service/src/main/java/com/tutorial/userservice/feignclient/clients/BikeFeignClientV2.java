@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.tutorial.userservice.feignclient.dto.BikeFeignRestDtoV2;
 
-@FeignClient(name = "bike-service", url = "http://localhost:8003/api/v2/bike")
+@FeignClient(name = "bike-service", url = "${bike.service.path}/api/v2/bike")
 public interface BikeFeignClientV2 {
 
     @GetMapping("/byUser/{userId}")

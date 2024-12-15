@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- Referencias a ficheros por defecto de loggin -->
+    <include resource="org/springframework/boot/logging/logback/base.xml" />
+
+    <!-- Parámetros propios -->
+    <property
+        name="HOME_LOGS" value="/logs" />
+    <property name="APP_NAME" value="car-service" />
+
+    <!-- Parámetros de configuración de los logs de fichero -->
+    <property
+        name="FILE_LOG_PATTERN"
+        value="%d{yyyy-MM-dd HH:mm:ss.SSS} | [${LOG_LEVEL_PATTERN:-%5p}] | %-40.40logger{39} : %msg%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}" />
+    <property
+        name="FILE_LOG_THRESHOLD" value="INFO" />
+
+    <property name="LOG_FILE"
+        value="${HOME_LOGS}/${APP_NAME}/${APP_NAME}.log" />
+    <property
+        name="LOGBACK_ROLLINGPOLICY_FILE_NAME_PATTERN"
+        value="${HOME_LOGS}/${APP_NAME}/${APP_NAME}.%d{yyyy-MM-dd}.%i.log" />
+    <property
+        name="LOGBACK_ROLLINGPOLICY_MAX_FILE_SIZE" value="10MB" />
+    <property
+        name="LOGBACK_ROLLINGPOLICY_TOTAL_SIZE_CAP" value="100MB" />
+    <property
+        name="LOGBACK_ROLLINGPOLICY_MAX_HISTORY" value="7" />
+
+    <springProfile>
+        <!-- Root logger configuration -->
+        <root level="INFO">
+            <appender-ref ref="CONSOLE" />
+            <appender-ref ref="FILE" />
+        </root>
+    </springProfile>
+
+    <!-- Todas las trazas de nivel INFO y superior se vuelcan al fichero y a la consola -->
+    <!-- Además todas las trazas de la clase "com.tutorial" donde el nivel sea WARN o superior -->
+    <!-- <springProfile name="pro">
+        <root level="INFO">
+            <appender-ref ref="FILE-ROLLING" />
+        </root>
+        <logger name="com.tutorial" level="WARN">
+            <appender-ref ref="CONSOLE" />
+            <appender-ref ref="FILE-ROLLING" />
+        </logger>
+    </springProfile> -->
+</configuration>
