@@ -1,0 +1,77 @@
+###################################
+#####  PostgreSQL Deployment  #####
+###################################
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bike-service-deploy
+  labels:
+    app: bike-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bike-service
+  strategy:
+    type: RollingUpdate
+  minReadySeconds: 5
+  template:
+    metadata:
+      labels:
+        app: bike-service
+    spec:
+      containers:
+        - name: bike-service
+          image: bike-service:1.0.0
+          ports:
+            - containerPort: 8003
+          env:
+            - name: PG_DB_URL
+              value: postgres-svc
+            - name: PG_DB_PORT
+              value: "5432"
+            - name: PG_DB_NAME
+              value: test
+            - name: PG_DB_USER
+              value: postgres
+            - name: PG_DB_PWD
+              value: postgres
+            - name: PG_DB_SCHEMA
+              value: user-app
+            - name: RABBITMQ_HOST
+              value: rabbitmq-svc
+            - name: RABBITMQ_PORT
+              value: "5672"
+            - name: RABBITMQ_USER
+              value: test
+            - name: RABBITMQ_PWD
+              value: test
+            - name: RABBITMQ_VHOST
+              value: test
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+
+---
+################################
+#####  PostgreSQL Service  #####
+################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: bike-svc
+  labels:
+    app: bike-service
+spec:
+  type: NodePort
+  ports:
+    - name: bike-service-port
+      port: 8003
+      targetPort: 8003
+      nodePort: 30003
+  selector:
+    app: bike-service

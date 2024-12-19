@@ -1,0 +1,84 @@
+###################################
+#####  PostgreSQL Deployment  #####
+###################################
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service-deploy
+  labels:
+    app: user-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-service
+  strategy:
+    type: RollingUpdate
+  minReadySeconds: 5
+  template:
+    metadata:
+      labels:
+        app: user-service
+    spec:
+      containers:
+        - name: user-service
+          image: user-service:1.0.0
+          ports:
+            - containerPort: 8001
+          env:
+            - name: PG_DB_URL
+              value: postgres-svc
+            - name: PG_DB_PORT
+              value: "5432"
+            - name: PG_DB_NAME
+              value: test
+            - name: PG_DB_USER
+              value: postgres
+            - name: PG_DB_PWD
+              value: postgres
+            - name: PG_DB_SCHEMA
+              value: user-app
+            - name: RABBITMQ_HOST
+              value: rabbitmq-svc
+            - name: RABBITMQ_PORT
+              value: "5672"
+            - name: RABBITMQ_USER
+              value: test
+            - name: RABBITMQ_PWD
+              value: test
+            - name: RABBITMQ_VHOST
+              value: test
+            - name: CAR_SERVICE_URL
+              value: car-svc
+            - name: CAR_SERVICE_PORT
+              value: "8002"
+            - name: BIKE_SERVICE_URL
+              value: bike-svc
+            - name: BIKE_SERVICE_PORT
+              value: "8003"
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+
+---
+################################
+#####  PostgreSQL Service  #####
+################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-svc
+  labels:
+    app: user-service
+spec:
+  type: NodePort
+  ports:
+    - name: user-service-port
+      port: 8001
+      nodePort: 30001
+  selector:
+    app: user-service

@@ -1,0 +1,46 @@
+############################
+#####  PostgreSQL Pod  #####
+############################
+apiVersion: v1
+kind: Pod
+metadata:
+  name: car-service-pod
+  labels:
+    app: car-service
+spec:
+  containers:
+    - name: car-service
+      image: car-service:1.0.0
+      ports:
+        - containerPort: 8002
+      env:
+        - name: PG_DB_URL
+          value: postgres-svc
+        - name: PG_DB_PORT
+          value: "5432"
+        - name: PG_DB_NAME
+          value: test
+        - name: PG_DB_USER
+          value: postgres
+        - name: PG_DB_PWD
+          value: postgres
+        - name: PG_DB_SCHEMA
+          value: user-app
+        - name: RABBITMQ_HOST
+          value: rabbitmq-svc
+        - name: RABBITMQ_PORT
+          value: "5672"
+        - name: RABBITMQ_USER
+          value: test
+        - name: RABBITMQ_PWD
+          value: test
+        - name: RABBITMQ_VHOST
+          value: test
+      resources:
+        requests:
+          memory: "64Mi"
+          cpu: "250m"
+        limits:
+          memory: "128Mi"
+          cpu: "500m"
+      restartPolicy: OnFailure

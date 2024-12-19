@@ -1,0 +1,37 @@
+############################
+#####  PostgreSQL Pod  #####
+############################
+apiVersion: v1
+kind: Pod
+metadata:
+  name: postgres-pod
+  labels:
+    app: postgres
+spec:
+  containers:
+    - name: postgres
+      image: postgres:14.13
+      ports:
+        - containerPort: 5432
+      env:
+        - name: POSTGRES_DB
+          value: test
+        - name: POSTGRES_USER
+          value: postgres
+        - name: POSTGRES_PASSWORD
+          value: postgres
+      volumeMounts:
+        - name: postgres-storage
+          mountPath: /var/lib/postgresql/data
+      resources:
+        requests:
+          memory: "64Mi"
+          cpu: "250m"
+        limits:
+          memory: "128Mi"
+          cpu: "500m"
+      restartPolicy: Always
+  volumes:
+    - name: postgres-storage
+      hostPath:
+        path: /Users/pabloramosizquierdo/Desktop/Pablo/Dockers/PostgreSQL/data
