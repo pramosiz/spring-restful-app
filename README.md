@@ -6,7 +6,7 @@
 
 - Layered Architecture
 - `Docker`: Docker Network, Docker Compose 
-- `Kubernetes`
+- `Kubernetes`: Metric Server
 - Tomcat
 - Maven
 - Spring Cloud `OpenFeign`
