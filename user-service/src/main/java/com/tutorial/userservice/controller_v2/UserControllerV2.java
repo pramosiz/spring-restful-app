@@ -26,11 +26,15 @@ import com.tutorial.userservice.service.UserService;
 import com.tutorial.userservice.service.dto.NewUserDTO;
 import com.tutorial.userservice.service.dto.UserDTO;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v2/user")
+@Tag(name = "User Controller", description = "v2")
 public class UserControllerV2 {
 
 	private final UserService userService;
@@ -42,6 +46,7 @@ public class UserControllerV2 {
 	final BikeMapperRestV2 bikeMapperRestV2;
 
 	@GetMapping
+	@Operation(summary = "Get all Users", description = "Service to get all Users", responses = @ApiResponse(responseCode = "200", description = "Success"))
 	public ResponseEntity<List<UserRestDtoV2>> getAll() {
 		//@formatter:off
 		return new ResponseEntity<>(userService.getAll()
@@ -53,6 +58,9 @@ public class UserControllerV2 {
 	}
 
 	@GetMapping("/{id}")
+	@Operation(summary = "Get User by ID", description = "Service to get 1 User", responses = {
+			@ApiResponse(responseCode = "200", description = "Success"),
+			@ApiResponse(responseCode = "404", description = "User not found") })
 	public ResponseEntity<UserRestDtoV2> getById(@PathVariable("id") Long id) {
 		Optional<UserDTO> userReturned = userService.getById(id);
 		return userReturned
@@ -60,13 +68,10 @@ public class UserControllerV2 {
 				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
-	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteById(@PathVariable("id") Long id) {
-		userService.deleteById(id);
-		return ResponseEntity.noContent().build();
-	}
-
 	@PostMapping()
+	@Operation(summary = "Save new User", description = "Service to save new User", responses = {
+			@ApiResponse(responseCode = "201", description = "User saved"),
+			@ApiResponse(responseCode = "400", description = "Bad requested for save User") })
 	public ResponseEntity<UserRestDtoV2> saveNewUser(@RequestBody NewUserRestDtoV2 user) {
 		try {
 			NewUserDTO newUserDTO = userMapperRestV2.newUserRestDtoV2_2_NewUserDto(user);
@@ -79,7 +84,17 @@ public class UserControllerV2 {
 		}
 	}
 
+	@DeleteMapping("/{id}")
+	@Operation(summary = "Delete User by ID", description = "Service to erase User from DDBB", responses = @ApiResponse(responseCode = "204", description = "User erased"))
+	public ResponseEntity<Void> deleteById(@PathVariable("id") Long id) {
+		userService.deleteById(id);
+		return ResponseEntity.noContent().build();
+	}
+
 	@GetMapping("/{userId}/cars")
+	@Operation(summary = "Get cars by User ID", description = "Service to get user's cars", responses = {
+			@ApiResponse(responseCode = "200", description = "Success"),
+			@ApiResponse(responseCode = "404", description = "User not found") })
 	public ResponseEntity<List<CarRestDtoV2>> getCars(@PathVariable("userId") int userId) {
 		//@formatter:off
 		List<CarRestDtoV2> carsReturned = userService.getCarsByUserId((long) userId)
@@ -93,6 +108,9 @@ public class UserControllerV2 {
 	}
 
 	@GetMapping("/{userId}/bikes")
+	@Operation(summary = "Get bikes by User ID", description = "Service to get user's bikes", responses = {
+			@ApiResponse(responseCode = "200", description = "Success"),
+			@ApiResponse(responseCode = "404", description = "User not found") })
 	public ResponseEntity<List<BikeRestDtoV2>> getBikes(@PathVariable("userId") int userId) {
 		//@formatter:off
 		List<BikeRestDtoV2> bikesReturned = userService.getBikesByUserId((long) userId)
@@ -106,6 +124,9 @@ public class UserControllerV2 {
 	}
 
 	@GetMapping("/getAll/{userId}")
+	@Operation(summary = "Get vehicles by User ID", description = "Service to get user's vehicles", responses = {
+			@ApiResponse(responseCode = "200", description = "Success"),
+			@ApiResponse(responseCode = "404", description = "User not found") })
 	public ResponseEntity<Map<String, Object>> getAllVehicles(@PathVariable("userId") Long userId) {
 		try {
 			return ResponseEntity.ok(userService.getUserAndVehicles(userId));

@@ -21,6 +21,9 @@ import com.tutorial.bikeservice.service.BikeService;
 import com.tutorial.bikeservice.service.dto.BikeDTO;
 import com.tutorial.bikeservice.service.dto.NewBikeDTO;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @RequestMapping("/api/v2/bike")
 @Slf4j
+@Tag(name = "Bike Controller", description = "v2")
 public class BikeControllerV2 {
 
 	private final BikeService bikeService;
@@ -35,6 +39,7 @@ public class BikeControllerV2 {
 	private final BikeMapperRestV2 bikeMapperRestV2;
 
 	@GetMapping
+	@Operation(summary = "Get all Bikes", description = "Service to get all Bikes", responses = @ApiResponse(responseCode = "200", description = "Success"))
 	public ResponseEntity<List<BikeRestDtoV2>> getAll() {
 		//@formatter:off
 		return new ResponseEntity<>(bikeService.getAll()
@@ -46,6 +51,9 @@ public class BikeControllerV2 {
 	}
 
 	@GetMapping("/{id}")
+	@Operation(summary = "Get Bike by ID", description = "Service to get 1 Bike", responses = {
+			@ApiResponse(responseCode = "200", description = "Success"),
+			@ApiResponse(responseCode = "404", description = "Bike not found") })
 	public ResponseEntity<BikeRestDtoV2> getById(@PathVariable("id") Long id) {
 		Optional<BikeDTO> bikeReturned = bikeService.getById(id);
 		// @formatter:off
@@ -54,13 +62,10 @@ public class BikeControllerV2 {
 		// @formatter:on
 	}
 
-	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteById(@PathVariable("id") Long id) {
-		bikeService.deleteById(id);
-		return ResponseEntity.noContent().build();
-	}
-
-	@PostMapping()
+	@PostMapping
+	@Operation(summary = "Save new Bike", description = "Service to save new Bike", responses = {
+			@ApiResponse(responseCode = "201", description = "Bike saved"),
+			@ApiResponse(responseCode = "400", description = "Bad requested for save Bike") })
 	public ResponseEntity<BikeRestDtoV2> saveNewBike(@RequestBody NewBikeRestDtoV2 newBikeRestDtoV2) {
 		NewBikeDTO newBikeDTO = bikeMapperRestV2.newBikeRestDtoV2_2_NewBikeDTO(newBikeRestDtoV2);
 		Optional<BikeDTO> bikeReturned = bikeService.saveNewBikeWithExternalCheck(newBikeDTO);
@@ -73,7 +78,17 @@ public class BikeControllerV2 {
 				});
 	}
 
+	@DeleteMapping("/{id}")
+	@Operation(summary = "Delete Bike by ID", description = "Service to erase Bike from DDBB", responses = @ApiResponse(responseCode = "204", description = "Bike erased"))
+	public ResponseEntity<Void> deleteById(@PathVariable("id") Long id) {
+		bikeService.deleteById(id);
+		return ResponseEntity.noContent().build();
+	}
+
 	@GetMapping("/byUser/{userId}")
+	@Operation(summary = "Get Bike by User", description = "Service to get Bikes by User", responses = {
+			@ApiResponse(responseCode = "200", description = "Success"),
+			@ApiResponse(responseCode = "400", description = "Bad requested for getting Bikes") })
 	public ResponseEntity<List<BikeRestDtoV2>> getByUserId(@PathVariable("userId") Long userId) {
 
 		List<BikeRestDtoV2> bikesReturned = bikeService.getByUserId(userId).stream()

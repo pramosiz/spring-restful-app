@@ -21,6 +21,9 @@ import com.tutorial.carservice.service.CarService;
 import com.tutorial.carservice.service.dto.CarDTO;
 import com.tutorial.carservice.service.dto.NewCarDTO;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @RequestMapping("/api/v2/car")
 @Slf4j
+@Tag(name = "Car Controller", description = "v2")
 public class CarControllerV2 {
 
 	private final CarService carService;
@@ -35,6 +39,7 @@ public class CarControllerV2 {
 	private final CarMapperRestV2 carMapperRestV2;
 
 	@GetMapping
+	@Operation(summary = "Get all Cars", description = "Service to get all Cars", responses = @ApiResponse(responseCode = "200", description = "Success"))
 	public ResponseEntity<List<CarRestDtoV2>> getAll() {
 		//@formatter:off
 		return new ResponseEntity<>(carService.getAll()
@@ -46,19 +51,19 @@ public class CarControllerV2 {
 	}
 
 	@GetMapping("/{id}")
+	@Operation(summary = "Get Car by ID", description = "Service to get 1 Car", responses = {
+			@ApiResponse(responseCode = "200", description = "Success"),
+			@ApiResponse(responseCode = "404", description = "Car not found") })
 	public ResponseEntity<CarRestDtoV2> getById(@PathVariable("id") Long id) {
 		Optional<CarDTO> carReturned = carService.getById(id);
 		return carReturned.map(car -> ResponseEntity.ok(carMapperRestV2.carDTO_2_CarRestDtoV2(car)))
 				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
-	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteById(@PathVariable("id") Long id) {
-		carService.deleteById(id);
-		return ResponseEntity.noContent().build();
-	}
-
-	@PostMapping()
+	@PostMapping
+	@Operation(summary = "Save new Car", description = "Service to save new Car", responses = {
+			@ApiResponse(responseCode = "201", description = "Car saved"),
+			@ApiResponse(responseCode = "400", description = "Bad requested for save Car") })
 	public ResponseEntity<CarRestDtoV2> saveNewBike(@RequestBody NewCarRestDtoV2 newCarRestDtoV2) {
 		NewCarDTO newCarDTO = carMapperRestV2.newCarRestDtoV2_2_NewCarDTO(newCarRestDtoV2);
 		Optional<CarDTO> carReturned = carService.saveNewCarWithExternalCheck(newCarDTO);
@@ -70,7 +75,17 @@ public class CarControllerV2 {
 				});
 	}
 
+	@DeleteMapping("/{id}")
+	@Operation(summary = "Delete Car by ID", description = "Service to erase Car from DDBB", responses = @ApiResponse(responseCode = "204", description = "Car erased"))
+	public ResponseEntity<Void> deleteById(@PathVariable("id") Long id) {
+		carService.deleteById(id);
+		return ResponseEntity.noContent().build();
+	}
+
 	@GetMapping("/byUser/{userId}")
+	@Operation(summary = "Get Car by User", description = "Service to get Cars by User", responses = {
+			@ApiResponse(responseCode = "200", description = "Success"),
+			@ApiResponse(responseCode = "400", description = "Bad requested for getting Cars") })
 	public ResponseEntity<List<CarRestDtoV2>> getByUserId(@PathVariable("userId") Long userId) {
 
 		List<CarRestDtoV2> carsReturned = carService.getByUserId(userId).stream()
