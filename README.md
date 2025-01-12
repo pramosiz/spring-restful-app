@@ -7,7 +7,7 @@
 - Layered Architecture
 - `Docker`: Docker Network, Docker Compose 
 - `Kubernetes`: Metric Server
-- `Documentation API Rest`: Swagger (OpenApi)
+- `Documentation API Rest`: Swagger (OpenApi), Doxygen
 - Tomcat
 - Maven
 - Spring Cloud `OpenFeign`

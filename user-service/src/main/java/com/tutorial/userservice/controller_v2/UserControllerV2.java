@@ -31,6 +31,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Controller for managing Users
+ */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v2/user")
@@ -45,6 +48,11 @@ public class UserControllerV2 {
 
 	final BikeMapperRestV2 bikeMapperRestV2;
 
+	/**
+	 * Service to get all Users
+	 * 
+	 * @return Users list
+	 */
 	@GetMapping
 	@Operation(summary = "Get all Users", description = "Service to get all Users", responses = @ApiResponse(responseCode = "200", description = "Success"))
 	public ResponseEntity<List<UserRestDtoV2>> getAll() {
@@ -57,6 +65,12 @@ public class UserControllerV2 {
 		//@formatter:on
 	}
 
+	/**
+	 * Service to get 1 User by ID
+	 * 
+	 * @param id: User ID
+	 * @return User information
+	 */
 	@GetMapping("/{id}")
 	@Operation(summary = "Get User by ID", description = "Service to get 1 User", responses = {
 			@ApiResponse(responseCode = "200", description = "Success"),
@@ -68,6 +82,12 @@ public class UserControllerV2 {
 				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
+	/**
+	 * Service to save new User
+	 * 
+	 * @param user: User information
+	 * @return User information saved
+	 */
 	@PostMapping()
 	@Operation(summary = "Save new User", description = "Service to save new User", responses = {
 			@ApiResponse(responseCode = "201", description = "User saved"),
@@ -84,6 +104,12 @@ public class UserControllerV2 {
 		}
 	}
 
+	/**
+	 * Service to delete User by ID
+	 * 
+	 * @param id: User ID
+	 * @return No content
+	 */
 	@DeleteMapping("/{id}")
 	@Operation(summary = "Delete User by ID", description = "Service to erase User from DDBB", responses = @ApiResponse(responseCode = "204", description = "User erased"))
 	public ResponseEntity<Void> deleteById(@PathVariable("id") Long id) {
@@ -91,6 +117,12 @@ public class UserControllerV2 {
 		return ResponseEntity.noContent().build();
 	}
 
+	/**
+	 * Service to get cars by User ID
+	 * 
+	 * @param userId: User ID
+	 * @return Cars list by User
+	 */
 	@GetMapping("/{userId}/cars")
 	@Operation(summary = "Get cars by User ID", description = "Service to get user's cars", responses = {
 			@ApiResponse(responseCode = "200", description = "Success"),
@@ -107,6 +139,12 @@ public class UserControllerV2 {
 		//@formatter:on
 	}
 
+	/**
+	 * Service to get bikes by User ID
+	 * 
+	 * @param userId: User ID
+	 * @return Bikes list by User
+	 */
 	@GetMapping("/{userId}/bikes")
 	@Operation(summary = "Get bikes by User ID", description = "Service to get user's bikes", responses = {
 			@ApiResponse(responseCode = "200", description = "Success"),
@@ -123,6 +161,12 @@ public class UserControllerV2 {
 		//@formatter:on
 	}
 
+	/**
+	 * Get all vehicles by User ID
+	 * 
+	 * @param userId: User ID
+	 * @return User and vehicles
+	 */
 	@GetMapping("/getAll/{userId}")
 	@Operation(summary = "Get vehicles by User ID", description = "Service to get user's vehicles", responses = {
 			@ApiResponse(responseCode = "200", description = "Success"),
