@@ -15,6 +15,7 @@
 - Asynchronous messaging `RabbitMQ`
 - Functional programming
 - Unit tests (JUnit 5 & Mockito)
+- Integration tests (JavaScript - Postman)
 - H2 database (testing)
 
 - PostgreSQL (PRO) 
