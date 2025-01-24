@@ -6,7 +6,7 @@
 
 - Layered Architecture
 - `Docker`: Docker Network, Docker Compose 
-- `Kubernetes`: Metric Server
+- `Kubernetes`: Charts, Metric Server
 - `Documentation API Rest`: Swagger (OpenApi), Doxygen (with Graphviz)
 - Tomcat
 - Maven

@@ -1,0 +1,16 @@
+apiVersion: v1
+replicas: 1
+minReadySeconds: 5
+image: rabbitmq_user
+version: v1
+managementPort: 15672
+nodePort:
+  amqpPort: 30672
+  managementPort: 30673
+resources:
+  requests:
+    memory: "64Mi"
+    cpu: "250m"
+  limits:
+    memory: "512Mi"
+    cpu: "500m"

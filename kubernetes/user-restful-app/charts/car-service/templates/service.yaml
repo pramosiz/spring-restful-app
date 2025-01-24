@@ -1,0 +1,15 @@
+apiVersion: {{ .Values.apiVersion }}
+kind: Service
+metadata:
+  name: {{ .Values.global.carService.service.name }}
+  labels:
+    app: {{ .Values.global.carService.name }}
+spec:
+  type: NodePort
+  ports:
+    - name: car-service-port
+      port: {{ .Values.global.carService.port }}
+      targetPort: {{ .Values.global.carService.port }}
+      nodePort: {{ .Values.nodePort }}
+  selector:
+    app: {{ .Values.global.carService.name }}

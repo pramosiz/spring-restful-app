@@ -1,0 +1,13 @@
+apiVersion: v1
+replicas: 1
+minReadySeconds: 5
+image: bike-service
+version: 1.0.0
+nodePort: 30003
+resources:
+  requests:
+    memory: "64Mi"
+    cpu: "250m"
+  limits:
+    memory: "512Mi"
+    cpu: "500m"

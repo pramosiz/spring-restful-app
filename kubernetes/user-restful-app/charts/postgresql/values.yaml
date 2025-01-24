@@ -1,0 +1,14 @@
+apiVersion: v1
+replicas: 1
+minReadySeconds: 5
+image: postgres
+version: 14.13
+mountPath: /var/lib/postgresql/data
+mountHost: /Users/pabloramosizquierdo/Desktop/Pablo/Dockers/PostgreSQL/data
+resources:
+  requests:
+    memory: "64Mi"
+    cpu: "250m"
+  limits:
+    memory: "512Mi"
+    cpu: "500m"

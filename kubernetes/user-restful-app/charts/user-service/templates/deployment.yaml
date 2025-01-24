@@ -1,0 +1,62 @@
+apiVersion: apps/{{ .Values.apiVersion }}
+kind: Deployment
+metadata:
+  name: {{ .Values.global.userService.deployment.name }}
+  labels:
+    app: {{ .Values.global.userService.name }}
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.global.userService.name }}
+  strategy:
+    type: RollingUpdate
+  minReadySeconds: {{ .Values.minReadySeconds }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.global.userService.name }}
+    spec:
+      containers:
+        - name: {{ .Values.global.userService.name }}
+          image: {{.Values.image}}:{{ .Values.version }}
+          ports:
+            - containerPort: {{ .Values.global.userService.port }}
+          env:
+            - name: PG_DB_URL
+              value: {{ .Values.global.postgresql.service.name }}
+            - name: PG_DB_PORT
+              value: "{{ .Values.global.postgresql.port }}"
+            - name: PG_DB_NAME
+              value: {{ .Values.global.postgresql.db }}
+            - name: PG_DB_USER
+              value: {{ .Values.global.postgresql.user }}
+            - name: PG_DB_PWD
+              value: {{ .Values.global.postgresql.password }}
+            - name: PG_DB_SCHEMA
+              value: {{ .Values.global.postgresql.schema }}
+            - name: RABBITMQ_HOST
+              value: {{ .Values.global.rabbitmq.service.name }}
+            - name: RABBITMQ_PORT
+              value: "{{ .Values.global.rabbitmq.amqpPort }}"
+            - name: RABBITMQ_USER
+              value: {{ .Values.global.rabbitmq.user }}
+            - name: RABBITMQ_PWD
+              value: {{ .Values.global.rabbitmq.password }}
+            - name: RABBITMQ_VHOST
+              value: {{ .Values.global.rabbitmq.vhost }}
+            - name: CAR_SERVICE_URL
+              value: {{ .Values.global.carService.service.name }}
+            - name: CAR_SERVICE_PORT
+              value: "{{ .Values.global.carService.port }}"
+            - name: BIKE_SERVICE_URL
+              value: {{ .Values.global.bikeService.service.name }}
+            - name: BIKE_SERVICE_PORT
+              value: "{{ .Values.global.bikeService.port }}"
+          resources:
+            requests:
+              memory: {{ .Values.resources.requests.memory }}
+              cpu: {{ .Values.resources.requests.cpu }}
+            limits:
+              memory: {{ .Values.resources.limits.memory }}
+              cpu: {{ .Values.resources.limits.cpu }}

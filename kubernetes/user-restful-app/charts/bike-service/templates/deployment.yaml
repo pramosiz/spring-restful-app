@@ -1,0 +1,54 @@
+apiVersion: apps/{{ .Values.apiVersion }}
+kind: Deployment
+metadata:
+  name: {{ .Values.global.bikeService.deployment.name }}
+  labels:
+    app: {{ .Values.global.bikeService.name }}
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.global.bikeService.name }}
+  strategy:
+    type: RollingUpdate
+  minReadySeconds: {{ .Values.minReadySeconds }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.global.bikeService.name }}
+    spec:
+      containers:
+        - name: {{ .Values.global.bikeService.name }}
+          image: {{ .Values.image }}:{{ .Values.version }}
+          ports:
+            - containerPort: {{ .Values.global.bikeService.port }}
+          env:
+            - name: PG_DB_URL
+              value: {{ .Values.global.postgresql.service.name }}
+            - name: PG_DB_PORT
+              value: "{{ .Values.global.postgresql.port }}"
+            - name: PG_DB_NAME
+              value: {{ .Values.global.postgresql.db }}
+            - name: PG_DB_USER
+              value: {{ .Values.global.postgresql.user }}
+            - name: PG_DB_PWD
+              value: {{ .Values.global.postgresql.password }}
+            - name: PG_DB_SCHEMA
+              value: {{ .Values.global.postgresql.schema }}
+            - name: RABBITMQ_HOST
+              value: {{ .Values.global.rabbitmq.service.name }}
+            - name: RABBITMQ_PORT
+              value: "{{ .Values.global.rabbitmq.amqpPort }}"
+            - name: RABBITMQ_USER
+              value: {{ .Values.global.rabbitmq.user }}
+            - name: RABBITMQ_PWD
+              value: {{ .Values.global.rabbitmq.password }}
+            - name: RABBITMQ_VHOST
+              value: {{ .Values.global.rabbitmq.vhost }}
+          resources:
+            requests:
+              memory: {{ .Values.resources.requests.memory }}
+              cpu: {{ .Values.resources.requests.cpu }}
+            limits:
+              memory: {{ .Values.resources.limits.memory }}
+              cpu: {{ .Values.resources.limits.cpu }}

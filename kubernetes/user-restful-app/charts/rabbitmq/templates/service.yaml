@@ -1,0 +1,19 @@
+apiVersion: {{ .Values.apiVersion }}
+kind: Service
+metadata:
+  name: {{ .Values.global.rabbitmq.service.name }}
+  labels:
+    app: {{ .Values.global.rabbitmq.name }}
+spec:
+  type: NodePort
+  ports:
+    - name: amqp
+      port: {{ .Values.global.rabbitmq.amqpPort }}
+      targetPort: {{ .Values.global.rabbitmq.amqpPort }}
+      nodePort: {{ .Values.nodePort.amqpPort }}
+    - name: management
+      port: {{ .Values.managementPort }}
+      targetPort: {{ .Values.managementPort }}
+      nodePort: {{ .Values.nodePort.managementPort }}
+  selector:
+    app: rabbitmq

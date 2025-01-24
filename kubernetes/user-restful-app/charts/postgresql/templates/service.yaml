@@ -1,0 +1,14 @@
+apiVersion: {{ .Values.apiVersion }}
+kind: Service
+metadata:
+  name: {{ .Values.global.postgresql.service.name }}
+  labels:
+    app: {{ .Values.global.postgresql.name }}
+spec:
+  type: ClusterIP # This is the default value
+  ports:
+    - name: postgres-port
+      port: {{ .Values.global.postgresql.port }}
+      targetPort: {{ .Values.global.postgresql.port }}
+  selector:
+    app: {{.Values.global.postgresql.name}}

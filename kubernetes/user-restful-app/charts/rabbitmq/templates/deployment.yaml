@@ -1,0 +1,33 @@
+apiVersion: apps/{{ .Values.apiVersion }}
+kind: Deployment
+metadata:
+  name: {{ .Values.global.rabbitmq.deployment.name }}
+  labels:
+    app: {{ .Values.global.rabbitmq.name }}
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.global.rabbitmq.name }}
+  strategy:
+    type: Recreate
+  minReadySeconds: {{ .Values.minReadySeconds }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.global.rabbitmq.name }}
+    spec:
+      containers:
+        - name: {{ .Values.global.rabbitmq.name }}
+          image: {{ .Values.image }}:{{ .Values.version }}
+          ports:
+            - containerPort: {{ .Values.global.rabbitmq.amqpPort }}
+            - containerPort: {{ .Values.managementPort }}
+          resources:
+            requests:
+              memory: {{ .Values.resources.requests.memory }}
+              cpu: {{ .Values.resources.requests.cpu }}
+            limits:
+              memory: {{ .Values.resources.limits.memory }}
+              cpu: {{.Values.resources.limits.cpu}}
+      restartPolicy: Always

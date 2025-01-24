@@ -1,0 +1,47 @@
+global:
+  userService:
+    name: user-service
+    port: 8001
+    deployment:
+      name: user-service-deploy
+    service:
+      name: user-svc
+
+  carService:
+    name: car-service
+    port: 8002
+    deployment:
+      name: car-service-deploy
+    service:
+      name: car-svc
+
+  bikeService:
+    name: bike-service
+    port: 8003
+    deployment:
+      name: bike-service-deploy
+    service:
+      name: bike-svc
+
+  postgresql:
+    name: postgres
+    port: 5432
+    db: test
+    user: postgres
+    password: postgres
+    schema: user-app
+    deployment:
+      name: postgres-deploy
+    service:
+      name: postgres-svc
+
+  rabbitmq:
+    name: rabbitmq
+    amqpPort: 5672
+    user: test
+    password: test
+    vhost: test
+    deployment:
+      name: rabbitmq-deploy
+    service:
+      name: rabbitmq-svc
