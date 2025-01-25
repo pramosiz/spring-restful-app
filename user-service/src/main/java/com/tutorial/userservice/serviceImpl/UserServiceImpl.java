@@ -23,7 +23,7 @@ import com.tutorial.userservice.service.dto.UserDTO;
 import com.tutorial.userservice.serviceimpl.mapper.BikeMapper;
 import com.tutorial.userservice.serviceimpl.mapper.CarMapper;
 import com.tutorial.userservice.serviceimpl.mapper.UserMapper;
-import com.tutorial.userservice.serviceimpl.utlis.FeignUtils;
+import com.tutorial.userservice.serviceimpl.utils.FeignUtils;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -72,17 +72,17 @@ public class UserServiceImpl implements UserService {
 	}
 
 	public List<CarDTO> getCarsByUserId(Long userId) {
-		return carFeignClientV2.getCarsByUserId(userId)
+		return FeignUtils.safeFeignCall(() -> carFeignClientV2.getCarsByUserId(userId)
 				.stream()
 				.map(carMapper::carFeignRestDtoV2_2_CarDTO)
-				.collect(Collectors.toList());
+				.collect(Collectors.toList()));
 	}
 
 	public List<BikeDTO> getBikesByUserId(Long userId) {
-		return bikeFeignClientV2.getBikesByUserId(userId)
+		return FeignUtils.safeFeignCall(() -> bikeFeignClientV2.getBikesByUserId(userId)
 				.stream()
 				.map(bikeMapper::bikeFeignRestDtoV2_2_BikeDTO)
-				.collect(Collectors.toList());
+				.collect(Collectors.toList()));
 	}
 
 	public void deleteById(Long id) {

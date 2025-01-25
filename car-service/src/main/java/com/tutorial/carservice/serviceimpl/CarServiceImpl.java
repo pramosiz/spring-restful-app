@@ -13,6 +13,7 @@ import com.tutorial.carservice.service.CarService;
 import com.tutorial.carservice.service.dto.CarDTO;
 import com.tutorial.carservice.service.dto.NewCarDTO;
 import com.tutorial.carservice.serviceimpl.mapper.CarMapper;
+import com.tutorial.carservice.serviceimpl.utils.FeignUtils;
 
 import lombok.RequiredArgsConstructor;
 
@@ -38,12 +39,11 @@ public class CarServiceImpl implements CarService {
 	}
 
 	public Optional<CarDTO> saveNewCarWithExternalCheck(NewCarDTO newCarDTO) {
-		if (userFeignClient.getById(newCarDTO.getUserId()).isPresent()) {
-			Car carSaved = carRepository.save(carMapper.newCarDto_2_Car(newCarDTO));
-			return Optional.of(carMapper.car_2_CarDTO(carSaved));
-		} else {
-			return Optional.empty();
-		}
+		return FeignUtils.safeFeignCall(() -> userFeignClient.getById(newCarDTO.getUserId()))
+				.map(userRestDto -> {
+					Car carSaved = carRepository.save(carMapper.newCarDto_2_Car(newCarDTO));
+					return carMapper.car_2_CarDTO(carSaved);
+				});
 	}
 
 	public List<CarDTO> getByUserId(Long id) {

@@ -13,6 +13,7 @@ import com.tutorial.bikeservice.service.BikeService;
 import com.tutorial.bikeservice.service.dto.BikeDTO;
 import com.tutorial.bikeservice.service.dto.NewBikeDTO;
 import com.tutorial.bikeservice.serviceimpl.mapper.BikeMapper;
+import com.tutorial.bikeservice.serviceimpl.utils.FeignUtils;
 
 import lombok.RequiredArgsConstructor;
 
@@ -40,12 +41,11 @@ public class BikeServiceImpl implements BikeService {
 	}
 
 	public Optional<BikeDTO> saveNewBikeWithExternalCheck(NewBikeDTO newBikeDTO) {
-		if (userFeignClient.getById(newBikeDTO.getUserId()).isPresent()) {
-			Bike bikeSaved = bikeRepository.save(bikeMapper.newBikeDto_2_Bike(newBikeDTO));
-			return Optional.of(bikeMapper.bike_2_BikeDTO(bikeSaved));
-		} else {
-			return Optional.empty();
-		}
+		return FeignUtils.safeFeignCall(() -> userFeignClient.getById(newBikeDTO.getUserId()))
+				.map(userRestDto -> {
+					Bike bikeSaved = bikeRepository.save(bikeMapper.newBikeDto_2_Bike(newBikeDTO));
+					return bikeMapper.bike_2_BikeDTO(bikeSaved);
+				});
 	}
 
 	public List<BikeDTO> getByUserId(Long id) {

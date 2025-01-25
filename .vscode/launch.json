@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Config Server",
+            "request": "launch",
+            "mainClass": "com.tutorial.configservice.ConfigServiceApplication",
+            "projectName": "config-service"
+        },
+        {
+            "type": "java",
             "name": "Bike App",
             "request": "launch",
             "mainClass": "com.tutorial.bikeservice.BikeServiceApplication",
