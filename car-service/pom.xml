@@ -18,8 +18,8 @@
 		<java.version>17</java.version>
 		<postgresql.version>42.7.3</postgresql.version>
 		<h2.version>2.2.224</h2.version>
-		<mapstruct.version>1.6.2</mapstruct.version>
-		<lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
+		<!-- <mapstruct.version>1.6.2</mapstruct.version> -->
+		<!-- <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version> -->
 		<maven.compiler.plugin>3.8.1</maven.compiler.plugin>
 		<maven.surefire.version>3.5.0</maven.surefire.version>
 		<lombok.version>1.18.34</lombok.version>
@@ -79,11 +79,11 @@
 			<optional>true</optional>
 		</dependency>
 		<!-- Libreria para el mapeo de objetos en tiempo de compilacion -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>org.mapstruct</groupId>
 			<artifactId>mapstruct</artifactId>
 			<version>${mapstruct.version}</version>
-		</dependency>
+		</dependency> -->
 		<!-- Libreria para el uso de OpenFeign (peticiones REST) -->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
@@ -132,22 +132,22 @@
 					<target>${java.version}</target>
 					<annotationProcessorPaths>
 						<!-- Mapeo de objetos en tiempo de compilacion -->
-						<path>
+						<!-- <path>
 							<groupId>org.mapstruct</groupId>
 							<artifactId>mapstruct-processor</artifactId>
 							<version>${mapstruct.version}</version>
-						</path>
+						</path> -->
 						<path>
 							<groupId>org.projectlombok</groupId>
 							<artifactId>lombok</artifactId>
 							<version>${lombok.version}</version>
 						</path>
 						<!-- Mapeo de objetos con Lombok -->
-						<path>
+						<!-- <path>
 							<groupId>org.projectlombok</groupId>
 							<artifactId>lombok-mapstruct-binding</artifactId>
 							<version>${lombok-mapstruct-binding.version}</version>
-						</path>
+						</path> -->
 					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
