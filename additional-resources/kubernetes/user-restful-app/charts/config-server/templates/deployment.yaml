@@ -1,0 +1,42 @@
+apiVersion: apps/{{ .Values.apiVersion }}
+kind: Deployment
+metadata:
+  name: {{ .Values.global.configService.deployment.name }}
+  labels:
+    app: {{ .Values.global.configService.name }}
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.global.configService.name }}
+  strategy:
+    type: RollingUpdate
+  minReadySeconds: {{ .Values.minReadySeconds }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.global.configService.name }}
+    spec:
+      containers:
+        - name: {{ .Values.global.configService.name }}
+          image: {{ .Values.image }}:{{ .Values.version }}
+          ports:
+            - containerPort: {{ .Values.global.configService.port }}
+          env:
+            - name: REPOSITORY_BRANCH
+              value: {{ .Values.repositoryBranch }}
+            - name: REPOSITORY_URL
+              value: {{ .Values.repositoryUrl }}
+            - name: CONFIG_FILE_ROUTE
+              value: {{ .Values.configFileRoute }}
+            - name: JAVA_OPTS
+              value: -Xms256m -Xmx512m
+          resources:
+            requests:
+              memory: {{ .Values.resources.requests.memory }}
+              cpu: {{ .Values.resources.requests.cpu }}
+            limits:
+              memory: {{ .Values.resources.limits.memory }}
+              cpu: {{ .Values.resources.limits.cpu }}
+
+

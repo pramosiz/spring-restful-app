@@ -23,6 +23,10 @@ spec:
           ports:
             - containerPort: {{ .Values.global.userService.port }}
           env:
+            - name: CONFIG_SERVER_URI
+              value: {{ .Values.global.configService.service.name }}
+            - name: CONFIG_SERVER_PORT
+              value: "{{ .Values.global.configService.port }}"
             - name: PG_DB_URL
               value: {{ .Values.global.postgresql.service.name }}
             - name: PG_DB_PORT

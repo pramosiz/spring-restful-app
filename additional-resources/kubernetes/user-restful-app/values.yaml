@@ -1,4 +1,12 @@
 global:
+  configService:
+    name: config-service
+    port: 8888
+    deployment:
+      name: config-service-deploy
+    service:
+      name: config-svc
+
   userService:
     name: user-service
     port: 8001
