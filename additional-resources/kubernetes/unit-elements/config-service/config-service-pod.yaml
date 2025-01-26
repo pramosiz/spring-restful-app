@@ -1,0 +1,31 @@
+############################
+#####  PostgreSQL Pod  #####
+############################
+apiVersion: v1
+kind: Pod
+metadata:
+  name: config-service-pod
+  namespace: user-app
+  labels:
+    app: config-service
+spec:
+  containers:
+    - name: config-service
+      image: config-service:1.0.0
+      ports:
+        - containerPort: 8888
+      env:
+        - name: REPOSITORY_BRANCH
+          value: develop-servlet
+        - name: REPOSITORY_URL
+          value: https://github.com/pramosiz/spring-restful-app
+        - name: CONFIG_FILE_ROUTE
+          value: additional-resources/config-data
+      resources:
+        requests:
+          memory: "64Mi"
+          cpu: "250m"
+        limits:
+          memory: "128Mi"
+          cpu: "500m"
+      restartPolicy: OnFailure

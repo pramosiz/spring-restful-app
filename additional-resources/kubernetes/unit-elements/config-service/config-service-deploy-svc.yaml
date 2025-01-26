@@ -1,0 +1,64 @@
+###################################
+#####  PostgreSQL Deployment  #####
+###################################
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: config-service-deploy
+  namespace: user-app
+  labels:
+    app: config-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: config-service
+  strategy:
+    type: RollingUpdate
+  minReadySeconds: 5
+  template:
+    metadata:
+      labels:
+        app: config-service
+    spec:
+      containers:
+        - name: config-service
+          image: config-service:1.0.0
+          ports:
+            - containerPort: 8888
+          env:
+            - name: REPOSITORY_BRANCH
+              value: develop-servlet
+            - name: REPOSITORY_URL
+              value: https://github.com/pramosiz/spring-restful-app
+            - name: CONFIG_FILE_ROUTE
+              value: additional-resources/config-data
+            - name: JAVA_OPTS
+              value: -Xms256m -Xmx512m
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "500m"
+            limits:
+              memory: "1024Mi"
+              cpu: "1000m"
+
+---
+################################
+#####  PostgreSQL Service  #####
+################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: config-svc
+  namespace: user-app
+  labels:
+    app: config-service
+spec:
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      port: 8888
+      targetPort: 8888
+  selector:
+    app: config-service
