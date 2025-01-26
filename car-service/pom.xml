@@ -116,6 +116,12 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-bootstrap</artifactId>
 		</dependency>
+		<!-- Librería para que la aplicación se registre en el servidor de configuración
+		centralizado -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+		</dependency>
 	</dependencies>
 
 	<!-- Importa las dependencias de Spring Cloud para que no haya conflictos de versiones -->

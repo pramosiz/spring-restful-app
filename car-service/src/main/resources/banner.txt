@@ -10,4 +10,3 @@
  App Description: ${spring.application.description}
  Java Version: ${java.version}
  SpringBoot Version: ${spring-boot.version} | ${spring-boot.formatted-version}
- Database: ${spring.datasource.url} | Schema: ${spring.jpa.properties.hibernate.default_schema}

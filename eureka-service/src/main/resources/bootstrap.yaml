@@ -1,0 +1,10 @@
+server:
+   port: 8761
+spring:
+   application:
+      name: eureka-service
+      description: App for Eureka Server
+   cloud:
+      config:
+         enabled: true
+         uri: http://${CONFIG_SERVER_URI:localhost}:${CONFIG_SERVER_PORT:8888}

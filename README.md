@@ -8,7 +8,7 @@
 - `Docker`: Docker Network, Docker Compose 
 - `Kubernetes`: Charts, Metric Server
 - `Documentation API Rest`: Swagger (OpenApi), Doxygen (with Graphviz)
-- `Spring Cloud`: Config server
+- `Spring Cloud`: Config server, Eureka server
 - Tomcat
 - Maven
 - Spring Cloud `OpenFeign`
