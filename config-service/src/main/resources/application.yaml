@@ -5,9 +5,9 @@ spring:
     config:
       server:
         git:
-          default-label: develop-servlet
-          uri: https://github.com/pramosiz/spring-restful-app
-          search-paths: additional-resources/config-data
+          default-label: ${REPOSITORY_BRANCH:develop-servlet}
+          uri: ${REPOSITORY_URL:https://github.com/pramosiz/spring-restful-app}
+          search-paths: ${CONFIG_FILE_ROUTE:additional-resources/config-data}
           
   application:
     name: @project.name@

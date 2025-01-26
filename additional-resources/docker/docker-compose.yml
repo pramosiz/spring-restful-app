@@ -1,5 +1,15 @@
 version: '3'
 services:
+
+  config-service:
+    image: config-service:1.0.0
+    ports:
+      - 8888:8888
+    environment:
+      REPOSITORY_BRANCH: develop-servlet
+      REPOSITORY_URL: https://github.com/pramosiz/spring-restful-app
+      CONFIG_FILE_ROUTE: additional-resources/config-data
+
   rabbitmq:
     image: rabbitmq_user:v1
     ports:
@@ -25,6 +35,7 @@ services:
     depends_on:
       - rabbitmq
       - postgres
+      - config-service
     environment:
       PG_DB_URL: postgres
       PG_DB_PORT: 5432
@@ -49,6 +60,7 @@ services:
     depends_on:
       - rabbitmq
       - postgres
+      - config-service
     environment:
       PG_DB_URL: postgres
       PG_DB_PORT: 5432
@@ -69,6 +81,7 @@ services:
     depends_on:
       - rabbitmq
       - postgres
+      - config-service
     environment:
       PG_DB_URL: postgres
       PG_DB_PORT: 5432

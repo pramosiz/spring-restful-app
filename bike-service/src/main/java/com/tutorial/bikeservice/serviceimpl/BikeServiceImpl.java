@@ -41,11 +41,11 @@ public class BikeServiceImpl implements BikeService {
 	}
 
 	public Optional<BikeDTO> saveNewBikeWithExternalCheck(NewBikeDTO newBikeDTO) {
-		return FeignUtils.safeFeignCall(() -> userFeignClient.getById(newBikeDTO.getUserId()))
+		return FeignUtils.safeFeignCall(() -> userFeignClient.getById(newBikeDTO.getUserId())
 				.map(userRestDto -> {
 					Bike bikeSaved = bikeRepository.save(bikeMapper.newBikeDto_2_Bike(newBikeDTO));
 					return bikeMapper.bike_2_BikeDTO(bikeSaved);
-				});
+				}).orElseThrow(() -> new RuntimeException("User not found")));
 	}
 
 	public List<BikeDTO> getByUserId(Long id) {

@@ -39,11 +39,11 @@ public class CarServiceImpl implements CarService {
 	}
 
 	public Optional<CarDTO> saveNewCarWithExternalCheck(NewCarDTO newCarDTO) {
-		return FeignUtils.safeFeignCall(() -> userFeignClient.getById(newCarDTO.getUserId()))
+		return FeignUtils.safeFeignCall(() -> userFeignClient.getById(newCarDTO.getUserId())
 				.map(userRestDto -> {
 					Car carSaved = carRepository.save(carMapper.newCarDto_2_Car(newCarDTO));
 					return carMapper.car_2_CarDTO(carSaved);
-				});
+				}).orElseThrow(() -> new RuntimeException("User not found")));
 	}
 
 	public List<CarDTO> getByUserId(Long id) {
