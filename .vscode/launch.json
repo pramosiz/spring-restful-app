@@ -13,6 +13,13 @@
         },
         {
             "type": "java",
+            "name": "Eureka Server",
+            "request": "launch",
+            "mainClass": "com.tutorial.eurekaservice.EurekaServiceApplication",
+            "projectName": "eureka-service"
+        },
+        {
+            "type": "java",
             "name": "Bike App",
             "request": "launch",
             "mainClass": "com.tutorial.bikeservice.BikeServiceApplication",
