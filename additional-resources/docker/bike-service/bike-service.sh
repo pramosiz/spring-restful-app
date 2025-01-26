@@ -7,6 +7,8 @@ docker network create restful-app || true
 docker run -d \
   --network restful-app \
   -p 8003:8003 \
+  -e CONFIG_SERVER_URI=config-service \
+  -e CONFIG_SERVER_PORT=8888 \
   -e PG_DB_URL=postgres \
   -e PG_DB_PORT=5432 \
   -e PG_DB_NAME=test \
