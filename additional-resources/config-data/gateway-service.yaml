@@ -16,14 +16,14 @@ spring:
           enabled: true
       routes:
         - id: user-service
-          uri: lb://user-service # lb = loadbalance
+          uri: lb://user-service
           predicates:
-            - Path=/api/v2/** # ** es para acceder a cualquier ruta inferior
+            - Path=/api/v2/user/**
         - id: car-service
           uri: lb://car-service
           predicates:
-            - Path=/api/v2/**
+            - Path=/api/v2/car/**
         - id: bike-service
           uri: lb://bike-service
           predicates:
-            - Path=/api/v2/**
+            - Path=/api/v2/bike/**
