@@ -3,4 +3,4 @@ eureka:
     fetchRegistry: false
     registerWithEureka: false
     serviceUrl:
-      defaultZone: http://${EUREKA_SERVER_URI}:${server.port}/eureka/
+      defaultZone: http://${EUREKA_SERVER_URI:localhost}:${server.port}/eureka/
