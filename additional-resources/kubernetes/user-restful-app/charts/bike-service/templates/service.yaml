@@ -1,4 +1,4 @@
-apiVersion: {{ .Values.apiVersion }}
+apiVersion: {{ .Values.bikeService.apiVersion }}
 kind: Service
 metadata:
   name: {{ .Values.global.bikeService.service.name }}
@@ -8,8 +8,8 @@ spec:
   type: NodePort
   ports:
     - name: bike-service-port
-      port: {{ .Values.global.bikeService.port }}
-      targetPort: {{ .Values.global.bikeService.port }}
-      nodePort: {{ .Values.nodePort }}
+      port: {{ .Values.bikeService.port }}
+      targetPort: {{ .Values.bikeService.port }}
+      nodePort: {{ .Values.bikeService.nodePort }}
   selector:
     app: {{ .Values.global.bikeService.name }}

@@ -1,4 +1,4 @@
-apiVersion: {{ .Values.apiVersion }}
+apiVersion: {{ .Values.carService.apiVersion }}
 kind: Service
 metadata:
   name: {{ .Values.global.carService.service.name }}
@@ -8,8 +8,8 @@ spec:
   type: NodePort
   ports:
     - name: car-service-port
-      port: {{ .Values.global.carService.port }}
-      targetPort: {{ .Values.global.carService.port }}
-      nodePort: {{ .Values.nodePort }}
+      port: {{ .Values.carService.port }}
+      targetPort: {{ .Values.carService.port }}
+      nodePort: {{ .Values.carService.nodePort }}
   selector:
     app: {{ .Values.global.carService.name }}

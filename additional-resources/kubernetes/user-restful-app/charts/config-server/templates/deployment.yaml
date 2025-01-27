@@ -1,17 +1,17 @@
-apiVersion: apps/{{ .Values.apiVersion }}
+apiVersion: apps/{{ .Values.configService.apiVersion }}
 kind: Deployment
 metadata:
   name: {{ .Values.global.configService.deployment.name }}
   labels:
     app: {{ .Values.global.configService.name }}
 spec:
-  replicas: {{ .Values.replicas }}
+  replicas: {{ .Values.configService.replicas }}
   selector:
     matchLabels:
       app: {{ .Values.global.configService.name }}
   strategy:
     type: RollingUpdate
-  minReadySeconds: {{ .Values.minReadySeconds }}
+  minReadySeconds: {{ .Values.configService.minReadySeconds }}
   template:
     metadata:
       labels:
@@ -19,24 +19,24 @@ spec:
     spec:
       containers:
         - name: {{ .Values.global.configService.name }}
-          image: {{ .Values.image }}:{{ .Values.version }}
+          image: {{ .Values.configService.image }}:{{ .Values.configService.version }}
           ports:
             - containerPort: {{ .Values.global.configService.port }}
           env:
             - name: REPOSITORY_BRANCH
-              value: {{ .Values.repositoryBranch }}
+              value: {{ .Values.configService.repositoryBranch }}
             - name: REPOSITORY_URL
-              value: {{ .Values.repositoryUrl }}
+              value: {{ .Values.configService.repositoryUrl }}
             - name: CONFIG_FILE_ROUTE
-              value: {{ .Values.configFileRoute }}
+              value: {{ .Values.configService.configFileRoute }}
             - name: JAVA_OPTS
               value: -Xms256m -Xmx512m
           resources:
             requests:
-              memory: {{ .Values.resources.requests.memory }}
-              cpu: {{ .Values.resources.requests.cpu }}
+              memory: {{ .Values.configService.resources.requests.memory }}
+              cpu: {{ .Values.configService.resources.requests.cpu }}
             limits:
-              memory: {{ .Values.resources.limits.memory }}
-              cpu: {{ .Values.resources.limits.cpu }}
+              memory: {{ .Values.configService.resources.limits.memory }}
+              cpu: {{ .Values.configService.resources.limits.cpu }}
 
 

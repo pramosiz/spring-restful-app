@@ -1,15 +1,16 @@
-apiVersion: v1
-replicas: 1
-minReadySeconds: 5
-image: config-service
-version: 1.0.0
-repositoryBranch: develop-servlet
-repositoryUrl: https://github.com/pramosiz/spring-restful-app
-configFileRoute: additional-resources/config-data
-resources:
-  requests:
-    memory: "512Mi"
-    cpu: "500m"
-  limits:
-    memory: "1024Mi"
-    cpu: "1000m"
+configService:
+  apiVersion: v1
+  replicas: 1
+  minReadySeconds: 1
+  image: config-service
+  version: 1.0.0
+  repositoryBranch: develop-servlet
+  repositoryUrl: https://github.com/pramosiz/spring-restful-app
+  configFileRoute: additional-resources/config-data
+  resources:
+    requests:
+      memory: "1024Mi"
+      cpu: "500m"
+    limits:
+      memory: "2048Mi"
+      cpu: "1000m"

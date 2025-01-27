@@ -1,0 +1,14 @@
+eurekaService:
+  apiVersion: v1
+  replicas: 1
+  minReadySeconds: 30
+  image: eureka-service
+  version: 1.0.0
+  nodePort: 30761
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "500m"
+    limits:
+      memory: "1024Mi"
+      cpu: "1000m"

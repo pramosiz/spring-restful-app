@@ -1,0 +1,14 @@
+apiVersion: {{ .Values.eurekaService.apiVersion }}
+kind: Service
+metadata:
+  name: {{ .Values.global.eurekaService.service.name }}
+  labels:
+    app: {{ .Values.global.eurekaService.name }}
+spec:
+  type: NodePort
+  ports:
+    - port: {{ .Values.global.eurekaService.port }}
+      targetPort: {{ .Values.global.eurekaService.port }}
+      nodePort: {{ .Values.eurekaService.nodePort }}
+  selector:
+    app: {{ .Values.global.eurekaService.name }}

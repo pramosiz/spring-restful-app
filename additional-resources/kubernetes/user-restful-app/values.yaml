@@ -7,9 +7,16 @@ global:
     service:
       name: config-svc
 
+  eurekaService:
+    name: eureka-service
+    port: 8761
+    deployment:
+      name: eureka-service-deploy
+    service:
+      name: eureka-svc
+
   userService:
     name: user-service
-    port: 8001
     deployment:
       name: user-service-deploy
     service:
@@ -17,7 +24,6 @@ global:
 
   carService:
     name: car-service
-    port: 8002
     deployment:
       name: car-service-deploy
     service:
@@ -25,7 +31,6 @@ global:
 
   bikeService:
     name: bike-service
-    port: 8003
     deployment:
       name: bike-service-deploy
     service:

@@ -1,17 +1,17 @@
-apiVersion: apps/{{ .Values.apiVersion }}
+apiVersion: apps/{{ .Values.carService.apiVersion }}
 kind: Deployment
 metadata:
   name: {{ .Values.global.carService.deployment.name }}
   labels:
     app: {{ .Values.global.carService.name }}
 spec:
-  replicas: {{ .Values.replicas }}
+  replicas: {{ .Values.carService.replicas }}
   selector:
     matchLabels:
       app: {{ .Values.global.carService.name }}
   strategy:
     type: RollingUpdate
-  minReadySeconds: {{ .Values.minReadySeconds }}
+  minReadySeconds: {{ .Values.carService.minReadySeconds }}
   template:
     metadata:
       labels:
@@ -19,9 +19,9 @@ spec:
     spec:
       containers:
         - name: {{ .Values.global.carService.name }}
-          image: {{ .Values.image }}:{{ .Values.version }}
+          image: {{ .Values.carService.image }}:{{ .Values.carService.version }}
           ports:
-            - containerPort: {{ .Values.global.carService.port }}
+            - containerPort: {{ .Values.carService.port }}
           env:
             - name: CONFIG_SERVER_URI
               value: {{ .Values.global.configService.service.name }}
@@ -49,10 +49,14 @@ spec:
               value: {{ .Values.global.rabbitmq.password }}
             - name: RABBITMQ_VHOST
               value: {{ .Values.global.rabbitmq.vhost }}
+            - name: EUREKA_SERVER_URI
+              value: {{ .Values.global.eurekaService.service.name }}
+            - name: EUREKA_SERVER_PORT
+              value: "{{ .Values.global.eurekaService.port }}"
           resources:
             requests:
-              memory: {{ .Values.resources.requests.memory }}
-              cpu: {{ .Values.resources.requests.cpu }}
+              memory: {{ .Values.carService.resources.requests.memory }}
+              cpu: {{ .Values.carService.resources.requests.cpu }}
             limits:
-              memory: {{ .Values.resources.limits.memory }}
-              cpu: {{ .Values.resources.limits.cpu }}
+              memory: {{ .Values.carService.resources.limits.memory }}
+              cpu: {{ .Values.carService.resources.limits.cpu }}

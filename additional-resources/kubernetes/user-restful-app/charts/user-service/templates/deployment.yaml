@@ -1,17 +1,17 @@
-apiVersion: apps/{{ .Values.apiVersion }}
+apiVersion: apps/{{ .Values.userService.apiVersion }}
 kind: Deployment
 metadata:
   name: {{ .Values.global.userService.deployment.name }}
   labels:
     app: {{ .Values.global.userService.name }}
 spec:
-  replicas: {{ .Values.replicas }}
+  replicas: {{ .Values.userService.replicas }}
   selector:
     matchLabels:
       app: {{ .Values.global.userService.name }}
   strategy:
     type: RollingUpdate
-  minReadySeconds: {{ .Values.minReadySeconds }}
+  minReadySeconds: {{ .Values.userService.minReadySeconds }}
   template:
     metadata:
       labels:
@@ -19,9 +19,9 @@ spec:
     spec:
       containers:
         - name: {{ .Values.global.userService.name }}
-          image: {{.Values.image}}:{{ .Values.version }}
+          image: {{.Values.userService.image}}:{{ .Values.userService.version }}
           ports:
-            - containerPort: {{ .Values.global.userService.port }}
+            - containerPort: {{ .Values.userService.port }}
           env:
             - name: CONFIG_SERVER_URI
               value: {{ .Values.global.configService.service.name }}
@@ -49,18 +49,14 @@ spec:
               value: {{ .Values.global.rabbitmq.password }}
             - name: RABBITMQ_VHOST
               value: {{ .Values.global.rabbitmq.vhost }}
-            - name: CAR_SERVICE_URL
-              value: {{ .Values.global.carService.service.name }}
-            - name: CAR_SERVICE_PORT
-              value: "{{ .Values.global.carService.port }}"
-            - name: BIKE_SERVICE_URL
-              value: {{ .Values.global.bikeService.service.name }}
-            - name: BIKE_SERVICE_PORT
-              value: "{{ .Values.global.bikeService.port }}"
+            - name: EUREKA_SERVER_URI
+              value: {{ .Values.global.eurekaService.service.name }}
+            - name: EUREKA_SERVER_PORT
+              value: "{{ .Values.global.eurekaService.port }}"
           resources:
             requests:
-              memory: {{ .Values.resources.requests.memory }}
-              cpu: {{ .Values.resources.requests.cpu }}
+              memory: {{ .Values.userService.resources.requests.memory }}
+              cpu: {{ .Values.userService.resources.requests.cpu }}
             limits:
-              memory: {{ .Values.resources.limits.memory }}
-              cpu: {{ .Values.resources.limits.cpu }}
+              memory: {{ .Values.userService.resources.limits.memory }}
+              cpu: {{ .Values.userService.resources.limits.cpu }}

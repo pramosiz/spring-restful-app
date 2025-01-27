@@ -1,4 +1,4 @@
-apiVersion: {{ .Values.apiVersion }}
+apiVersion: {{ .Values.configService.apiVersion }}
 kind: Service
 metadata:
   name: {{ .Values.global.configService.service.name }}

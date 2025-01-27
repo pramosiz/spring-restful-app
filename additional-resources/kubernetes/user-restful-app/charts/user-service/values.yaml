@@ -1,13 +1,15 @@
-apiVersion: v1
-replicas: 1
-minReadySeconds: 5
-image: user-service
-version: 1.0.0
-nodePort: 30001
-resources:
-  requests:
-    memory: "64Mi"
-    cpu: "250m"
-  limits:
-    memory: "512Mi"
-    cpu: "500m"
+userService:
+  apiVersion: v1
+  replicas: 1
+  minReadySeconds: 60
+  image: user-service
+  version: 1.0.0
+  port: 8001
+  nodePort: 30001
+  resources:
+    requests:
+      memory: "64Mi"
+      cpu: "250m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"

@@ -1,17 +1,17 @@
-apiVersion: apps/{{ .Values.apiVersion }}
+apiVersion: apps/{{ .Values.bikeService.apiVersion }}
 kind: Deployment
 metadata:
   name: {{ .Values.global.bikeService.deployment.name }}
   labels:
     app: {{ .Values.global.bikeService.name }}
 spec:
-  replicas: {{ .Values.replicas }}
+  replicas: {{ .Values.bikeService.replicas }}
   selector:
     matchLabels:
       app: {{ .Values.global.bikeService.name }}
   strategy:
     type: RollingUpdate
-  minReadySeconds: {{ .Values.minReadySeconds }}
+  minReadySeconds: {{ .Values.bikeService.minReadySeconds }}
   template:
     metadata:
       labels:
@@ -19,9 +19,9 @@ spec:
     spec:
       containers:
         - name: {{ .Values.global.bikeService.name }}
-          image: {{ .Values.image }}:{{ .Values.version }}
+          image: {{ .Values.bikeService.image }}:{{ .Values.bikeService.version }}
           ports:
-            - containerPort: {{ .Values.global.bikeService.port }}
+            - containerPort: {{ .Values.bikeService.port }}
           env:
             - name: CONFIG_SERVER_URI
               value: {{ .Values.global.configService.service.name }}
@@ -49,10 +49,14 @@ spec:
               value: {{ .Values.global.rabbitmq.password }}
             - name: RABBITMQ_VHOST
               value: {{ .Values.global.rabbitmq.vhost }}
+            - name: EUREKA_SERVER_URI
+              value: {{ .Values.global.eurekaService.service.name }}
+            - name: EUREKA_SERVER_PORT
+              value: "{{ .Values.global.eurekaService.port }}"
           resources:
             requests:
-              memory: {{ .Values.resources.requests.memory }}
-              cpu: {{ .Values.resources.requests.cpu }}
+              memory: {{ .Values.bikeService.resources.requests.memory }}
+              cpu: {{ .Values.bikeService.resources.requests.cpu }}
             limits:
-              memory: {{ .Values.resources.limits.memory }}
-              cpu: {{ .Values.resources.limits.cpu }}
+              memory: {{ .Values.bikeService.resources.limits.memory }}
+              cpu: {{ .Values.bikeService.resources.limits.cpu }}

@@ -1,0 +1,40 @@
+apiVersion: apps/{{ .Values.eurekaService.apiVersion }}
+kind: Deployment
+metadata:
+  name: {{ .Values.global.eurekaService.deployment.name }}
+  labels:
+    app: {{ .Values.global.eurekaService.name }}
+spec:
+  replicas: {{ .Values.eurekaService.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.global.eurekaService.name }}
+  strategy:
+    type: Recreate
+  minReadySeconds: {{.Values.eurekaService.minReadySeconds}}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.global.eurekaService.name }}
+    spec:
+      containers:
+        - name: {{ .Values.global.eurekaService.name }}
+          image: {{ .Values.eurekaService.image }}:{{ .Values.eurekaService.version }}
+          ports:
+            - containerPort: {{ .Values.global.eurekaService.port }}
+          env:
+            - name: CONFIG_SERVER_URI
+              value: {{ .Values.global.configService.service.name }}
+            - name: CONFIG_SERVER_PORT
+              value: "{{ .Values.global.configService.port }}"
+            - name: EUREKA_SERVER_URI
+              value: {{ .Values.global.eurekaService.service.name }}
+            - name: JAVA_OPTS
+              value: -Xms256m -Xmx512m
+          resources:
+            requests:
+              memory: {{ .Values.eurekaService.resources.requests.memory }}
+              cpu: {{ .Values.eurekaService.resources.requests.cpu }}
+            limits:
+              memory: {{ .Values.eurekaService.resources.limits.memory }}
+              cpu: {{.Values.eurekaService.resources.limits.cpu}}

@@ -1,4 +1,4 @@
-apiVersion: {{ .Values.apiVersion }}
+apiVersion: {{ .Values.userService.apiVersion }}
 kind: Service
 metadata:
   name: {{ .Values.global.userService.service.name }}
@@ -8,7 +8,8 @@ spec:
   type: NodePort
   ports:
     - name: user-service-port
-      port: {{ .Values.global.userService.port }}
-      nodePort: {{ .Values.nodePort }}
+      port: {{ .Values.userService.port }}
+      targetPort: {{ .Values.userService.port }}
+      nodePort: {{ .Values.userService.nodePort }}
   selector:
     app: {{ .Values.global.userService.name }}
