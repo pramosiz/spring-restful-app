@@ -38,6 +38,13 @@
             "request": "launch",
             "mainClass": "com.tutorial.userservice.UserServiceApplication",
             "projectName": "user-service"
+        },
+        {
+            "type": "java",
+            "name": "Gateway Server",
+            "request": "launch",
+            "mainClass": "com.tutorial.gatewayservice.GatewayServiceApplication",
+            "projectName": "gateway-service"
         }
     ]
 }
