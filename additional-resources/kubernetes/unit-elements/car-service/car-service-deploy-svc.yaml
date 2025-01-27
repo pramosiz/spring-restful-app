@@ -53,6 +53,10 @@ spec:
               value: test
             - name: RABBITMQ_VHOST
               value: test
+            - name: EUREKA_SERVER_URI
+              value: eureka-svc
+            - name: EUREKA_SERVER_PORT
+              value: "8761"
           resources:
             requests:
               memory: "64Mi"

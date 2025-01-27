@@ -1,0 +1,64 @@
+###################################
+#####  RabbitMQ Deployment  #####
+###################################
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eureka-service-deploy
+  namespace: user-app
+  labels:
+    app: eureka-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: eureka-service
+  strategy:
+    type: Recreate
+  minReadySeconds: 5
+  template:
+    metadata:
+      labels:
+        app: eureka-service
+    spec:
+      containers:
+        - name: eureka-service
+          image: eureka-service:1.0.0
+          ports:
+            - containerPort: 8761
+          env:
+            - name: CONFIG_SERVER_URI
+              value: config-svc
+            - name: CONFIG_SERVER_PORT
+              value: "8888"
+            - name: EUREKA_SERVER_URI
+              value: eureka-svc
+            - name: JAVA_OPTS
+              value: -Xms256m -Xmx512m
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "500m"
+            limits:
+              memory: "1024Mi"
+              cpu: "1000m"
+
+---
+##############################
+#####  RabbitMQ Service  #####
+##############################
+apiVersion: v1
+kind: Service
+metadata:
+  name: eureka-svc
+  namespace: user-app
+  labels:
+    app: eureka-service
+spec:
+  type: NodePort
+  ports:
+    - port: 8761
+      targetPort: 8761
+      nodePort: 30761
+  selector:
+    app: eureka-service

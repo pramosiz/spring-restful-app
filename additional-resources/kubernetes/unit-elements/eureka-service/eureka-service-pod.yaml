@@ -1,0 +1,32 @@
+############################
+#####  PostgreSQL Pod  #####
+############################
+apiVersion: v1
+kind: Pod
+metadata:
+  name: eureka-service-pod
+  namespace: user-app
+  labels:
+    app: eureka-service
+spec:
+  containers:
+    - name: eureka-service
+      image: eureka-service:1.0.0
+      ports:
+        - containerPort: 8761
+      env:
+        - name: CONFIG_SERVER_URI
+          value: config-service
+        - name: CONFIG_SERVER_PORT
+          value: "8888"
+        - name: EUREKA_SERVER_URI
+          value: eureka-svc
+        - name: JAVA_OPTS
+          value: -Xms256m -Xmx512m
+      resources:
+        requests:
+          memory: "512Mi"
+          cpu: "500m"
+        limits:
+          memory: "1024Mi"
+          cpu: "1000m"
