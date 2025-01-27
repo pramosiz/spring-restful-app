@@ -1,0 +1,1 @@
+To install application is necessary Config Server was running in the cluster

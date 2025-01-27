@@ -1,7 +1,7 @@
 carService:
   apiVersion: v1
   replicas: 1
-  minReadySeconds: 60
+  minReadySeconds: 20
   image: car-service
   version: 1.0.0
   port: 8002

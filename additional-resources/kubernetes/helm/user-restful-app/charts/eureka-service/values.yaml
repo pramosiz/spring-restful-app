@@ -1,7 +1,7 @@
 eurekaService:
   apiVersion: v1
   replicas: 1
-  minReadySeconds: 30
+  minReadySeconds: 5
   image: eureka-service
   version: 1.0.0
   nodePort: 30761

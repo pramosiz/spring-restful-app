@@ -1,11 +1,11 @@
-bikeService:
+userService:
   apiVersion: v1
   replicas: 1
-  minReadySeconds: 60
-  image: bike-service
+  minReadySeconds: 20
+  image: user-service
   version: 1.0.0
-  port: 8003
-  nodePort: 30003
+  port: 8001
+  nodePort: 30001
   resources:
     requests:
       memory: "64Mi"
