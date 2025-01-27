@@ -20,8 +20,6 @@ docker run -d \
   -e RABBITMQ_USER=test \
   -e RABBITMQ_PWD=test \
   -e RABBITMQ_VHOST=test \
-  -e CAR_SERVICE_URL=car-service \
-  -e CAR_SERVICE_PORT=8002 \
-  -e BIKE_SERVICE_URL=bike-service \
-  -e BIKE_SERVICE_PORT=8003 \
+  -e EUREKA_SERVER_URI=eureka-service \
+  -e EUREKA_SERVER_PORT=8761 \
   --name user-service user-service:1.0.0

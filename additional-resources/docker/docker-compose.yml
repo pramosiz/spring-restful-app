@@ -10,6 +10,17 @@ services:
       REPOSITORY_URL: https://github.com/pramosiz/spring-restful-app
       CONFIG_FILE_ROUTE: additional-resources/config-data
 
+  eureka-service:
+    image: eureka-service:1.0.0
+    ports:
+      - 8761:8761
+    depends_on:
+      - config-service
+    environment:
+      CONFIG_SERVER_URI: config-service
+      CONFIG_SERVER_PORT: 8888
+      EUREKA_SERVER_URI: eureka-service
+
   rabbitmq:
     image: rabbitmq_user:v1
     ports:
@@ -35,7 +46,7 @@ services:
     depends_on:
       - rabbitmq
       - postgres
-      - config-service
+      - eureka-service
     environment:
       PG_DB_URL: postgres
       PG_DB_PORT: 5432
@@ -48,10 +59,10 @@ services:
       RABBITMQ_USER: test
       RABBITMQ_PWD: test
       RABBITMQ_VHOST: test
-      CAR_SERVICE_URL: car-service
-      CAR_SERVICE_PORT: 8002
-      BIKE_SERVICE_URL: bike-service
-      BIKE_SERVICE_PORT: 8003
+      CONFIG_SERVER_URI: config-service
+      CONFIG_SERVER_PORT: 8888
+      EUREKA_SERVER_URI: eureka-service
+      EUERKA_SERVER_PORT: 8761
   
   car-service:
     image: car-service:1.0.0
@@ -60,7 +71,7 @@ services:
     depends_on:
       - rabbitmq
       - postgres
-      - config-service
+      - eureka-service
     environment:
       PG_DB_URL: postgres
       PG_DB_PORT: 5432
@@ -73,6 +84,10 @@ services:
       RABBITMQ_USER: test
       RABBITMQ_PWD: test
       RABBITMQ_VHOST: test
+      CONFIG_SERVER_URI: config-service
+      CONFIG_SERVER_PORT: 8888
+      EUREKA_SERVER_URI: eureka-service
+      EUERKA_SERVER_PORT: 8761
   
   bike-service:
     image: bike-service:1.0.0
@@ -81,7 +96,7 @@ services:
     depends_on:
       - rabbitmq
       - postgres
-      - config-service
+      - eureka-service
     environment:
       PG_DB_URL: postgres
       PG_DB_PORT: 5432
@@ -94,3 +109,7 @@ services:
       RABBITMQ_USER: test
       RABBITMQ_PWD: test
       RABBITMQ_VHOST: test
+      CONFIG_SERVER_URI: config-service
+      CONFIG_SERVER_PORT: 8888
+      EUREKA_SERVER_URI: eureka-service
+      EUERKA_SERVER_PORT: 8761
