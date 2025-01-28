@@ -1,0 +1,55 @@
+apiVersion: apps/{{ .Values.gatewayService.apiVersion }}
+kind: Deployment
+metadata:
+  name: {{ .Values.global.gatewayService.deployment.name }}
+  labels:
+    app: {{ .Values.global.gatewayService.name }}
+spec:
+  replicas: {{ .Values.gatewayService.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.global.gatewayService.name }}
+  strategy:
+    type: Recreate
+  minReadySeconds: {{ .Values.gatewayService.minReadySeconds }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.global.gatewayService.name }}
+    spec:
+      containers:
+        - name: {{ .Values.global.gatewayService.name }}
+          image: {{ .Values.gatewayService.image }}:{{ .Values.gatewayService.version }}
+          ports:
+            - containerPort: {{ .Values.gatewayService.port }}
+          env:
+            - name: CONFIG_SERVER_URI
+              value: {{ .Values.global.configService.service.name }}
+            - name: CONFIG_SERVER_PORT
+              value: "{{ .Values.global.configService.port }}"
+            - name: EUREKA_SERVER_URI
+              value: {{ .Values.global.eurekaService.service.name }}
+            - name: EUREKA_SERVER_PORT
+              value: "{{ .Values.global.eurekaService.port }}"
+            - name: USER_SERVICE_NAME
+              value: {{ .Values.global.userService.name }}
+            - name: USER_SERVICE_URI
+              value: {{ .Values.global.userService.name }}
+            - name: CAR_SERVICE_NAME
+              value: {{ .Values.global.carService.name }}
+            - name: CAR_SERVICE_URI
+              value: {{ .Values.global.carService.name }}
+            - name: BIKE_SERVICE_NAME
+              value: {{ .Values.global.bikeService.name }}
+            - name: BIKE_SERVICE_URI
+              value: {{ .Values.global.bikeService.name }}
+            - name: JAVA_OPTS
+              value: -Xms256m -Xmx512m
+          resources:
+            requests:
+              memory: {{ .Values.gatewayService.resources.requests.memory }}
+              cpu: {{ .Values.gatewayService.resources.requests.cpu }}
+            limits:
+              memory: {{ .Values.gatewayService.resources.limits.memory }}
+              cpu: {{ .Values.gatewayService.resources.limits.cpu }}
+

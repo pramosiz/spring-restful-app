@@ -1,10 +1,11 @@
-eurekaService:
+gatewayService:
   apiVersion: v1
   replicas: 1
-  minReadySeconds: 5
-  image: eureka-service
+  minReadySeconds: 60
+  image: gateway-service
   version: 1.0.0
-  nodePort: 30761
+  port: 8080
+  nodePort: 30080
   resources:
     requests:
       memory: "512Mi"

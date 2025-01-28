@@ -1,0 +1,31 @@
+eurekaService:
+  apiVersion: v1
+  replicas: 1
+  minReadySeconds: 5
+  image: eureka-service
+  version: 1.0.0
+  nodePort: 30761
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "500m"
+    limits:
+      memory: "1024Mi"
+      cpu: "1000m"
+
+global:
+  configService:
+    name: config-service
+    port: 8888
+    deployment:
+      name: config-service-deploy
+    service:
+      name: config-svc
+
+  eurekaService:
+    name: eureka-service
+    port: 8761
+    deployment:
+      name: eureka-service-deploy
+    service:
+      name: eureka-svc

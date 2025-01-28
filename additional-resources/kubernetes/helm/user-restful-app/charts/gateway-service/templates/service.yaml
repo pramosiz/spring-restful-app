@@ -1,0 +1,14 @@
+apiVersion: {{ .Values.gatewayService.apiVersion }}
+kind: Service
+metadata:
+  name: {{ .Values.global.gatewayService.service.name }}
+  labels:
+    app: {{ .Values.global.gatewayService.name }}
+spec:
+  type: NodePort
+  ports:
+    - port: {{ .Values.gatewayService.port }}
+      targetPort: {{ .Values.gatewayService.port }}
+      nodePort: {{ .Values.gatewayService.nodePort }}
+  selector:
+    app: {{ .Values.global.gatewayService.name }}

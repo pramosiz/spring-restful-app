@@ -15,6 +15,13 @@ global:
     service:
       name: eureka-svc
 
+  gatewayService:
+    name: gateway-service
+    deployment:
+      name: gateway-service-deploy
+    service:
+      name: gateway-svc
+
   userService:
     name: user-service
     deployment:
