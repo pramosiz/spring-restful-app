@@ -7,7 +7,7 @@ eureka:
     serviceUrl:
       defaultZone: http://${EUREKA_SERVER_URI:localhost}:${EUREKA_SERVER_PORT:8761}/eureka
   instance:
-    hostname: ${spring.application.name}
+    instanceId: ${spring.application.name}:${spring.application.instance-id:${random.name}}
 spring:
   cloud:
     gateway:
@@ -15,15 +15,15 @@ spring:
         locator:
           enabled: true
       routes:
-        - id: user-service
-          uri: lb://user-service
+        - id: ${USER_SERVICE_NAME:user-service}
+          uri: lb://${USER_SERVICE_NAME:user-service}
           predicates:
             - Path=/api/v2/user/**
-        - id: car-service
-          uri: lb://car-service
+        - id: ${CAR_SERVICE_NAME:car-service}
+          uri: lb://${CAR_SERVICE_NAME:car-service}
           predicates:
             - Path=/api/v2/car/**
-        - id: bike-service
-          uri: lb://bike-service
+        - id: ${BIKE_SERVICE_NAME:bike-service}
+          uri: lb://${BIKE_SERVICE_NAME:bike-service}
           predicates:
             - Path=/api/v2/bike/**
