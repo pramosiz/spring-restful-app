@@ -1,0 +1,46 @@
+############################
+#####  Gateway Pod     #####
+############################
+apiVersion: v1
+kind: Pod
+metadata:
+  name: gateway-service-pod
+  namespace: user-app
+  labels:
+    app: gateway-service
+spec:
+  containers:
+    - name: gateway-service
+      image: gateway-service:1.0.0
+      ports:
+        - containerPort: 8080
+      env:
+        - name: CONFIG_SERVER_URI
+          value: config-svc
+        - name: CONFIG_SERVER_PORT
+          value: "8888"
+        - name: EUREKA_SERVER_URI
+          value: eureka-svc
+        - name: EUREKA_SERVER_PORT
+          value: "8761"
+        - name: USER_SERVICE_NAME
+          value: user-service
+        - name: USER_SERVICE_URI
+          value: user-svc
+        - name: CAR_SERVICE_NAME
+          value: car-service
+        - name: CAR_SERVICE_URI
+          value: car-svc
+        - name: BIKE_SERVICE_NAME
+          value: bike-service
+        - name: BIKE_SERVICE_URI
+          value: bike-svc
+        - name: JAVA_OPTS
+          value: -Xms256m -Xmx512m
+      resources:
+        requests:
+          memory: "512Mi"
+          cpu: "500m"
+        limits:
+          memory: "1024Mi"
+          cpu: "1000m"

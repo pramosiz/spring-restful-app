@@ -1,0 +1,78 @@
+###################################
+#####  RabbitMQ Deployment  #####
+###################################
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway-service-deploy
+  namespace: user-app
+  labels:
+    app: gateway-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gateway-service
+  strategy:
+    type: Recreate
+  minReadySeconds: 5
+  template:
+    metadata:
+      labels:
+        app: gateway-service
+    spec:
+      containers:
+        - name: gateway-service
+          image: gateway-service:1.0.0
+          ports:
+            - containerPort: 8080
+          env:
+            - name: CONFIG_SERVER_URI
+              value: config-svc
+            - name: CONFIG_SERVER_PORT
+              value: "8888"
+            - name: EUREKA_SERVER_URI
+              value: eureka-svc
+            - name: EUREKA_SERVER_PORT
+              value: "8761"
+            - name: USER_SERVICE_NAME
+              value: user-service
+            - name: USER_SERVICE_URI
+              value: user-service
+            - name: CAR_SERVICE_NAME
+              value: car-service
+            - name: CAR_SERVICE_URI
+              value: car-service
+            - name: BIKE_SERVICE_NAME
+              value: bike-service
+            - name: BIKE_SERVICE_URI
+              value: bike-service
+            - name: JAVA_OPTS
+              value: -Xms256m -Xmx512m
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "500m"
+            limits:
+              memory: "1024Mi"
+              cpu: "1000m"
+
+---
+##############################
+#####  RabbitMQ Service  #####
+##############################
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway-svc
+  namespace: user-app
+  labels:
+    app: gateway-service
+spec:
+  type: NodePort
+  ports:
+    - port: 8080
+      targetPort: 8080
+      nodePort: 30080
+  selector:
+    app: gateway-service

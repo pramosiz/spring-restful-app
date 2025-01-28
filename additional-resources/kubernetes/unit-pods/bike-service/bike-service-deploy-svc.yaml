@@ -1,5 +1,5 @@
 ###################################
-#####  PostgreSQL Deployment  #####
+#####  Bike Deployment        #####
 ###################################
 apiVersion: apps/v1
 kind: Deployment
@@ -67,7 +67,7 @@ spec:
 
 ---
 ################################
-#####  PostgreSQL Service  #####
+#####  Bike Service        #####
 ################################
 apiVersion: v1
 kind: Service
