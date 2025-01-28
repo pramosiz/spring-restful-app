@@ -12,6 +12,9 @@ docker run -d \
   -e EUREKA_SERVER_URI=eureka-service \
   -e EUREKA_SERVER_PORT=8761 \
   -e USER_SERVICE_NAME=user-service \
+  -e USER_SERVICE_URI=user-service \
   -e CAR_SERVICE_NAME=car-service \
+  -e CAR_SERVICE_URI=car-service \
   -e BIKE_SERVICE_NAME=bike-service \
+  -e BIKE_SERVICE_URI=bike-service \
   --name gateway-service gateway-service:1.0.0
