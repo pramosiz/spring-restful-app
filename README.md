@@ -4,11 +4,11 @@
 <br/><br/>
 # Spring boot RESTful Servlet App with this technologies:
 
-- Layered Architecture
+- Layered Architecture: user-service, car-service, bike-service
 - `Docker`: Docker Network, Docker Compose 
 - `Kubernetes`: Charts, Metric Server
 - `Documentation API Rest`: Swagger (OpenApi), Doxygen (with Graphviz)
-- `Spring Cloud`: Config server, Eureka server, Gateway
+- `Spring Cloud`: Config server, Eureka server, Gateway Server
 - Tomcat
 - Maven
 - Spring Cloud `OpenFeign`
