@@ -36,3 +36,18 @@ eureka:
   instance:
     instanceId: ${spring.application.name}:${spring.application.instance-id:${random.name}}
     preferIpAddress: true
+
+####################
+# Circuit Breaker ##
+####################
+resilience4j.circuitbreaker:
+  instances:
+    userService:
+      registerHealthIndicator: true # Register CircuitBreakerHealthIndicator
+      slidingWindowSize: 10 # Number of calls in the sliding window
+      permittedNumberOfCallsInHalfOpenState: 3 # Number of permitted calls in half open state
+      slidingWindowType: TIME_BASED
+      minimumNumberOfCalls: 4
+      waitDurationInOpenState: 5s
+      failureRateThreshold: 50
+      eventConsumerBufferSize: 10
