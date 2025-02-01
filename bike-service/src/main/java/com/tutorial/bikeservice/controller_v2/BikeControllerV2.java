@@ -21,6 +21,7 @@ import com.tutorial.bikeservice.service.BikeService;
 import com.tutorial.bikeservice.service.dto.BikeDTO;
 import com.tutorial.bikeservice.service.dto.NewBikeDTO;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -86,6 +87,7 @@ public class BikeControllerV2 {
 	}
 
 	@GetMapping("/byUser/{userId}")
+	@CircuitBreaker(name = "userService", fallbackMethod = "fallbackGetBikesByUserId")
 	@Operation(summary = "Get Bike by User", description = "Service to get Bikes by User", responses = {
 			@ApiResponse(responseCode = "200", description = "Success"),
 			@ApiResponse(responseCode = "400", description = "Bad requested for getting Bikes") })
@@ -96,5 +98,10 @@ public class BikeControllerV2 {
 				.collect(Collectors.toList());
 		return bikesReturned.isEmpty() ? ResponseEntity.notFound().build()
 				: ResponseEntity.ok(bikesReturned);
+	}
+
+	private ResponseEntity<List<BikeRestDtoV2>> fallbackGetBikesByUserId(Long userId, Exception e) {
+		log.error("Error getting bikes by user id: {}", userId, e);
+		return ResponseEntity.badRequest().build();
 	}
 }

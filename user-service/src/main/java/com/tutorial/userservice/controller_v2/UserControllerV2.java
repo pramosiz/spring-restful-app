@@ -26,14 +26,17 @@ import com.tutorial.userservice.service.UserService;
 import com.tutorial.userservice.service.dto.NewUserDTO;
 import com.tutorial.userservice.service.dto.UserDTO;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Controller for managing Users
  */
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v2/user")
@@ -124,6 +127,7 @@ public class UserControllerV2 {
 	 * @return Cars list by User
 	 */
 	@GetMapping("/{userId}/cars")
+	@CircuitBreaker(name = "carService", fallbackMethod = "fallbackGetCarsByUserId")
 	@Operation(summary = "Get cars by User ID", description = "Service to get user's cars", responses = {
 			@ApiResponse(responseCode = "200", description = "Success"),
 			@ApiResponse(responseCode = "404", description = "User not found") })
@@ -139,6 +143,11 @@ public class UserControllerV2 {
 		//@formatter:on
 	}
 
+	private ResponseEntity<List<CarRestDtoV2>> fallbackGetCarsByUserId(int userId, Throwable t) {
+		log.warn("The user with userId {} hasn't got cars", userId, t);
+		return ResponseEntity.notFound().build();
+	}
+
 	/**
 	 * Service to get bikes by User ID
 	 * 
@@ -146,6 +155,7 @@ public class UserControllerV2 {
 	 * @return Bikes list by User
 	 */
 	@GetMapping("/{userId}/bikes")
+	@CircuitBreaker(name = "bikeService", fallbackMethod = "fallbackGetBikesByUserId")
 	@Operation(summary = "Get bikes by User ID", description = "Service to get user's bikes", responses = {
 			@ApiResponse(responseCode = "200", description = "Success"),
 			@ApiResponse(responseCode = "404", description = "User not found") })
@@ -161,6 +171,11 @@ public class UserControllerV2 {
 		//@formatter:on
 	}
 
+	private ResponseEntity<List<BikeRestDtoV2>> fallbackGetBikesByUserId(int userId, Throwable t) {
+		log.warn("The user with userId {} hasn't got bikes", userId, t);
+		return ResponseEntity.notFound().build();
+	}
+
 	/**
 	 * Get all vehicles by User ID
 	 * 
@@ -168,6 +183,7 @@ public class UserControllerV2 {
 	 * @return User and vehicles
 	 */
 	@GetMapping("/getAll/{userId}")
+	@CircuitBreaker(name = "vehicleService", fallbackMethod = "fallbackGetAllVehiclesByUserId")
 	@Operation(summary = "Get vehicles by User ID", description = "Service to get user's vehicles", responses = {
 			@ApiResponse(responseCode = "200", description = "Success"),
 			@ApiResponse(responseCode = "404", description = "User not found") })
@@ -177,5 +193,10 @@ public class UserControllerV2 {
 		} catch (RuntimeException e) {
 			return ResponseEntity.notFound().build();
 		}
+	}
+
+	private ResponseEntity<Map<String, Object>> fallbackGetAllVehiclesByUserId(Long userId, Throwable t) {
+		log.warn("The user with userId {} hasn't got vehicles", userId, t);
+		return ResponseEntity.notFound().build();
 	}
 }

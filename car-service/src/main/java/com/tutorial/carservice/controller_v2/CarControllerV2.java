@@ -21,6 +21,7 @@ import com.tutorial.carservice.service.CarService;
 import com.tutorial.carservice.service.dto.CarDTO;
 import com.tutorial.carservice.service.dto.NewCarDTO;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -83,6 +84,7 @@ public class CarControllerV2 {
 	}
 
 	@GetMapping("/byUser/{userId}")
+	@CircuitBreaker(name = "userService", fallbackMethod = "fallbackGetCarsByUserId")
 	@Operation(summary = "Get Car by User", description = "Service to get Cars by User", responses = {
 			@ApiResponse(responseCode = "200", description = "Success"),
 			@ApiResponse(responseCode = "400", description = "Bad requested for getting Cars") })
@@ -93,5 +95,10 @@ public class CarControllerV2 {
 				.collect(Collectors.toList());
 		return carsReturned.isEmpty() ? ResponseEntity.notFound().build()
 				: ResponseEntity.ok(carsReturned);
+	}
+
+	private ResponseEntity<List<CarRestDtoV2>> fallbackGetCarsByUserId(Long userId, Exception e) {
+		log.error("Error getting Cars by User: {}", e.getMessage());
+		return ResponseEntity.badRequest().build();
 	}
 }
