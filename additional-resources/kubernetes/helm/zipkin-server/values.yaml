@@ -1,0 +1,21 @@
+global:
+  zipkin:
+    name: zipkin
+    apiVersion: v1
+    port: 9411
+    nodePort: 30411
+    replicas: 1
+    minReadySeconds: 5
+    image: bitnami/zipkin
+    version: 3.4.4
+    deployment:
+      name: zipkin-deploy
+    service:
+      name: zipkin-svc
+    resources:
+      requests:
+        memory: "64Mi"
+        cpu: "250m"
+      limits:
+        memory: "512Mi"
+        cpu: "500m"

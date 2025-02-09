@@ -65,3 +65,11 @@ global:
       name: rabbitmq-deploy
     service:
       name: rabbitmq-svc
+
+  zipkin:
+    name: zipkin
+    port: 9411
+    deployment:
+      name: zipkin-deploy
+    service:
+      name: zipkin-svc

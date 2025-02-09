@@ -57,6 +57,10 @@ spec:
               value: eureka-svc
             - name: EUREKA_SERVER_PORT
               value: "8761"
+            - name: ZIPKIN_SERVER_URI
+              value: zipkin-svc
+            - name: ZIPKIN_SERVER_PORT
+              value: "9411"
           resources:
             requests:
               memory: "64Mi"

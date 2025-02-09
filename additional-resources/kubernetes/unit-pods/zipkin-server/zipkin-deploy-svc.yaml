@@ -1,0 +1,56 @@
+#################################
+#####  Zipkin Deployment    #####
+#################################
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zipkin-deploy
+  namespace: user-app
+  labels:
+    app: zipkin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zipkin
+  strategy:
+    type: Recreate
+  minReadySeconds: 5
+  template:
+    metadata:
+      labels:
+        app: zipkin
+    spec:
+      containers:
+        - name: zipkin
+          image: bitnami/zipkin:3.4.4
+          ports:
+            - containerPort: 9411
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+      restartPolicy: Always
+
+---
+##############################
+#####  Zipkin Service    #####
+##############################
+apiVersion: v1
+kind: Service
+metadata:
+  name: zipkin-svc
+  namespace: user-app
+  labels:
+    app: zipkin
+spec:
+  type: NodePort
+  ports:
+    - port: 9411
+      targetPort: 9411
+      nodePort: 30411
+  selector:
+    app: zipkin

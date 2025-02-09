@@ -27,6 +27,9 @@
 		<amqp.version>3.3.8</amqp.version>
 		<rabbit.test.version>3.1.7</rabbit.test.version>
 		<spring-cloud.version>2023.0.5</spring-cloud.version>
+		<micrometer.version>1.4.2</micrometer.version>
+		<zipkin-reporter.version>3.4.3</zipkin-reporter.version>
+		<micrometer-core.version>1.14.3</micrometer-core.version>
 	</properties>
 
 	<dependencies>
@@ -138,6 +141,24 @@
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
+		</dependency>
+		<!-- Librería para la trazabilidad de las peticiones con Brave -->
+		<dependency>
+			<groupId>io.micrometer</groupId>
+			<artifactId>micrometer-core</artifactId>
+			<version>${micrometer-core.version}</version>
+		</dependency>
+		<!-- Librería para la trazabilidad de las peticiones con Brave -->
+		<dependency>
+			<groupId>io.micrometer</groupId>
+			<artifactId>micrometer-tracing-bridge-brave</artifactId>
+			<version>${micrometer.version}</version>
+		</dependency>
+		<!-- Librería para el envío de las trazas a Zipkin -->
+		<dependency>
+			<groupId>io.zipkin.reporter2</groupId>
+			<artifactId>zipkin-reporter-brave</artifactId>
+			<version>${zipkin-reporter.version}</version>
 		</dependency>
 	</dependencies>
 

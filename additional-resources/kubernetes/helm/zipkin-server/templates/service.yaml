@@ -1,0 +1,14 @@
+apiVersion: {{ .Values.global.zipkin.apiVersion }}
+kind: Service
+metadata:
+  name: {{ .Values.global.zipkin.service.name }}
+  labels:
+    app: {{ .Values.global.zipkin.name }}
+spec:
+  type: NodePort
+  ports:
+    - port: {{ .Values.global.zipkin.port }}
+      targetPort: {{ .Values.global.zipkin.port }}
+      nodePort: {{ .Values.global.zipkin.nodePort }}
+  selector:
+    app: {{ .Values.global.zipkin.name }}

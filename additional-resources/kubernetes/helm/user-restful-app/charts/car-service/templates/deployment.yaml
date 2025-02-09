@@ -53,6 +53,10 @@ spec:
               value: {{ .Values.global.eurekaService.service.name }}
             - name: EUREKA_SERVER_PORT
               value: "{{ .Values.global.eurekaService.port }}"
+            - name: ZIPKIN_SERVER_URI
+              value: {{ .Values.global.zipkin.service.name }}
+            - name: ZIPKIN_SERVER_PORT
+              value: "{{ .Values.global.zipkin.port }}"
           resources:
             requests:
               memory: {{ .Values.carService.resources.requests.memory }}

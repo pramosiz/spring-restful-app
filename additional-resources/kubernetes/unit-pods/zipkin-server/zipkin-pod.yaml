@@ -1,0 +1,24 @@
+############################
+#####  Zipkin Pod    #######
+############################
+apiVersion: v1
+kind: Pod
+metadata:
+  name: zipkin-pod
+  namespace: user-app
+  labels:
+    app: zipkin
+spec:
+  containers:
+    - name: zipkin
+      image: bitnami/zipkin:3.4.4
+      ports:
+        - containerPort: 9411
+      resources:
+        requests:
+          memory: "64Mi"
+          cpu: "250m"
+        limits:
+          memory: "128Mi"
+          cpu: "500m"
+      restartPolicy: Always

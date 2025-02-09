@@ -10,6 +10,7 @@
 - `Documentation API Rest`: Swagger (OpenApi), Doxygen (with Graphviz)
 - `Spring Cloud`: Config server, Eureka server, Gateway Server, OpenFeign
 - Failure tolerance: CircuitBreaker (`Spring Cloud`)
+- `Tracing`: Zipkin
 - Tomcat
 - Maven
 - `Spring Data` JPA

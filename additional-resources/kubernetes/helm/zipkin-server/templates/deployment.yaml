@@ -1,0 +1,32 @@
+apiVersion: apps/{{ .Values.global.zipkin.apiVersion }}
+kind: Deployment
+metadata:
+  name: {{ .Values.global.zipkin.deployment.name }}
+  labels:
+    app: {{ .Values.global.zipkin.name }}
+spec:
+  replicas: {{ .Values.global.zipkin.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.global.zipkin.name }}
+  strategy:
+    type: Recreate
+  minReadySeconds: {{ .Values.global.zipkin.minReadySeconds }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.global.zipkin.name }}
+    spec:
+      containers:
+        - name: {{ .Values.global.zipkin.name }}
+          image: {{ .Values.global.zipkin.image }}:{{ .Values.global.zipkin.version }}
+          ports:
+            - containerPort: {{ .Values.global.zipkin.port }}
+          resources:
+            requests:
+              memory: {{ .Values.global.zipkin.resources.requests.memory }}
+              cpu: {{ .Values.global.zipkin.resources.requests.cpu }}
+            limits:
+              memory: {{ .Values.global.zipkin.resources.limits.memory }}
+              cpu: {{ .Values.global.zipkin.resources.limits.cpu }}
+      restartPolicy: Always
