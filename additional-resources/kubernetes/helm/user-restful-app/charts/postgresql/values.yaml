@@ -4,7 +4,7 @@ minReadySeconds: 5
 image: postgres
 version: 14.13
 mountPath: /var/lib/postgresql/data
-mountHost: /Users/pabloramosizquierdo/Desktop/Pablo/Dockers/PostgreSQL/data
+mountHost: /Users/pabloramosizquierdo/Desktop/Pablo/Tecnologias/Dockers/PostgreSQL/data
 resources:
   requests:
     memory: "64Mi"

@@ -47,7 +47,7 @@ spec:
       volumes:
         - name: postgres-storage
           hostPath:
-            path: /Users/pabloramosizquierdo/Desktop/Pablo/Dockers/PostgreSQL/data
+            path: /Users/pabloramosizquierdo/Desktop/Pablo/Tecnologias/Dockers/PostgreSQL/data
 
 ---
 ################################
