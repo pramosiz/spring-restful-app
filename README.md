@@ -4,7 +4,8 @@
 <br/><br/>
 # Spring boot RESTful Servlet App with this technologies:
 
-- Layered Architecture: user-service, car-service, bike-service
+- `Layered` Architecture: user-service
+- `Hexagonal` Architecture: bike-service, car-service
 - `Docker`: Docker Network, Docker Compose 
 - `Kubernetes`: Charts, Metric Server
 - `Documentation API Rest`: Swagger (OpenApi), Doxygen (with Graphviz)
