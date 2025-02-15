@@ -65,6 +65,13 @@ public class UserControllerV2 {
 				.map(userMapperRestV2::userDto_2_UserRestDtoV2)
 				.collect(Collectors.toList()), 
 				HttpStatus.OK);
+		
+		// List<UserDTO> users = userService.getAll();
+		// return users.isEmpty() ? ResponseEntity.noContent().build()
+		// 		: ResponseEntity.ok(
+		// 				users.stream()
+		// 				.map(userMapperRestV2::userDto_2_UserRestDtoV2)
+		// 				.collect(Collectors.toList()));
 		//@formatter:on
 	}
 
