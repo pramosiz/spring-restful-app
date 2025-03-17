@@ -13,6 +13,8 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -72,7 +74,9 @@ class UserControllerV2Test {
         when(userService.getAll()).thenReturn(expectedResponse);
 
         // When
-        ResultActions response = httpClient.perform(MockMvcRequestBuilders.get("/api/v2/user"));
+        ResultActions response = httpClient
+                .perform(MockMvcRequestBuilders.get("/api/v2/user")
+                        .with(httpBasic("admin", "admin")));
 
         // Then
         verify(userService).getAll();
@@ -96,7 +100,8 @@ class UserControllerV2Test {
         when(userService.getAll()).thenReturn(expectedResponse);
 
         // When
-        ResultActions response = httpClient.perform(MockMvcRequestBuilders.get("/api/v2/user"));
+        ResultActions response = httpClient
+                .perform(MockMvcRequestBuilders.get("/api/v2/user").with(httpBasic("admin", "admin")));
 
         // Then
         verify(userService).getAll();
@@ -116,7 +121,8 @@ class UserControllerV2Test {
         when(userService.getById(id)).thenReturn(Optional.of(userReturned));
 
         // When
-        ResultActions response = httpClient.perform(MockMvcRequestBuilders.get("/api/v2/user/" + id));
+        ResultActions response = httpClient
+                .perform(MockMvcRequestBuilders.get("/api/v2/user/" + id).with(httpBasic("admin", "admin")));
 
         // Then
         verify(userService).getById(idCaptor.capture());
@@ -139,7 +145,8 @@ class UserControllerV2Test {
         Long id = 10L;
 
         // When
-        ResultActions response = httpClient.perform(MockMvcRequestBuilders.get("/api/v2/user/" + id));
+        ResultActions response = httpClient
+                .perform(MockMvcRequestBuilders.get("/api/v2/user/" + id).with(httpBasic("admin", "admin")));
 
         // Then
         verify(userService).getById(idCaptor.capture());
@@ -162,7 +169,9 @@ class UserControllerV2Test {
 
         // When
         ResultActions response = httpClient.perform(MockMvcRequestBuilders.post("/api/v2/user")
-                .contentType(MediaType.APPLICATION_JSON).content("{\"name\":\"John\",\"email\":\"john@gmail.com\"}"));
+                .contentType(MediaType.APPLICATION_JSON).content("{\"name\":\"John\",\"email\":\"john@gmail.com\"}")
+                .with(httpBasic("admin", "admin"))
+                .with(csrf()));
 
         // Then
         verify(userService).saveNewUser(newUserCaptor.capture());
@@ -199,7 +208,8 @@ class UserControllerV2Test {
         when(userService.getCarsByUserId(userId)).thenReturn(expectedResponse);
 
         // When
-        ResultActions response = httpClient.perform(MockMvcRequestBuilders.get("/api/v2/user/" + userId + "/cars"));
+        ResultActions response = httpClient.perform(
+                MockMvcRequestBuilders.get("/api/v2/user/" + userId + "/cars").with(httpBasic("admin", "admin")));
 
         // Then
         verify(userService).getCarsByUserId(idCaptor.capture());
@@ -229,7 +239,8 @@ class UserControllerV2Test {
         when(userService.getCarsByUserId(userId)).thenReturn(expectedResponse);
 
         // When
-        ResultActions response = httpClient.perform(MockMvcRequestBuilders.get("/api/v2/user/" + userId + "/cars"));
+        ResultActions response = httpClient.perform(
+                MockMvcRequestBuilders.get("/api/v2/user/" + userId + "/cars").with(httpBasic("admin", "admin")));
 
         // Then
         verify(userService).getCarsByUserId(idCaptor.capture());
@@ -260,7 +271,8 @@ class UserControllerV2Test {
         when(userService.getBikesByUserId(userId)).thenReturn(expectedResponse);
 
         // When
-        ResultActions response = httpClient.perform(MockMvcRequestBuilders.get("/api/v2/user/" + userId + "/bikes"));
+        ResultActions response = httpClient.perform(
+                MockMvcRequestBuilders.get("/api/v2/user/" + userId + "/bikes").with(httpBasic("admin", "admin")));
 
         // Then
         verify(userService).getBikesByUserId(idCaptor.capture());
@@ -290,7 +302,8 @@ class UserControllerV2Test {
         when(userService.getBikesByUserId(userId)).thenReturn(expectedResponse);
 
         // When
-        ResultActions response = httpClient.perform(MockMvcRequestBuilders.get("/api/v2/user/" + userId + "/bikes"));
+        ResultActions response = httpClient.perform(
+                MockMvcRequestBuilders.get("/api/v2/user/" + userId + "/bikes").with(httpBasic("admin", "admin")));
 
         // Then
         verify(userService).getBikesByUserId(idCaptor.capture());
@@ -307,7 +320,10 @@ class UserControllerV2Test {
         Long id = 1L;
 
         // When
-        ResultActions response = httpClient.perform(MockMvcRequestBuilders.delete("/api/v2/user/" + id));
+        ResultActions response = httpClient
+                .perform(MockMvcRequestBuilders.delete("/api/v2/user/" + id)
+                        .with(httpBasic("admin", "admin"))
+                        .with(csrf()));
 
         // Then
         verify(userService).deleteById(idCaptor.capture());
@@ -325,7 +341,8 @@ class UserControllerV2Test {
         when(userService.getUserAndVehicles(id)).thenReturn(expectedResponse);
 
         // When
-        ResultActions response = httpClient.perform(MockMvcRequestBuilders.get("/api/v2/user/getAll/" + id));
+        ResultActions response = httpClient
+                .perform(MockMvcRequestBuilders.get("/api/v2/user/getAll/" + id).with(httpBasic("admin", "admin")));
 
         // Then
         verify(userService).getUserAndVehicles(idCaptor.capture());
@@ -344,7 +361,8 @@ class UserControllerV2Test {
         when(userService.getUserAndVehicles(id)).thenThrow(new RuntimeException("User not found"));
 
         // When
-        ResultActions response = httpClient.perform(MockMvcRequestBuilders.get("/api/v2/user/getAll/" + id));
+        ResultActions response = httpClient
+                .perform(MockMvcRequestBuilders.get("/api/v2/user/getAll/" + id).with(httpBasic("admin", "admin")));
 
         // Then
         verify(userService).getUserAndVehicles(idCaptor.capture());

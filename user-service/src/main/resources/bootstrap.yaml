@@ -8,3 +8,10 @@ spring:
       config:
          enabled: true
          uri: http://${CONFIG_SERVER_URI:localhost}:${CONFIG_SERVER_PORT:8888}
+   security:
+      user:
+         name: admin
+         password: admin
+         roles: ADMIN
+      cors:
+         allowed-origins: ${CORS_ALLOWED_ORIGINS:*}

@@ -2,9 +2,12 @@ package com.tutorial.userservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
-@SpringBootApplication
+@SpringBootApplication(exclude = SecurityAutoConfiguration.class) // Reemplazamos la seguridad por defecto por la mía
+
+// @SpringBootApplication
 @EnableFeignClients
 public class UserServiceApplication {
 
