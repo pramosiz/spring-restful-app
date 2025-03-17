@@ -3,10 +3,10 @@
 # Crear una red Docker si no existe
 docker network create restful-app || true
 
-# Run the Docker container for bike-service
+# Run the Docker container for user-service
+# -p 8001:8001 \ # Uncomment for Swagger UI
 docker run -d \
   --network restful-app \
-   -p 8003:8003 \
   -e CONFIG_SERVER_URI=config-service \
   -e CONFIG_SERVER_PORT=8888 \
   -e PG_DB_URL=postgres \
@@ -22,4 +22,4 @@ docker run -d \
   -e RABBITMQ_VHOST=test \
   -e EUREKA_SERVER_URI=eureka-service \
   -e EUREKA_SERVER_PORT=8761 \
-  --name bike-service bike-service:1.0.0
+  --name user-service user-service:1.0.0

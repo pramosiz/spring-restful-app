@@ -19,6 +19,7 @@ spring:
         - id: ${USER_SERVICE_NAME:user-service}
           uri: lb://${USER_SERVICE_URI:user-service}
           predicates:
+            # - Path=/** # Replace this for use Swagger UI
             - Path=/api/v2/user/**
         - id: ${CAR_SERVICE_NAME:car-service}
           uri: lb://${CAR_SERVICE_URI:car-service}
