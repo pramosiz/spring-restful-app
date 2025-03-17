@@ -1,4 +1,5 @@
 FROM eclipse-temurin:17-jdk-noble
+# FROM eclipse-temurin:17-alpine
 
 RUN mkdir /jars /logs /logs/user-service
 
