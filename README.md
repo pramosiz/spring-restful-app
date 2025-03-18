@@ -10,6 +10,7 @@
 - `Kubernetes`: Charts, Metric Server
 - `Documentation API Rest`: Swagger (OpenApi), Doxygen (with Graphviz)
 - `Spring Cloud`: Config server, Eureka server, Gateway Server, OpenFeign
+- `Security`: Keycloak, Spring Security
 - Failure tolerance: CircuitBreaker (`Spring Cloud`)
 - `Tracing`: Zipkin
 - Tomcat
