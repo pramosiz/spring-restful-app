@@ -29,6 +29,8 @@ import com.tutorial.carservice.domain.V2.dto.NewCarDTO;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 import lombok.SneakyThrows;
 
@@ -72,7 +74,12 @@ class BikeControllerV2Test {
         when(carService.getAll()).thenReturn(expectedResponse);
 
         // When
-        ResultActions response = httpClient.perform(MockMvcRequestBuilders.get("/api/v2/car"));
+        // ResultActions response =
+        // httpClient.perform(MockMvcRequestBuilders.get("/api/v2/car"));
+        ResultActions response = httpClient
+                .perform(MockMvcRequestBuilders.get("/api/v2/car")
+                        .with(jwt().jwt(jwt -> jwt.claim("scope", "read")))
+                        .with(csrf()));
 
         // Then
         verify(carService).getAll();
@@ -98,7 +105,12 @@ class BikeControllerV2Test {
         when(carService.getAll()).thenReturn(expectedResponse);
 
         // When
-        ResultActions response = httpClient.perform(MockMvcRequestBuilders.get("/api/v2/car"));
+        // ResultActions response =
+        // httpClient.perform(MockMvcRequestBuilders.get("/api/v2/car"));
+        ResultActions response = httpClient
+                .perform(MockMvcRequestBuilders.get("/api/v2/car")
+                        .with(jwt().jwt(jwt -> jwt.claim("scope", "read")))
+                        .with(csrf()));
 
         // Then
         verify(carService).getAll();
@@ -119,7 +131,12 @@ class BikeControllerV2Test {
         when(carService.getById(id)).thenReturn(Optional.of(carReturned));
 
         // When
-        ResultActions response = httpClient.perform(MockMvcRequestBuilders.get("/api/v2/car/" + id));
+        // ResultActions response =
+        // httpClient.perform(MockMvcRequestBuilders.get("/api/v2/car/" + id));
+        ResultActions response = httpClient
+                .perform(MockMvcRequestBuilders.get("/api/v2/car/" + id)
+                        .with(jwt().jwt(jwt -> jwt.claim("scope", "read")))
+                        .with(csrf()));
 
         // Then
         verify(carService).getById(idCaptor.capture());
@@ -142,7 +159,12 @@ class BikeControllerV2Test {
         Long id = 10L;
 
         // When
-        ResultActions response = httpClient.perform(MockMvcRequestBuilders.get("/api/v2/car/" + id));
+        // ResultActions response =
+        // httpClient.perform(MockMvcRequestBuilders.get("/api/v2/car/" + id));
+        ResultActions response = httpClient
+                .perform(MockMvcRequestBuilders.get("/api/v2/car/" + id)
+                        .with(jwt().jwt(jwt -> jwt.claim("scope", "read")))
+                        .with(csrf()));
 
         // Then
         verify(carService).getById(idCaptor.capture());
@@ -165,9 +187,16 @@ class BikeControllerV2Test {
         when(carService.saveNewCarWithExternalCheck(any(NewCarDTO.class))).thenReturn(Optional.of(carReturned));
 
         // When
-        ResultActions response = httpClient.perform(MockMvcRequestBuilders.post("/api/v2/car")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(contentTest));
+        // ResultActions response =
+        // httpClient.perform(MockMvcRequestBuilders.post("/api/v2/car")
+        // .contentType(MediaType.APPLICATION_JSON)
+        // .content(contentTest));
+        ResultActions response = httpClient
+                .perform(MockMvcRequestBuilders.post("/api/v2/car")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(contentTest)
+                        .with(jwt().jwt(jwt -> jwt.claim("scope", "write")))
+                        .with(csrf()));
 
         // Then
         verify(carService).saveNewCarWithExternalCheck(newCarCaptor.capture());
@@ -196,9 +225,16 @@ class BikeControllerV2Test {
         when(carService.saveNewCarWithExternalCheck(any(NewCarDTO.class))).thenReturn(Optional.empty());
 
         // When
-        ResultActions response = httpClient.perform(MockMvcRequestBuilders.post("/api/v2/car")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(contentTest));
+        // ResultActions response =
+        // httpClient.perform(MockMvcRequestBuilders.post("/api/v2/car")
+        // .contentType(MediaType.APPLICATION_JSON)
+        // .content(contentTest));
+        ResultActions response = httpClient
+                .perform(MockMvcRequestBuilders.post("/api/v2/car")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(contentTest)
+                        .with(jwt().jwt(jwt -> jwt.claim("scope", "write")))
+                        .with(csrf()));
 
         // Then
         verify(carService).saveNewCarWithExternalCheck(newCarCaptor.capture());
@@ -231,7 +267,13 @@ class BikeControllerV2Test {
         when(carService.getByUserId(userId)).thenReturn(expectedResponse);
 
         // When
-        ResultActions response = httpClient.perform(MockMvcRequestBuilders.get("/api/v2/car/byUser/" + userId));
+        // ResultActions response =
+        // httpClient.perform(MockMvcRequestBuilders.get("/api/v2/car/byUser/" +
+        // userId));
+        ResultActions response = httpClient
+                .perform(MockMvcRequestBuilders.get("/api/v2/car/byUser/" + userId)
+                        .with(jwt().jwt(jwt -> jwt.claim("scope", "read")))
+                        .with(csrf()));
 
         // Then
         verify(carService).getByUserId(idCaptor.capture());
@@ -261,7 +303,13 @@ class BikeControllerV2Test {
         when(carService.getByUserId(userId)).thenReturn(expectedResponse);
 
         // When
-        ResultActions response = httpClient.perform(MockMvcRequestBuilders.get("/api/v2/car/byUser/" + userId));
+        // ResultActions response =
+        // httpClient.perform(MockMvcRequestBuilders.get("/api/v2/car/byUser/" +
+        // userId));
+        ResultActions response = httpClient
+                .perform(MockMvcRequestBuilders.get("/api/v2/car/byUser/" + userId)
+                        .with(jwt().jwt(jwt -> jwt.claim("scope", "read")))
+                        .with(csrf()));
 
         // Then
         verify(carService).getByUserId(idCaptor.capture());
@@ -280,7 +328,12 @@ class BikeControllerV2Test {
         doNothing().when(carService).deleteById(id);
 
         // When
-        ResultActions response = httpClient.perform(MockMvcRequestBuilders.delete("/api/v2/car/" + id));
+        // ResultActions response =
+        // httpClient.perform(MockMvcRequestBuilders.delete("/api/v2/car/" + id));
+        ResultActions response = httpClient
+                .perform(MockMvcRequestBuilders.delete("/api/v2/car/" + id)
+                        .with(jwt().jwt(jwt -> jwt.claim("scope", "write")))
+                        .with(csrf()));
 
         // Then
         verify(carService).deleteById(idCaptor.capture());
