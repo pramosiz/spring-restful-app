@@ -32,6 +32,8 @@
 		<micrometer-core.version>1.14.3</micrometer-core.version>
 		<spring-security-test.version>6.4.2</spring-security-test.version>
 		<openapi.version>2.6.0</openapi.version>
+		<spring-security-oauth2-jose.version>6.3.8
+		</spring-security-oauth2-jose.version>
 	</properties>
 
 	<dependencies>
@@ -173,6 +175,17 @@
 			<artifactId>spring-security-test</artifactId>
 			<version>${spring-security-test.version}</version>
 			<scope>test</scope>
+		</dependency>
+		<!-- Librería para el uso de Spring Security OAuth2 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+		</dependency>
+		<!-- Librería para el uso de Spring Security OAuth2 Java Object Signing and Encryption -->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-oauth2-jose</artifactId>
+			<version>${spring-security-oauth2-jose.version}</version>
 		</dependency>
 
 	</dependencies>

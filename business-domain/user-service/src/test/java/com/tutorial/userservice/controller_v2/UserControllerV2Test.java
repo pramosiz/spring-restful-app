@@ -14,7 +14,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
+// import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -74,9 +75,13 @@ class UserControllerV2Test {
         when(userService.getAll()).thenReturn(expectedResponse);
 
         // When
+        // ResultActions response = httpClient
+        // .perform(MockMvcRequestBuilders.get("/api/v2/user")
+        // .with(httpBasic("admin", "admin")));
         ResultActions response = httpClient
                 .perform(MockMvcRequestBuilders.get("/api/v2/user")
-                        .with(httpBasic("admin", "admin")));
+                        .with(jwt().jwt(jwt -> jwt.claim("scope", "read")))
+                        .with(csrf()));
 
         // Then
         verify(userService).getAll();
@@ -100,8 +105,13 @@ class UserControllerV2Test {
         when(userService.getAll()).thenReturn(expectedResponse);
 
         // When
+        // ResultActions response = httpClient
+        // .perform(MockMvcRequestBuilders.get("/api/v2/user").with(httpBasic("admin",
+        // "admin")));
         ResultActions response = httpClient
-                .perform(MockMvcRequestBuilders.get("/api/v2/user").with(httpBasic("admin", "admin")));
+                .perform(MockMvcRequestBuilders.get("/api/v2/user")
+                        .with(jwt().jwt(jwt -> jwt.claim("scope", "read")))
+                        .with(csrf()));
 
         // Then
         verify(userService).getAll();
@@ -121,8 +131,13 @@ class UserControllerV2Test {
         when(userService.getById(id)).thenReturn(Optional.of(userReturned));
 
         // When
+        // ResultActions response = httpClient
+        // .perform(MockMvcRequestBuilders.get("/api/v2/user/" +
+        // id).with(httpBasic("admin", "admin")));
         ResultActions response = httpClient
-                .perform(MockMvcRequestBuilders.get("/api/v2/user/" + id).with(httpBasic("admin", "admin")));
+                .perform(MockMvcRequestBuilders.get("/api/v2/user/" + id)
+                        .with(jwt().jwt(jwt -> jwt.claim("scope", "read")))
+                        .with(csrf()));
 
         // Then
         verify(userService).getById(idCaptor.capture());
@@ -145,8 +160,13 @@ class UserControllerV2Test {
         Long id = 10L;
 
         // When
+        // ResultActions response = httpClient
+        // .perform(MockMvcRequestBuilders.get("/api/v2/user/" +
+        // id).with(httpBasic("admin", "admin")));
         ResultActions response = httpClient
-                .perform(MockMvcRequestBuilders.get("/api/v2/user/" + id).with(httpBasic("admin", "admin")));
+                .perform(MockMvcRequestBuilders.get("/api/v2/user/" + id)
+                        .with(jwt().jwt(jwt -> jwt.claim("scope", "read")))
+                        .with(csrf()));
 
         // Then
         verify(userService).getById(idCaptor.capture());
@@ -168,9 +188,14 @@ class UserControllerV2Test {
         when(userService.saveNewUser(any(NewUserDTO.class))).thenReturn(userReturned);
 
         // When
+        // ResultActions response =
+        // httpClient.perform(MockMvcRequestBuilders.post("/api/v2/user")
+        // .contentType(MediaType.APPLICATION_JSON).content("{\"name\":\"John\",\"email\":\"john@gmail.com\"}")
+        // .with(httpBasic("admin", "admin"))
+        // .with(csrf()));
         ResultActions response = httpClient.perform(MockMvcRequestBuilders.post("/api/v2/user")
                 .contentType(MediaType.APPLICATION_JSON).content("{\"name\":\"John\",\"email\":\"john@gmail.com\"}")
-                .with(httpBasic("admin", "admin"))
+                .with(jwt().jwt(jwt -> jwt.claim("scope", "write")))
                 .with(csrf()));
 
         // Then
@@ -208,8 +233,13 @@ class UserControllerV2Test {
         when(userService.getCarsByUserId(userId)).thenReturn(expectedResponse);
 
         // When
+        // ResultActions response = httpClient.perform(
+        // MockMvcRequestBuilders.get("/api/v2/user/" + userId +
+        // "/cars").with(httpBasic("admin", "admin")));
         ResultActions response = httpClient.perform(
-                MockMvcRequestBuilders.get("/api/v2/user/" + userId + "/cars").with(httpBasic("admin", "admin")));
+                MockMvcRequestBuilders.get("/api/v2/user/" + userId + "/cars")
+                        .with(jwt().jwt(jwt -> jwt.claim("scope", "read")))
+                        .with(csrf()));
 
         // Then
         verify(userService).getCarsByUserId(idCaptor.capture());
@@ -239,8 +269,13 @@ class UserControllerV2Test {
         when(userService.getCarsByUserId(userId)).thenReturn(expectedResponse);
 
         // When
+        // ResultActions response = httpClient.perform(
+        // MockMvcRequestBuilders.get("/api/v2/user/" + userId +
+        // "/cars").with(httpBasic("admin", "admin")));
         ResultActions response = httpClient.perform(
-                MockMvcRequestBuilders.get("/api/v2/user/" + userId + "/cars").with(httpBasic("admin", "admin")));
+                MockMvcRequestBuilders.get("/api/v2/user/" + userId + "/cars")
+                        .with(jwt().jwt(jwt -> jwt.claim("scope", "read")))
+                        .with(csrf()));
 
         // Then
         verify(userService).getCarsByUserId(idCaptor.capture());
@@ -271,8 +306,13 @@ class UserControllerV2Test {
         when(userService.getBikesByUserId(userId)).thenReturn(expectedResponse);
 
         // When
+        // ResultActions response = httpClient.perform(
+        // MockMvcRequestBuilders.get("/api/v2/user/" + userId +
+        // "/bikes").with(httpBasic("admin", "admin")));
         ResultActions response = httpClient.perform(
-                MockMvcRequestBuilders.get("/api/v2/user/" + userId + "/bikes").with(httpBasic("admin", "admin")));
+                MockMvcRequestBuilders.get("/api/v2/user/" + userId + "/bikes")
+                        .with(jwt().jwt(jwt -> jwt.claim("scope", "read")))
+                        .with(csrf()));
 
         // Then
         verify(userService).getBikesByUserId(idCaptor.capture());
@@ -302,8 +342,13 @@ class UserControllerV2Test {
         when(userService.getBikesByUserId(userId)).thenReturn(expectedResponse);
 
         // When
+        // ResultActions response = httpClient.perform(
+        // MockMvcRequestBuilders.get("/api/v2/user/" + userId +
+        // "/bikes").with(httpBasic("admin", "admin")));
         ResultActions response = httpClient.perform(
-                MockMvcRequestBuilders.get("/api/v2/user/" + userId + "/bikes").with(httpBasic("admin", "admin")));
+                MockMvcRequestBuilders.get("/api/v2/user/" + userId + "/bikes")
+                        .with(jwt().jwt(jwt -> jwt.claim("scope", "read")))
+                        .with(csrf()));
 
         // Then
         verify(userService).getBikesByUserId(idCaptor.capture());
@@ -320,9 +365,13 @@ class UserControllerV2Test {
         Long id = 1L;
 
         // When
+        // ResultActions response = httpClient
+        // .perform(MockMvcRequestBuilders.delete("/api/v2/user/" + id)
+        // .with(httpBasic("admin", "admin"))
+        // .with(csrf()));
         ResultActions response = httpClient
                 .perform(MockMvcRequestBuilders.delete("/api/v2/user/" + id)
-                        .with(httpBasic("admin", "admin"))
+                        .with(jwt().jwt(jwt -> jwt.claim("scope", "write")))
                         .with(csrf()));
 
         // Then
@@ -341,8 +390,13 @@ class UserControllerV2Test {
         when(userService.getUserAndVehicles(id)).thenReturn(expectedResponse);
 
         // When
+        // ResultActions response = httpClient
+        // .perform(MockMvcRequestBuilders.get("/api/v2/user/getAll/" +
+        // id).with(httpBasic("admin", "admin")));
         ResultActions response = httpClient
-                .perform(MockMvcRequestBuilders.get("/api/v2/user/getAll/" + id).with(httpBasic("admin", "admin")));
+                .perform(MockMvcRequestBuilders.get("/api/v2/user/getAll/" + id)
+                        .with(jwt().jwt(jwt -> jwt.claim("scope", "read")))
+                        .with(csrf()));
 
         // Then
         verify(userService).getUserAndVehicles(idCaptor.capture());
@@ -361,8 +415,13 @@ class UserControllerV2Test {
         when(userService.getUserAndVehicles(id)).thenThrow(new RuntimeException("User not found"));
 
         // When
+        // ResultActions response = httpClient
+        // .perform(MockMvcRequestBuilders.get("/api/v2/user/getAll/" +
+        // id).with(httpBasic("admin", "admin")));
         ResultActions response = httpClient
-                .perform(MockMvcRequestBuilders.get("/api/v2/user/getAll/" + id).with(httpBasic("admin", "admin")));
+                .perform(MockMvcRequestBuilders.get("/api/v2/user/getAll/" + id)
+                        .with(jwt().jwt(jwt -> jwt.claim("scope", "read")))
+                        .with(csrf()));
 
         // Then
         verify(userService).getUserAndVehicles(idCaptor.capture());
