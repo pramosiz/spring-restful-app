@@ -13,7 +13,7 @@ spring:
   cloud:
     gateway:
       default-filters:
-        - TokenRelay
+        - TokenRelay # Con esto reenviamos el token de autenticación a los servicios en el header Authorization
       discovery:
         locator:
           enabled: true
@@ -33,24 +33,3 @@ spring:
           uri: lb://${BIKE_SERVICE_URI:bike-service}
           predicates:
             - Path=/api/v2/bike/**
-
-  ###################################################################################################
-  # Keycloak: GET http://localhost:8091/realms/UserServiceRealm/.well-known/openid-configuration   ##
-  ###################################################################################################
-  security:
-    oauth2:
-      client:
-        provider:
-          keycloak:
-            authorization-uri: http://localhost:8091/realms/UserServiceRealm/protocol/openid-connect/auth
-            user-info-uri: http://localhost:8091/realms/UserServiceRealm/protocol/openid-connect/userinfo
-            user-name-attribute: preferred_username
-            token-uri: http://localhost:8091/realms/UserServiceRealm/protocol/openid-connect/token
-        registration:
-          user-client: # Name of the Keycloak client
-            provider: keycloak
-            client-id: user-client
-            client-secret: fVk4zIco4iwUWyGJkmaXsdDHqmWgoNlc
-            authorization-grant-type: authorization_code
-            #redirect-uri: http://localhost:8080/login/oauth2/code/user-client
-            redirect-uri: "{baseUrl}/login/oauth2/code/user-client"
