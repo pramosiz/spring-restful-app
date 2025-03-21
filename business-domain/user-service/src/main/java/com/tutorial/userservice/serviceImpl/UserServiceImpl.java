@@ -1,5 +1,6 @@
 package com.tutorial.userservice.serviceimpl;
 
+import java.net.http.HttpHeaders;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -7,7 +8,13 @@ import java.util.stream.Collectors;
 
 import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tutorial.userservice.amqp.dto.NotificationDTO;
@@ -49,6 +56,8 @@ public class UserServiceImpl implements UserService {
 
 	final FanoutExchange notifyDeleteInfoFanout;
 
+	// final RestTemplate restTemplate;
+
 	public List<UserDTO> getAll() {
 		//@formatter:off
 		return userRepository.findAll()
@@ -72,6 +81,16 @@ public class UserServiceImpl implements UserService {
 	}
 
 	public List<CarDTO> getCarsByUserId(Long userId) {
+		// public List getCarsByUserId(Long userId) {
+		// Jwt jwt = (Jwt)
+		// SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		// HttpHeaders headers = new HttpHeaders();
+		// headers.add("Authorization", "Bearer " + jwt.getTokenValue());
+		// ResponseEntity<List> cars =
+		// restTemplate.exchange("http://car-service/api/v2/car/byUser/" + userId,
+		// HttpMethod.GET, new HttpEntity<>(headers), List.class);
+		// return cars.getBody();
+
 		return FeignUtils.safeFeignCall(() -> carFeignClientV2.getCarsByUserId(userId)
 				.stream()
 				.map(carMapper::carFeignRestDtoV2_2_CarDTO)
@@ -79,6 +98,18 @@ public class UserServiceImpl implements UserService {
 	}
 
 	public List<BikeDTO> getBikesByUserId(Long userId) {
+
+		// REST TEMPLATE
+		// public List getBikesByUserId(Long userId) {
+		// Jwt jwt = (Jwt)
+		// SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		// HttpHeaders headers = new HttpHeaders();
+		// headers.add("Authorization", "Bearer " + jwt.getTokenValue());
+		// ResponseEntity<List> bikes =
+		// restTemplate.exchange("http://bike-service/api/v2/bike/byUser/" + userId,
+		// HttpMethod.GET, new HttpEntity<>(headers), List.class);
+		// return bikes.getBody();
+
 		return FeignUtils.safeFeignCall(() -> bikeFeignClientV2.getBikesByUserId(userId)
 				.stream()
 				.map(bikeMapper::bikeFeignRestDtoV2_2_BikeDTO)
