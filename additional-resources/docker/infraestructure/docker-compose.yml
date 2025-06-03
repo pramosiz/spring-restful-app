@@ -36,7 +36,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     volumes:
-      - /Users/pabloramosizquierdo/Desktop/Pablo/Dockers/PostgreSQL/data:/var/lib/postgresql/data
+      - /Users/pabloramosizquierdo/Desktop/Pablo/Tecnologias/Dockers/PostgreSQL/data:/var/lib/postgresql/data
 
   user-service:
     image: user-service:1.0.0

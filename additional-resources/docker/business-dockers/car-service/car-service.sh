@@ -22,4 +22,6 @@ docker run -d \
   -e RABBITMQ_VHOST=test \
   -e EUREKA_SERVER_URI=eureka-service \
   -e EUREKA_SERVER_PORT=8761 \
+  -e KEYCLOAK_SERVER_URI=keycloak-server \
+  -e KEYCLOAK_SERVER_PORT=8091 \
   --name car-service car-service:1.0.0
