@@ -1,5 +1,2 @@
-/target/classes/
-/target/maven-archiver/
-/target/maven-status/
-/target/generated-sources/
-/target/config-service-1.0.0-SNAPSHOT.jar.original
+/.idea/
+/target/
